@@ -1,0 +1,22 @@
+\input{preamble.tex}
+
+\begin{document}
+
+\def\title{Tecnológico de Monterrey Campus Querétaro}
+.\\[0.2cm]
+%\centering{\includegraphics[width=5.5cm]{img/vasito.jpg}}
+\tableofcontents\newpage
+
+\section{Data structures}
+\subsection{Segment tree}
+\cppfile{data_structures/segment_tree.cpp}
+
+\section{Matemáticas}
+\subsection{Divisores}
+\cppfile{matematicas/divisores.cpp}
+El siguiente código sirve para implementar la función \lstinline{calcular_divisores}. El algoritmo tiene complejidad de $O(\sqrt n)$.
+\cppfile{matematicas/calcular_divisores.cpp}
+\subsection{Criba de primos}
+La siguiente criba les servirá para calcular los primeros 78,499 primos (todos los primos menores o iguales a un millón). Si quieren saber si un número es primo, lo pueden consultar de manera constante checando el arreglo \lstinline{es_primo}. Antes de usar los arreglos \lstinline{es_primo} y \lstinline{primos}, hay que llamar a la función \lstinline{criba_primos}.
+
+\end{document}
