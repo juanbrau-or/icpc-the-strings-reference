@@ -1,7 +1,7 @@
 # El vasito #
 
-ICPC Team Notebook. Team "UNC - Gracias Demetrio".
+ICPC Team Notebook. Team "The algorithms are talking".
 
 ## Compile
-``pdflatex vasito.tex``
+``pdflatex reference.tex``
 
