@@ -1,2 +1,7 @@
-# icpc-the-strings-reference
-Reference para ICPC del equipo The strings
+# El vasito #
+
+ICPC Team Notebook. Team "UNC - Gracias Demetrio".
+
+## Compile
+``pdflatex vasito.tex``
+

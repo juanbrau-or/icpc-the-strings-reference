@@ -4,8 +4,8 @@ struct STree { // persistent segment tree for min over integers
 	vector<int> st, L, R; int n,sz,rt;
 	STree(int n): st(1,NEUT),L(1,0),R(1,0),n(n),rt(0),sz(1){}
 	int new_node(int v, int l=0, int r=0){
-		int ks=SZ(st);
-		st.pb(v);L.pb(l);R.pb(r);
+		int ks=((int)(st).size());
+		st.push_back(v);L.push_back(l);R.push_back(r);
 		return ks;
 	}
 	int init(int s, int e, int *a){ // not necessary in most cases

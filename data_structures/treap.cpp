@@ -44,9 +44,9 @@ pitem kth(pitem t, int k){
 pair<int,int> lb(pitem t, int key){ // position and value of lower_bound
 	if(!t)return {0,1<<30}; // (special value)
 	if(key>t->key){
-		auto w=lb(t->r,key);w.fst+=cnt(t->l)+1;return w;
+		auto w=lb(t->r,key);w.first+=cnt(t->l)+1;return w;
 	}
 	auto w=lb(t->l,key);
-	if(w.fst==cnt(t->l))w.snd=t->key;
+	if(w.first==cnt(t->l))w.second=t->key;
 	return w;
 }

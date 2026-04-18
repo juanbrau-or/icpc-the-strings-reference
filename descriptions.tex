@@ -1,0 +1,47 @@
+% descriptions.tex
+\section{Algorithm Descriptions}
+
+\subsection{Data Structures}
+\begin{itemize}
+    \item \textbf{Segment Tree}: Range queries and updates in $O(\log n)$. Lazy propagation for range updates.
+    \item \textbf{Sparse Table}: Static Range Minimum Query (RMQ) in $O(1)$ with $O(n \log n)$ preprocessing.
+    \item \textbf{Fenwick Tree}: Prefix sums and point updates in $O(\log n)$. Very low constant factor.
+    \item \textbf{Treap}: Randomized binary search tree. Supports split/merge and implicit keys for sequence operations.
+    \item \textbf{Link-Cut Tree}: Maintains a forest of trees under edge addition/deletion and path queries in $O(\log n)$.
+    \item \textbf{Convex Hull Trick}: Maintains a set of lines to find $\min/\max$ value at $x$ in $O(\log n)$ or $O(1)$.
+    \item \textbf{Li-Chao Tree}: Insert line/segments and query $\min/\max$ at a point in $O(\log n)$.
+\end{itemize}
+
+\subsection{Graphs}
+\begin{itemize}
+    \item \textbf{Tarjan / SCC}: Finds strongly connected components in directed graphs in $O(V+E)$.
+    \item \textbf{Articulation Points/Bridges}: Finds vertices/edges whose removal increases connected components.
+    \item \textbf{HLD}: Decomposes a tree into paths to perform range queries on paths in $O(\log^2 n)$.
+    \item \textbf{Centroid Decomposition}: Divide and conquer on trees based on centroids for path-related problems.
+    \item \textbf{Dominator Tree}: For a flowgraph, $u$ dominates $v$ if every path from start to $v$ goes through $u$.
+    \item \textbf{Blossom Algorithm}: Finds a maximum matching in general (non-bipartite) graphs in $O(V^2 E)$.
+\end{itemize}
+
+\subsection{Math}
+\begin{itemize}
+    \item \textbf{Pollard's Rho}: Integer factorization in $O(n^{1/4})$.
+    \item \textbf{FFT / NTT}: Polynomial multiplication in $O(n \log n)$.
+    \item \textbf{Berlekamp-Massey}: Finds the shortest linear recurrence for a given sequence.
+    \item \textbf{Simplex}: Solves linear programming problems (optimization under constraints).
+    \item \textbf{Chinese Remainder Theorem}: Solves systems of congruences with coprime moduli.
+\end{itemize}
+
+\subsection{Strings}
+\begin{itemize}
+    \item \textbf{Aho-Corasick}: Multiple pattern matching using a trie-based automaton in $O(\sum |pattern|)$.
+    \item \textbf{Suffix Automaton}: DFA that recognizes all substrings of a string in $O(n)$.
+    \item \textbf{Palindromic Tree}: Maintains all unique palindromic substrings in $O(n)$.
+    \item \textbf{Suffix Array}: Lexicographically sorted list of all suffixes of a string.
+\end{itemize}
+
+\subsection{Flow}
+\begin{itemize}
+    \item \textbf{Dinic}: Maximum flow in $O(V^2 E)$, much faster in unit networks or bipartite matching.
+    \item \textbf{MCMF}: Minimum cost maximum flow using SPFA or Dijkstra with potentials.
+    \item \textbf{Hungarian}: Solves the assignment problem (perfect matching in bipartite graphs) in $O(n^3)$.
+\end{itemize}

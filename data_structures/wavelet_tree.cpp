@@ -2,15 +2,15 @@ struct WT {
 	vector<int> wt[1<<20];int n;
 	void init(int k, int s, int e){
 		if(s+1==e)return;
-		wt[k].clear();wt[k].pb(0);
+		wt[k].clear();wt[k].push_back(0);
 		int m=(s+e)/2;
 		init(2*k,s,m);init(2*k+1,m,e);
 	}
 	void add(int k, int s, int e, int v){
 		if(s+1==e)return;
 		int m=(s+e)/2;
-		if(v<m)wt[k].pb(wt[k].back()),add(2*k,s,m,v);
-		else wt[k].pb(wt[k].back()+1),add(2*k+1,m,e,v);
+		if(v<m)wt[k].push_back(wt[k].back()),add(2*k,s,m,v);
+		else wt[k].push_back(wt[k].back()+1),add(2*k+1,m,e,v);
 	}
 	int query0(int k, int s, int e, int a, int b, int i){
 		if(s+1==e)return s;
