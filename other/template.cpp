@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#ifdef DEMETRIO
+#ifdef BRAULIO
 #define deb(...) fprintf(stderr,__VA_ARGS__)
 #define deb1(x) cerr << #x << " = " << x << endl
 #else
