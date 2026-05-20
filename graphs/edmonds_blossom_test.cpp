@@ -2,7 +2,6 @@
 // http://acm.timus.ru/problem.aspx?space=1&num=1099
 #include <bits/stdc++.h>
 using namespace std;
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 #define MAXN 512
 vector<int> g[MAXN];
 int n,m,mt[MAXN],qh,qt,q[MAXN],ft[MAXN],bs[MAXN];
@@ -33,7 +32,7 @@ void contr(int s, int x, int y){
 	mark(z,x);mark(z,y);
 	if(bs[x]!=z)ft[x]=y;
 	if(bs[y]!=z)ft[y]=x;
-	for (int x = 0, _n = n; x < _n; ++x)if(inb[bs[x]]){
+	for (int x = 0; x < n; ++x)if(inb[bs[x]]){
 		bs[x]=z;
 		if(!inq[x])inq[q[++qt]=x]=true;
 	}
@@ -41,7 +40,7 @@ void contr(int s, int x, int y){
 int findp(int s){
 	memset(inq,0,sizeof(inq));
 	memset(ft,-1,sizeof(ft));
-	for (int i = 0, _n = n; i < _n; ++i)bs[i]=i;
+	for (int i = 0; i < n; ++i)bs[i]=i;
 	inq[q[qh=qt=0]=s]=true;
 	while(qh<=qt){
 		int x=q[qh++];
@@ -69,7 +68,7 @@ int aug(int s, int t){
 int edmonds(){ // O(n^2 m)
 	int r=0;
 	memset(mt,-1,sizeof(mt));
-	for (int x = 0, _n = n; x < _n; ++x)if(mt[x]<0)r+=aug(x,findp(x));
+	for (int x = 0; x < n; ++x)if(mt[x]<0)r+=aug(x,findp(x));
 	return r;
 }
 

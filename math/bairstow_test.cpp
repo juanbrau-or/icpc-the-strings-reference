@@ -1,9 +1,4 @@
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -21,19 +16,19 @@ struct poly {  // poly<> : 1 variable, poly<poly<>>: 2 variables, etc.
 	poly operator+(poly<T> o){
 		int m=c.size(),n=o.c.size();
 		poly res(max(m,n));
-		for (int i = 0, _n = m; i < _n; ++i)res[i]=res[i]+c[i];
-		for (int i = 0, _n = n; i < _n; ++i)res[i]=res[i]+o.c[i];
+		for (int i = 0; i < m; ++i)res[i]=res[i]+c[i];
+		for (int i = 0; i < n; ++i)res[i]=res[i]+o.c[i];
 		return res;
 	}
 	poly operator*(tp k){
 		poly res(c.size());
-		for (int i = 0, _n = c.size(; i < _n; ++i))res[i]=c[i]*k;
+		for (int i = 0; i < c.size(); ++i)res[i]=c[i]*k;
 		return res;
 	}
 	poly operator*(poly o){
 		int m=c.size(),n=o.c.size();
 		poly res(m+n-1);
-		for (int i = 0, _n = m; i < _n; ++i)for (int j = 0, _n = n; j < _n; ++j)res[i+j]=res[i+j]+c[i]*o.c[j];
+		for (int i = 0; i < m; ++i)for (int j = 0; j < n; ++j)res[i+j]=res[i+j]+c[i]*o.c[j];
 		return res;
 	}
 	poly operator-(poly<T> o){return *this+(o*-1);}
@@ -57,7 +52,7 @@ pair<poly<>,poly<> > polydiv(poly<> p, poly<> q){ // returns pair (result,rem)
 	vector<tp> b(n);
 	for(int k=n-1;k>=0;--k){
 		b[k]=p.c.back()/q.c.back();
-		for (int i = 0, _n = q.c.size(; i < _n; ++i))p[i+k]-=b[k]*q[i];
+		for (int i = 0; i < q.c.size(); ++i)p[i+k]-=b[k]*q[i];
 		p.c.pop_back();
 	}
 	while(!p.c.empty()&&abs(p.c.back())<EPS)p.c.pop_back();
@@ -71,7 +66,7 @@ poly<> bairstow(poly<> p){
 	int n=p.c.size()-1;
 	assert(n>=3&&abs(p.c.back())>EPS);
 	double u=p[n-1]/p[n],v=p[n-2]/p[n];
-	for (int _ = 0, _n = ITER; _ < _n; ++_){
+	for (int _ = 0; _ < ITER; ++_){
 		auto w=polydiv(p,{v,u,1});
 		poly<> q=w.first,r0=w.second;
 		poly<> r1=polydiv(q,{v,u,1}).second;
@@ -97,7 +92,7 @@ void addr(vector<double>& r, poly<>& p){
 }
 vector<double> roots(poly<> p){
 	while(!p.c.empty()&&abs(p.c.back())<EPS)p.c.pop_back();
-	for (int i = 0, _n = p.c.size(; i < _n; ++i))p[i]/=p.c.back();
+	for (int i = 0; i < p.c.size(); ++i)p[i]/=p.c.back();
 	vector<double> r;int n;
 	while((n=p.c.size()-1)>=3){
 		poly<> q=bairstow(p);
@@ -113,7 +108,7 @@ int main(){
 	int n;
 	while(scanf("%d",&n)!=EOF){
 		/*vector<double> v;
-		for (int i = 0, _n = n+1; i < _n; ++i){
+		for (int i = 0; i < n+1; ++i){
 			double x;
 			scanf("%lf",&x);
 			v.push_back(x);
@@ -121,7 +116,7 @@ int main(){
 		poly<> p(v);
 		*/
 		poly<> p={1};
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			double x;
 			scanf("%lf",&x);
 			p=p*poly<>({-x,1});

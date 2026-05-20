@@ -1,9 +1,4 @@
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -109,7 +104,7 @@ struct circle {
 double randd(){return 1.*rand()/RAND_MAX;}
 
 int main(){
-	for (int _ = 0, _n = 100000; _ < _n; ++_){
+	for (int _ = 0; _ < 100000; ++_){
 		pt c0(randd(),randd()),c1(randd(),randd());
 		double r0=randd(),r1=randd();
 		double d=(c0-c1).norm();
@@ -123,7 +118,7 @@ int main(){
 		}
 		for(auto p:v)assert(abs((p-c0).norm()-r0)<EPS&&abs((p-c1).norm()-r1)<EPS);
 	}
-	for (int _ = 0, _n = 100000; _ < _n; ++_){
+	for (int _ = 0; _ < 100000; ++_){
 		pt c(randd(),randd());ln l(pt(randd(),randd()),pt(randd(),randd()));
 		double r=randd();
 		double d=l.dist(c);
@@ -136,7 +131,7 @@ int main(){
 		//printf("(%lf,%lf,%lf) (%lf,%lf) (%lf,%lf)  (%lf,%lf)\n",c.x,c.y,r,l.p.x,l.p.y,(l.p+l.pq).x,(l.p+l.pq).y,v[0].x,v[0].y);
 		for(auto p:v)assert(l.has(p)),assert(abs((p-c).norm()-r)<EPS);
 	}
-	for (int _ = 0, _n = 100000; _ < _n; ++_){
+	for (int _ = 0; _ < 100000; ++_){
 		pt c(randd(),randd());pt p(randd(),randd());
 		double r=randd();
 		if(circle(c,r).has(p)){_--;continue;}

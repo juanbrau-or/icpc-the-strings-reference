@@ -1,11 +1,6 @@
 // Codeforces 508D - AC
 // http://codeforces.com/problemset/problem/508/D
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -53,7 +48,7 @@ int id(char a, char b){
 
 int main(){
 	scanf("%d",&m);
-	for (int _ = 0, _n = m; _ < _n; ++_){
+	for (int _ = 0; _ < m; ++_){
 		char s[8];
 		scanf("%s",s);
 		int x=id(s[0],s[1]),y=id(s[1],s[2]);
@@ -61,7 +56,7 @@ int main(){
 		out[x]++;in[y]++;
 	}
 	int x=-1;
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		if(out[i]==in[i]+1){
 			if(x>=0){puts("NO");return 0;}
 			x=i;
@@ -73,7 +68,7 @@ int main(){
 	if(p.size()!=m+1){puts("NO");return 0;}
 	puts("YES");
 	putchar(w[x][0]);putchar(w[x][1]);
-	for (int i = 1, _n = p.size(; i < _n; ++i))putchar(w[p[i]][1]);
+	for (int i = 1; i < p.size(); ++i)putchar(w[p[i]][1]);
 	puts("");
 	return 0;
 }

@@ -1,11 +1,6 @@
 // UVA 12532 - AC
 // https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3977
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -56,7 +51,7 @@ int main(){
 	int n,q;
 	while(scanf("%d%d",&n,&q)!=EOF){
 		STree rmq(n);
-		for (int i = 0, _n = n; i < _n; ++i)scanf("%d",x+i),x[i]=sgn(x[i]);
+		for (int i = 0; i < n; ++i)scanf("%d",x+i),x[i]=sgn(x[i]);
 		rmq.init(x);
 		while(q--){
 			char t[4];

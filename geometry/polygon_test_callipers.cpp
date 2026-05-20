@@ -1,6 +1,16 @@
 // Kattis roberthood - AC
 // https://open.kattis.com/problems/roberthood
 #include <bits/stdc++.h>
+#ifdef DEMETRIO
+#define deb(...) fprintf(stderr,__VA_ARGS__)
+#define deb1(x) cerr << #x << " = " << x << endl
+#else
+#define deb(...) 0
+#define deb1(x) 0
+#endif
+#define SZ(x) ((int)x.size())
+using namespace std;
+typedef long long ll;
 
 //#define double ll
 #define EPS 1e-9
@@ -39,7 +49,7 @@ pt cw90(-1,0);
 vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
-	for (int i = 0, _n = p.size(; i < _n; ++i)){ // lower hull
+	for (int i = 0; i < p.size(); ++i){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
 		r.push_back(p[i]);
 	}
@@ -75,7 +85,7 @@ vector<pt> p;
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		double x,y;
 		scanf("%lf%lf",&x,&y);
 		p.push_back(pt(x,y));

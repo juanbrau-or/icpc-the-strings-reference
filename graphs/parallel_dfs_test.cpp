@@ -1,11 +1,6 @@
 // Codeforces gym 100109K - AC
 // http://codeforces.com/gym/100109/problem/K
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 #define MOD 99990001
 using namespace std;
 typedef long long ll;
@@ -57,13 +52,13 @@ int l[200005]; // lazy
 int main() {
 	scanf("%d",&n);
 	Tree t(n);
-	for (int i = 0, _n = n-1; i < _n; ++i){
+	for (int i = 0; i < n-1; ++i){
 		int x,y;
 		scanf("%d%d%d",&x,&y,ew+i);x--;y--;
 		t.add_edge(x,y);
 	}
 	nc=1;
-	for (int i = 1, _n = n; i < _n; ++i){
+	for (int i = 1; i < n; ++i){
 		int e;
 		scanf("%d",&e);e--;
 		int c=wc[t.ex[2*e]];

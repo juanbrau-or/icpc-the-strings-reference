@@ -4,7 +4,7 @@ int mt[MAXN],mt2[MAXN],ds[MAXN];
 bool bfs(){
 	queue<int> q;
 	memset(ds,-1,sizeof(ds));
-	for (int i = 0, _n = n; i < _n; ++i)if(mt2[i]<0)ds[i]=0,q.push(i);
+	for (int i = 0; i < n; ++i)if(mt2[i]<0)ds[i]=0,q.push(i);
 	bool r=false;
 	while(!q.empty()){
 		int x=q.front();q.pop();
@@ -27,7 +27,7 @@ int mm(){
 	int r=0;
 	memset(mt,-1,sizeof(mt));memset(mt2,-1,sizeof(mt2));
 	while(bfs()){
-		for (int i = 0, _n = n; i < _n; ++i)if(mt2[i]<0)r+=dfs(i);
+		for (int i = 0; i < n; ++i)if(mt2[i]<0)r+=dfs(i);
 	}
 	return r;
 }

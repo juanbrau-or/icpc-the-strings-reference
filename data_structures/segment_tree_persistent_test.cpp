@@ -1,11 +1,7 @@
 #include <bits/stdc++.h>
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
-#define push_back push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
-#define ((int)(n).size()) ((int)(n).size())
+#define SZ(n) ((int)(n).size())
 using namespace std;
 typedef long long ll;
 typedef pair<int,int> ii;
@@ -16,7 +12,7 @@ struct STree { // persistent segment tree for min over integers
   vector<int> st, L, R; int n,sz,rt;
   STree(int n): st(1,NEUT),L(1,0),R(1,0),n(n),rt(0),sz(1){}
   int new_node(int v, int l=0, int r=0){
-      int ks=((int)(st).size());
+      int ks=SZ(st);
       st.push_back(v);L.push_back(l);R.push_back(r);
       return ks;
   }
@@ -52,7 +48,7 @@ int main(){FIN;
   int n; cin >> n;
   vector<int> root={0};
   STree s(n+1);
-  for (int i = 1, _n = n+1; i < _n; ++i){
+  for (int i = 1; i < n+1; ++i){
     int x; cin >> x;
     int r=root.back();
     if(lst[x]) r=s.upd(lst[x],0);

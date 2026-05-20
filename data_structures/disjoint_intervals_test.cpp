@@ -1,9 +1,4 @@
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -24,13 +19,13 @@ bool w[1024];
 disjoint_intervals z;
 
 int main(){
-	for (int _ = 0, _n = 10000; _ < _n; ++_){
+	for (int _ = 0; _ < 10000; ++_){
 		memset(w,false,sizeof(w));
 		z.s.clear();
-		for (int _ = 0, _n = 100; _ < _n; ++_){
+		for (int _ = 0; _ < 100; ++_){
 			int a=rand()%1000,b=min(a-1+rand()%50,1000);
 			z.insert({a,b});
-			for (int i = a, _n = b; i < _n; ++i)w[i]=true;
+			for (int i = a; i < b; ++i)w[i]=true;
 			vector<pair<int,int> > v;
 			int i=0;
 			while(i<1000){

@@ -1,13 +1,9 @@
 // Universal cup - Season 4, stage 21, problem C - AC
 // https://contest.ucup.ac/contest/3542/problem/17421
 #include <bits/stdc++.h>
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
-#define push_back push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
-#define ((int)(s).size()) int(s.size())
+#define SZ(s) int(s.size())
 using namespace std;
 typedef long long ll;
 typedef pair<int,int> ii;
@@ -47,7 +43,7 @@ vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
 	p.erase(unique(ALL(p)), p.end());
-	for (int i = 0, _n = p.size(; i < _n; ++i)){ // lower hull
+	for (int i = 0; i < p.size(); ++i){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
 		r.push_back(p[i]);
 	}
@@ -66,14 +62,14 @@ int main(){FIN;
 	while(t--){
 		int n; cin>>n;
 		vector<pt> v(n);
-		for (int i = 0, _n = n; i < _n; ++i) cin>>v[i].x>>v[i].y;
+		for (int i = 0; i < n; ++i) cin>>v[i].x>>v[i].y;
 
-		map<pt,int> make_pair;
-		for (int i = 0, _n = n; i < _n; ++i) make_pair[v[i]]=i;
+		map<pt,int> point_id;
+		for (int i = 0; i < n; ++i) point_id[v[i]]=i;
 
 		vector<vector<pt>> cs;
 
-		while(((int)(v).size())){
+		while(SZ(v)){
 			vector<pt> cur=chull(v);
 			set<pt> s(ALL(cur));
 			cs.push_back(cur);
@@ -85,15 +81,15 @@ int main(){FIN;
 		vector<pt> ans;
 
 		int st=0;
-		for (int i = 0, _n = ((int)(cs; i < _n; ++i).size())){
-			for (int j = 0, _n = ((int)(cs[i]; j < _n; ++j).size())) ans.push_back(cs[i][(st+j)%((int)(cs[i]).size())]);
+		for (int i = 0; i < SZ(cs); ++i){
+			for (int j = 0; j < SZ(cs[i]); ++j) ans.push_back(cs[i][(st+j)%SZ(cs[i])]);
 
-			pt p=ans[((int)(ans).size())-2], q=ans[((int)(ans).size())-1];
-			if(i+1<((int)(cs).size())){
+			pt p=ans[SZ(ans)-2], q=ans[SZ(ans)-1];
+			if(i+1<SZ(cs)){
 				st=-1;
-				for (int j = 0, _n = ((int)(cs[i+1]; j < _n; ++j).size())){
+				for (int j = 0; j < SZ(cs[i+1]); ++j){
 					pt x=cs[i+1][j];
-					pt y=cs[i+1][(j+1)%((int)(cs[i+1]).size())];
+					pt y=cs[i+1][(j+1)%SZ(cs[i+1])];
 
 					if(x.good(p,q) && y.good(q,x)){
 						st=j;
@@ -104,9 +100,9 @@ int main(){FIN;
 			}
 		}
 
-		for (int i = 1, _n = ((int)(ans; i < _n; ++i).size())-1) while(!ans[i+1].good(ans[i-1],ans[i]));
+		for (int i = 1; i < SZ(ans)-1; ++i) while(!ans[i+1].good(ans[i-1],ans[i]));
 
-		for(auto p:ans)cout<<make_pair[p]+1<<" ";cout<<"\n";
+		for(auto p:ans)cout<<point_id[p]+1<<" ";cout<<"\n";
 
 	}
 }

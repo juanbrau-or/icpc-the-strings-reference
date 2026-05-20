@@ -1,7 +1,7 @@
 int cr[MAXN]; // -1 if prime, some not trivial divisor if not
 void init_sieve(){
 	memset(cr,-1,sizeof(cr));
-	for (int i = 2, _n = MAXN; i < _n; ++i)if(cr[i]<0)for(ll j=1LL*i*i;j<MAXN;j+=i)cr[j]=i;
+	for (int i = 2; i < MAXN; ++i)if(cr[i]<0)for(ll j=1LL*i*i;j<MAXN;j+=i)cr[j]=i;
 }
 map<int,int> fact(int n){  // must call init_cribe before
 	map<int,int> r;

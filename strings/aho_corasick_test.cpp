@@ -1,11 +1,6 @@
 // UVA 10679 - AC
 // https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=1620
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,to=b;i<to;++i)
 using namespace std;
 typedef long long ll;
 
@@ -51,7 +46,7 @@ bool vis[1<<20];
 void proc(int x){
 	if(x==-1||vis[x])return;
 	vis[x]=true;
-	for (int i = 0, _n = t[x].leaf.size(; i < _n; ++i))r[t[x].leaf[i]]=true;
+	for (int i = 0; i < t[x].leaf.size(); ++i)r[t[x].leaf[i]]=true;
 	proc(t[x].link);
 }
 
@@ -65,7 +60,7 @@ int main(){
 	while(tn--){
 		aho_init();
 		scanf("%s%d",s,&n);
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			scanf("%s",tt);
 			add_string(string(tt),i);
 		}
@@ -74,7 +69,7 @@ int main(){
 			k=go(k,s[i]);
 			proc(k);
 		}
-		for (int i = 0, _n = n; i < _n; ++i)puts(r[i]?"y":"n");
+		for (int i = 0; i < n; ++i)puts(r[i]?"y":"n");
 	}
 	return 0;
 }

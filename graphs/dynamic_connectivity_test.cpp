@@ -1,11 +1,6 @@
 // Codeforces gym 100551A - AC
 // http://codeforces.com/gym/100551/problem/A
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -13,7 +8,7 @@ struct UnionFind {
 	int n,comp;
 	vector<int> uf,si,c;
 	UnionFind(int n=0):n(n),comp(n),uf(n),si(n,1){
-		for (int i = 0, _n = n; i < _n; ++i)uf[i]=i;}
+		for (int i = 0; i < n; ++i)uf[i]=i;}
 	int find(int x){return x==uf[x]?x:find(uf[x]);}
 	bool join(int x, int y){
 		if((x=find(x))==(y=find(y)))return false;
@@ -53,7 +48,7 @@ struct DynCon {
 		q.push_back((Query){QUERY,-1,-1});mt.push_back(-1);}
 	void process(){ // answers all queries in order
 		if(!q.size())return;
-		for (int i = 0, _n = q.size(; i < _n; ++i))if(q[i].type==ADD&&mt[i]<0)mt[i]=q.size();
+		for (int i = 0; i < q.size(); ++i)if(q[i].type==ADD&&mt[i]<0)mt[i]=q.size();
 		go(0,q.size());
 	}
 	void go(int s, int e){

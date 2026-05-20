@@ -1,5 +1,15 @@
 // https://www.spoj.com/problems/DYNALCA/
 #include <bits/stdc++.h>
+#ifdef DEMETRIO
+#define deb(...) fprintf(stderr,__VA_ARGS__)
+#define deb1(x) cerr << #x << " = " << x << endl
+#else
+#define deb(...) 0
+#define deb1(x) 0
+#endif
+#define SZ(x) ((int)x.size())
+using namespace std;
+typedef long long ll;
 
 const int N_DEL = 0, N_VAL = 0; //delta, value
 inline int mOp(int x, int y){return x+y;}//modify
@@ -20,10 +30,10 @@ struct Node_t{
   void push(){
     if(rev){
       rev=0; swap(c[0], c[1]);
-      for (int x = 0, _n = 2; x < _n; ++x)if(c[x])c[x]->rev^=1;
+      for (int x = 0; x < 2; ++x)if(c[x])c[x]->rev^=1;
     }
     nVal=joinVD(nVal, d); tVal=joinVD(tVal, dOnSeg(d, sz));
-    for (int x = 0, _n = 2; x < _n; ++x)if(c[x])c[x]->d=joinD(c[x]->d, d);
+    for (int x = 0; x < 2; ++x)if(c[x])c[x]->d=joinD(c[x]->d, d);
     d=N_DEL;
   }
   void upd();
@@ -97,7 +107,7 @@ int n,m;
 
 int main(){
 	scanf("%d%d",&n,&m);
-	for (int i = 0, _n = n; i < _n; ++i)x[i]=new Node_t(i);
+	for (int i = 0; i < n; ++i)x[i]=new Node_t(i);
 	while(m--){
 		char s[8];
 		scanf("%s",s);

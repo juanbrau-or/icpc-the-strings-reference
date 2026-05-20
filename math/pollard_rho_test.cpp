@@ -1,11 +1,6 @@
 // SPOJ FACT0 - AC
 // http://www.spoj.com/problems/FACT0/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -25,7 +20,7 @@ bool is_prime_prob(ll n, int a){
 	while(d%2==0)s++,d/=2;
 	ll x=expmod(a,d,n);
 	if((x==1)||(x+1==n))return true;
-	for (int _ = 0, _n = s-1; _ < _n; ++_){
+	for (int _ = 0; _ < s-1; ++_){
 		x=mulmod(x,x,n);
 		if(x==1)return false;
 		if(x+1==n)return true;
@@ -35,7 +30,7 @@ bool is_prime_prob(ll n, int a){
 bool rabin(ll n){ // true iff n is prime
 	if(n==1)return false;
 	int ar[]={2,3,5,7,11,13,17,19,23};
-	for (int i = 0, _n = 9; i < _n; ++i)if(!is_prime_prob(n,ar[i]))return false;
+	for (int i = 0; i < 9; ++i)if(!is_prime_prob(n,ar[i]))return false;
 	return true;
 }
 ll rho(ll n){

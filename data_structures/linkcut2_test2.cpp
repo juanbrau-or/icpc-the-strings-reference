@@ -1,5 +1,4 @@
 #include <bits/stdc++.h>
-#define for (int x = a, _n = b; x < _n; ++x) for(int x=a,qwe=b; x<qwe; x++)
 using namespace std;
 
 const int N_DELTA = 0, N_VALUE = 0;
@@ -22,10 +21,10 @@ struct Node_t{
   void push(){
     if(rev){
       rev=0; swap(ch[0], ch[1]);
-      for (int x = 0, _n = 2; x < _n; ++x)if(ch[x])ch[x]->rev^=1;
+      for (int x = 0; x < 2; ++x)if(ch[x])ch[x]->rev^=1;
     }
     nVal=joinVD(nVal, d); stVal=joinVD(stVal, dOnSeg(d, sz));
-    for (int x = 0, _n = 2; x < _n; ++x)if(ch[x])ch[x]->d=joinDeltas(ch[x]->d, d);
+    for (int x = 0; x < 2; ++x)if(ch[x])ch[x]->d=joinDeltas(ch[x]->d, d);
     d=N_DELTA;
   }
   void upd();
@@ -76,8 +75,8 @@ Node x[N];
 
 int main(){ios_base::sync_with_stdio(0);cout.tie(0);cin.tie(0);
     cin >> n;
-	for (int i = 0, _n = n; i < _n; ++i)x[i]=new Node_t(0);
-    for (int i = 0, _n = n-1; i < _n; ++i){
+	for (int i = 0; i < n; ++i)x[i]=new Node_t(0);
+    for (int i = 0; i < n-1; ++i){
         int a, b; cin >> a >> b;a--;b--;
         link(x[a],x[b]);
     }

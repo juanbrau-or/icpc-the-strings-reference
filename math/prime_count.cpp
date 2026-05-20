@@ -6,7 +6,7 @@ ll prime_count(ll n) {
     int v = sqrtl(n), s = (v+1)>>1, pc=0;
     vector<int> smalls(s), roughs(s), skip(v+1);
     vector<ll> larges(s);
-    for (int i = 0, _n = s; i < _n; ++i){
+    for (int i = 0; i < s; ++i){
         smalls[i]=i;
         roughs[i]=2*i+1;
         larges[i]=(n/roughs[i]-1)>>1;
@@ -17,7 +17,7 @@ ll prime_count(ll n) {
         skip[p]=1;
         for(int i=q;i<=v;i+=2*p) skip[i]=1;
         int ns=0;
-        for (int k = 0, _n = s; k < _n; ++k){
+        for (int k = 0; k < s; ++k){
             int i=roughs[k];
             if(skip[i]) continue;
             ll d=1ll*i*p;
@@ -32,13 +32,13 @@ ll prime_count(ll n) {
         pc++;
     }
     larges[0]+=1ll*(s+2*(pc-1))*(s-1)>>1;
-    for (int k = 1, _n = s; k < _n; ++k) larges[0]-=larges[k];
-    for (int l = 1, _n = s; l < _n; ++l){
+    for (int k = 1; k < s; ++k) larges[0]-=larges[k];
+    for (int l = 1; l < s; ++l){
         int q=roughs[l];
         ll m=n/q, t=0;
         int e=smalls[(m/q-1)>>1]-pc;
         if(e<l+1)break;
-        for (int k = l+1, _n = e+1; k < _n; ++k) t+=smalls[(m/roughs[k]-1)>>1];
+        for (int k = l+1; k < e+1; ++k) t+=smalls[(m/roughs[k]-1)>>1];
         larges[0]+=t-1ll*(e-l)*(pc+l-1);
     }
     return larges[0]+1;

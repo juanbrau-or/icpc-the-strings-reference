@@ -4,13 +4,9 @@
 #else
 #define deb(...) 0
 #endif
-#define first first
-#define second second
-#define for (int x = a, _n = b; x < _n; ++x) for(int x=(a), qwerty=(b); x<qwerty; x++)
-#define push_back push_back
 #define mset(a,v) memset((a),(v),sizeof(a))
 #define ALL(a) (a).begin(), (a).end()
-#define ((int)(a).size()) int((a).size())
+#define SZ(a) int((a).size())
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 using namespace std;
 typedef long long ll;
@@ -41,13 +37,13 @@ void tjn(int u){
 void scc(){
     memset(idx,0,sizeof(idx));qidx=0;
     memset(cmp,-1,sizeof(cmp));qcmp=0;
-    for (int i = 0, _n = n; i < _n; ++i)if(!idx[i])tjn(i);
+    for (int i = 0; i < n; ++i)if(!idx[i])tjn(i);
 }
 // Only for 2SAT:
 void addor(int a, int b){g[neg(a)].push_back(b);g[neg(b)].push_back(a);}
 bool satisf(int _nvar){
     nvar=_nvar;n=MAXN;scc();
-    for (int i = 0, _n = nvar; i < _n; ++i)if(cmp[i]==cmp[neg(i)])return false;
+    for (int i = 0; i < nvar; ++i)if(cmp[i]==cmp[neg(i)])return false;
     return true;
 }
  
@@ -56,35 +52,35 @@ int get(int v){if(v<0)return neg(-v-1); return v-1;}
 int main(){FIN;
     cin >> f >> c >> w;
     n = c;
-    for (int x = 0, _n = w; x < _n; ++x){
+    for (int x = 0; x < w; ++x){
         int a,b;cin>>a>>b;a--;
         wishes[a].push_back(b);
     }
-    for (int x = 0, _n = f; x < _n; ++x){
+    for (int x = 0; x < f; ++x){
         int st = n;
-        if(((int)(wishes[x]).size())<=1)continue;
+        if(SZ(wishes[x])<=1)continue;
         for(int v:wishes[x]){
             if(st!=n)g[n].push_back(n-1);
             g[n].push_back(get(v));
             n++;
         }
-        int cnt = ((int)(wishes[x]).size());
+        int cnt = SZ(wishes[x]);
         for(int v:wishes[x]){
             if(cnt>1)g[n].push_back(n+1);
             g[n].push_back(get(v));
             n++;cnt--;
         }
-        g[neg(get(wishes[x][0]))].push_back(st+((int)(wishes[x]).size())+1);
-        g[neg(get(wishes[x].back()))].push_back(st+((int)(wishes[x]).size())-2);
-        for (int i = 1, _n = ((int)(wishes[x]; i < _n; ++i).size())-1){
+        g[neg(get(wishes[x][0]))].push_back(st+SZ(wishes[x])+1);
+        g[neg(get(wishes[x].back()))].push_back(st+SZ(wishes[x])-2);
+        for (int i = 1; i < SZ(wishes[x])-1; ++i){
             g[neg(get(wishes[x][i]))].push_back(st+i-1);
-            g[neg(get(wishes[x][i]))].push_back(st+i+((int)(wishes[x]).size())+1);
+            g[neg(get(wishes[x][i]))].push_back(st+i+SZ(wishes[x])+1);
         }
     }
     if(satisf(c)){
         vector<int> ans;
-        for (int x = 0, _n = c; x < _n; ++x)if(truth[cmp[x]])ans.push_back(x+1);
-        cout<<((int)(ans).size())<<"\n";
-        for (int x = 0, _n = ((int)(ans; x < _n; ++x).size()))cout<<ans[x]<<" \n"[x+1==((int)(ans).size())];
+        for (int x = 0; x < c; ++x)if(truth[cmp[x]])ans.push_back(x+1);
+        cout<<SZ(ans)<<"\n";
+        for (int x = 0; x < SZ(ans); ++x)cout<<ans[x]<<" \n"[x+1==SZ(ans)];
     }else cout<<"-1\n";
 }

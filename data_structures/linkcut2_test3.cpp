@@ -9,8 +9,6 @@
  */
 
 #include <bits/stdc++.h>
-#define for (int x = a, _n = b; x < _n; ++x) for(int x=a,qwe=b; x<qwe; x++)
-#define push_back push_back
 using namespace std;
 typedef long long ll;
 
@@ -29,7 +27,7 @@ struct Node_t{
   void push(){
     if(rev){
       rev=0; swap(ch[0], ch[1]);
-      for (int x = 0, _n = 2; x < _n; ++x)if(ch[x])ch[x]->rev^=1;
+      for (int x = 0; x < 2; ++x)if(ch[x])ch[x]->rev^=1;
     }
   }
   void upd();
@@ -121,15 +119,15 @@ int find(int i){return i==P[i]?i:P[i]=find(P[i]);}
 
 int main(){ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
     cin >> n >> m;
-    for (int x = 0, _n = n; x < _n; ++x)P[x]=x,vs[x]=new Node_t(x);
-    for (int x = 0, _n = m; x < _n; ++x){
+    for (int x = 0; x < n; ++x)P[x]=x,vs[x]=new Node_t(x);
+    for (int x = 0; x < m; ++x){
         int u,v;ll c; cin >> u >> v >> c; u--; v--;
         g[u].push_back({v,c});g[v].push_back({u,c});
         edges.push_back(Edge{u,v,c});
     }
     sort(edges.begin(),edges.end());
     ll total = 0;
-    for (int x = 0, _n = m; x < _n; ++x){
+    for (int x = 0; x < m; ++x){
         int u=edges[x].u,v=edges[x].v;
         es[x]=new Node_t(u,v,edges[x].c);
         int i=find(u), j=find(v);
@@ -139,5 +137,5 @@ int main(){ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
             link(es[x],vs[u]); link(vs[v],es[x]);
         }
     }
-    for (int x = 0, _n = n; x < _n; ++x)cout<<total+calc(x)<<"\n";   
+    for (int x = 0; x < n; ++x)cout<<total+calc(x)<<"\n";   
 }

@@ -1,11 +1,6 @@
 // SPOJ SUBST1 - AC
 // http://www.spoj.com/problems/SUBST1/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -19,7 +14,7 @@ struct SuffixTree {
 	int node,pos,sz=1,n=0;
 	void clear(){
 		node=pos=n=0;
-		for (int i = 0, _n = sz; i < _n; ++i)to[i].clear();
+		for (int i = 0; i < sz; ++i)to[i].clear();
 		sz=1;
 	}
 	int make_node(int p, int l){
@@ -56,7 +51,7 @@ struct SuffixTree {
 	}
 	ll doit(){
 		ll r=0;
-		for (int i = 1, _n = sz; i < _n; ++i)r+=min(len[i],n-fpos[i]);
+		for (int i = 1; i < sz; ++i)r+=min(len[i],n-fpos[i]);
 		return r;
 	}
 };

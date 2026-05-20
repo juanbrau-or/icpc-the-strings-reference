@@ -1,7 +1,4 @@
 #include <bits/stdc++.h>
-#define first first
-#define second second
-#define for (int x = a, _n = b; x < _n; ++x) for(int x=(a), qwerty=(b); x<qwerty; x++)
 using namespace std;
 typedef long long ll;
 
@@ -26,7 +23,7 @@ ll tonelli_shanks(ll n, ll p){
     ll i=1, ts=(t*t)%p;
     while(ts!=1)i++,ts=(ts*ts)%p;
     ll b=c; 
-    for (int _ = 0, _n = m-i-1; _ < _n; ++_)b=(b*b)%p;
+    for (int _ = 0; _ < m-i-1; ++_)b=(b*b)%p;
     r=r*b%p;c=b*b%p;t=t*c%p;m=i;
   }
   return r;

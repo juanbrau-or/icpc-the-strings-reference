@@ -17,10 +17,10 @@ struct Node_t{
   void push(){
     if(rev){
       rev=0; swap(c[0], c[1]);
-      for (int x = 0, _n = 2; x < _n; ++x)if(c[x])c[x]->rev^=1;
+      for (int x = 0; x < 2; ++x)if(c[x])c[x]->rev^=1;
     }
     nVal=joinVD(nVal, d); tVal=joinVD(tVal, dOnSeg(d, sz));
-    for (int x = 0, _n = 2; x < _n; ++x)if(c[x])c[x]->d=joinD(c[x]->d, d);
+    for (int x = 0; x < 2; ++x)if(c[x])c[x]->d=joinD(c[x]->d, d);
     d=N_DEL;
   }
   void upd();

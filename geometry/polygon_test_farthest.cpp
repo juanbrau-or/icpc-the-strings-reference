@@ -1,6 +1,16 @@
 // AC
 // http://codeforces.com/group/3qadGzUdR4/contest/101707/problem/H
 #include <bits/stdc++.h>
+#ifdef DEMETRIO
+#define deb(...) fprintf(stderr,__VA_ARGS__)
+#define deb1(x) cerr << #x << " = " << x << endl
+#else
+#define deb(...) 0
+#define deb1(x) 0
+#endif
+#define SZ(x) ((int)x.size())
+using namespace std;
+typedef long long ll;
 
 #define double ll
 #define EPS 0
@@ -39,7 +49,7 @@ pt cw90(-1,0);
 vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
-	for (int i = 0, _n = p.size(; i < _n; ++i)){ // lower hull
+	for (int i = 0; i < p.size(); ++i){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
 		r.push_back(p[i]);
 	}
@@ -62,16 +72,16 @@ struct pol {
 		if(p[2].left(p[0],p[1]))reverse(p.begin(),p.end());
 		int pi=min_element(p.begin(),p.end())-p.begin();
 		vector<pt> s(n);
-		for (int i = 0, _n = n; i < _n; ++i)s[i]=p[(pi+i)%n];
+		for (int i = 0; i < n; ++i)s[i]=p[(pi+i)%n];
 		p.swap(s);
 	}
 	pt farthest(pt v){ // O(log(n)) only CONVEX
 		if(n<10){
 			int k=0;
-			for (int i = 1, _n = n; i < _n; ++i)if(v*(p[i]-p[k])>EPS)k=i;
+			for (int i = 1; i < n; ++i)if(v*(p[i]-p[k])>EPS)k=i;
 			return p[k];
 		}
-		if(n==((int)(p).size()))p.push_back(p[0]);
+		if(n==SZ(p))p.push_back(p[0]);
 		pt a=p[1]-p[0];
 		int s=0,e=n,ua=v*a>EPS;
 		if(!ua&&v*(p[n-1]-p[0])<=EPS)return p[0];
@@ -98,8 +108,8 @@ bool doit(ll a, ll b, ll c){
 
 int main(){
 	scanf("%d%d",&m,&n);
-	for (int i = 0, _n = m; i < _n; ++i)scanf("%lld%lld%lld",a+i,b+i,c+i);
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < m; ++i)scanf("%lld%lld%lld",a+i,b+i,c+i);
+	for (int i = 0; i < n; ++i){
 		ll x,y;
 		scanf("%lld%lld",&x,&y);
 		v.push_back(pt(x,y));
@@ -108,9 +118,9 @@ int main(){
 	if(q.empty())q=v;
 	p=pol(q);
 	vector<int> r;
-	for (int i = 0, _n = m; i < _n; ++i)if(doit(a[i],b[i],c[i]))r.push_back(i);
-	printf("%d\n",((int)(r).size()));
-	for (int i = 0, _n = ((int)(r; i < _n; ++i).size())){
+	for (int i = 0; i < m; ++i)if(doit(a[i],b[i],c[i]))r.push_back(i);
+	printf("%d\n",SZ(r));
+	for (int i = 0; i < SZ(r); ++i){
 		if(i)putchar(' ');
 		printf("%d",r[i]+1);
 	}

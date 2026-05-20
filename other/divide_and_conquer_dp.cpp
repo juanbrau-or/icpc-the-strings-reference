@@ -4,7 +4,7 @@ void doit(int s, int e, int s0, int e0, int i){
 	// [s,e): range of calculation, [s0,e0): range of optimal choice
 	if(s==e)return;
 	int m=(s+e)/2,r=INF,rp;
-	fore(j,s0,min(e0,m)){
+	for (int j = s0; j < min(e0,m); ++j){
 		int r0=something(i,j); // "something" usually depends on f
 		if(r0<r)r=r0,rp=j; // position of optimal choice
 	}
@@ -13,6 +13,6 @@ void doit(int s, int e, int s0, int e0, int i){
 }
 int doall(){
 	init_base_cases();
-	for (int i = 1, _n = k; i < _n; ++i)doit(1,n+1,0,n,i),memcpy(f,f2,sizeof(f));
+	for (int i = 1; i < k; ++i)doit(1,n+1,0,n,i),memcpy(f,f2,sizeof(f));
 	return f[n];
 }

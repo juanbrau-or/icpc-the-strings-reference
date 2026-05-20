@@ -1,9 +1,5 @@
 //https://open.kattis.com/problems/generalchineseremainder
 #include <bits/stdc++.h>
-#define first first
-#define second second
-#define push_back push_back
-#define make_pair make_pair
 using namespace std;
 typedef long long ll;
 typedef pair<ll,ll> ii;

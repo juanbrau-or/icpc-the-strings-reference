@@ -1,11 +1,6 @@
 // SPOJ HORRIBLE - AC
 // http://www.spoj.com/problems/HORRIBLE/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 

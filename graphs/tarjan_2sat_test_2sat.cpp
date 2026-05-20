@@ -1,11 +1,6 @@
 // UVA 10319 - AC
 // https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=1260
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,to=b;i<to;++i)
 using namespace std;
 typedef long long ll;
 #define MAXN 200005
@@ -36,26 +31,26 @@ void tjn(int u){
 void scc(){
 	memset(idx,0,sizeof(idx));qidx=0;
 	memset(cmp,-1,sizeof(cmp));qcmp=0;
-	for (int i = 0, _n = n; i < _n; ++i)if(!idx[i])tjn(i);
+	for (int i = 0; i < n; ++i)if(!idx[i])tjn(i);
 }
 // Only for 2SAT:
 void addor(int a, int b){g[neg(a)].push_back(b);g[neg(b)].push_back(a);}
 bool satisf(int _nvar){
 	nvar=_nvar;n=MAXN;scc();
-	for (int i = 0, _n = nvar; i < _n; ++i)if(cmp[i]==cmp[neg(i)])return false;
+	for (int i = 0; i < nvar; ++i)if(cmp[i]==cmp[neg(i)])return false;
 	return true;
 }
 
 void verify(){
-	for (int xx = 0, _n = nvar; xx < _n; ++xx){
+	for (int xx = 0; xx < nvar; ++xx){
 		int x=xx;
-		for (int _ = 0, _n = g[x].size(; _ < _n; ++_)){
+		for (int _ = 0; _ < g[x].size(); ++_){
 			int y=g[x][_];
 			assert(!truth[cmp[x]]||truth[cmp[y]]);
 		}
 		assert(truth[cmp[x]]!=truth[cmp[neg(x)]]);
 		x=neg(x);
-		for (int _ = 0, _n = g[x].size(; _ < _n; ++_)){
+		for (int _ = 0; _ < g[x].size(); ++_){
 			int y=g[x][_];
 			assert(!truth[cmp[x]]||truth[cmp[y]]);
 		}
@@ -88,7 +83,7 @@ int main(){
 		}
 		if(satisf(x+y))verify(),puts("Yes");
 		else puts("No");
-		for (int i = 0, _n = n; i < _n; ++i)g[i].clear();
+		for (int i = 0; i < n; ++i)g[i].clear();
 	}
 	return 0;
 }

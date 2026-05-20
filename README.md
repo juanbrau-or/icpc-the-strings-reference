@@ -6,4 +6,3 @@ Inspired in [icpc-team-notebook-el-vasito](https://github.com/mhunicken/icpc-tea
 
 ## Compile
 ``pdflatex reference.tex``
-

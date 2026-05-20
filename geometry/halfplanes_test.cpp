@@ -2,13 +2,9 @@
 // https://www.codechef.com/problems/CHN02
 
 #include <bits/stdc++.h>
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
-#define push_back push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
-#define ((int)(n).size()) ((int)(n).size())
+#define SZ(n) ((int)(n).size())
 using namespace std;
 typedef long long ll;
 typedef pair<int,int> ii;
@@ -82,11 +78,11 @@ struct halfplane:public ln{
 };
 vector<pt> intersect(vector<halfplane> b){
 	vector<pt>bx={{DINF,DINF},{-DINF,DINF},{-DINF,-DINF},{DINF,-DINF}};
-	for (int i = 0, _n = 4; i < _n; ++i) b.push_back(halfplane(bx[i],bx[(i+1)%4]));
+	for (int i = 0; i < 4; ++i) b.push_back(halfplane(bx[i],bx[(i+1)%4]));
 	sort(ALL(b));
-	int n=((int)(b).size()),q=1,h=0;
-	vector<halfplane> c(((int)(b).size())+10);
-	for (int i = 0, _n = n; i < _n; ++i){
+	int n=SZ(b),q=1,h=0;
+	vector<halfplane> c(SZ(b)+10);
+	for (int i = 0; i < n; ++i){
 		while(q<h&&b[i].out(c[h]^c[h-1])) h--;
 		while(q<h&&b[i].out(c[q]^c[q+1])) q++;
 		c[++h]=b[i];
@@ -101,18 +97,18 @@ vector<pt> intersect(vector<halfplane> b){
 	if(h-q<=1)return {};
 	c[h+1]=c[q];
 	vector<pt> s;
-	for (int i = q, _n = h+1; i < _n; ++i) s.push_back(c[i]^c[i+1]);
+	for (int i = q; i < h+1; ++i) s.push_back(c[i]^c[i+1]);
 	return s;
 }
 
 int main(){FIN;
   int n; cin >> n;
   vector<halfplane> v;
-  for (int i = 0, _n = n; i < _n; ++i){
+  for (int i = 0; i < n; ++i){
     int c; cin >> c;
     vector<pt> p(c);
-    for (int i = 0, _n = c; i < _n; ++i) cin >> p[i].x >> p[i].y;
-    for (int i = 0, _n = c; i < _n; ++i) v.push_back(halfplane(p[i],p[(i+1)%c]));
+    for (int i = 0; i < c; ++i) cin >> p[i].x >> p[i].y;
+    for (int i = 0; i < c; ++i) v.push_back(halfplane(p[i],p[(i+1)%c]));
   }
   pol p(intersect(v));
   cout<<fixed<<setprecision(10)<<p.area()<<"\n";

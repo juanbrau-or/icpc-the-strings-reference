@@ -4,7 +4,7 @@ vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
 	p.erase(unique(ALL(p)), p.end());
-	for (int i = 0, _n = p.size(; i < _n; ++i)){ // lower hull
+	for (int i = 0; i < p.size(); ++i){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
 		r.push_back(p[i]);
 	}

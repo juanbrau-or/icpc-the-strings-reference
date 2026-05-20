@@ -5,21 +5,21 @@ struct pol {
 	pol(vector<pt> _p){p=_p;n=p.size();}
 	double area(){
 		double r=0.;
-		for (int i = 0, _n = n; i < _n; ++i)r+=p[i]%p[(i+1)%n];
+		for (int i = 0; i < n; ++i)r+=p[i]%p[(i+1)%n];
 		return abs(r)/2; // negative if CW, positive if CCW
 	}
 	pt centroid(){ // (barycenter)
 		pt r(0,0);double t=0;
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			r=r+(p[i]+p[(i+1)%n])*(p[i]%p[(i+1)%n]);
 			t+=p[i]%p[(i+1)%n];
 		}
 		return r/t/3;
 	}
 	bool has(pt q){ // O(n)
-		for (int i = 0, _n = n; i < _n; ++i)if(ln(p[i],p[(i+1)%n]).seghas(q))return true;
+		for (int i = 0; i < n; ++i)if(ln(p[i],p[(i+1)%n]).seghas(q))return true;
 		int cnt=0;
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			int j=(i+1)%n;
 			int k=sgn((q-p[j])%(p[i]-p[j]));
 			int u=sgn(p[i].y-q.y),v=sgn(p[j].y-q.y);
@@ -32,7 +32,7 @@ struct pol {
 		if(p[2].left(p[0],p[1]))reverse(p.begin(),p.end());
 		int pi=min_element(p.begin(),p.end())-p.begin();
 		vector<pt> s(n);
-		for (int i = 0, _n = n; i < _n; ++i)s[i]=p[(pi+i)%n];
+		for (int i = 0; i < n; ++i)s[i]=p[(pi+i)%n];
 		p.swap(s);
 	}
 	bool haslog(pt q){ // O(log(n)) only CONVEX. Call normalize first
@@ -48,10 +48,10 @@ struct pol {
 	pt farthest(pt v){ // O(log(n)) only CONVEX
 		if(n<10){
 			int k=0;
-			for (int i = 1, _n = n; i < _n; ++i)if(v*(p[i]-p[k])>EPS)k=i;
+			for (int i = 1; i < n; ++i)if(v*(p[i]-p[k])>EPS)k=i;
 			return p[k];
 		}
-		if(n==((int)(p).size()))p.push_back(p[0]);
+		if(n==SZ(p))p.push_back(p[0]);
 		pt a=p[1]-p[0];
 		int s=0,e=n,ua=v*a>EPS;
 		if(!ua&&v*(p[n-1]-p[0])<=EPS)return p[0];
@@ -67,7 +67,7 @@ struct pol {
 	}
 	pol cut(ln l){   // cut CONVEX polygon by line l
 		vector<pt> q;  // returns part at left of l.pq
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			int d0=sgn(l.pq%(p[i]-l.p)),d1=sgn(l.pq%(p[(i+1)%n]-l.p));
 			if(d0>=0)q.push_back(p[i]);
 			ln m(p[i],p[(i+1)%n]);
@@ -77,7 +77,7 @@ struct pol {
 	}
 	double intercircle(circle c){ // area of intersection with circle
 		double r=0.;
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			int j=(i+1)%n;double w=c.intertriangle(p[i],p[j]);
 			if((p[j]-c.o)%(p[i]-c.o)>0)r+=w;
 			else r-=w;
@@ -99,7 +99,7 @@ struct pol {
 vector<pol> w;
 void add(pt q){ // add(q), O(log^2(n))
 	vector<pt> p={q};
-	while(!w.empty()&&((int)(w.back().size()).p)<2*((int)(p).size())){
+	while(!w.empty()&&SZ(w.back().p)<2*SZ(p)){
 		for(pt v:w.back().p)p.push_back(v);
 		w.pop_back();
 	}

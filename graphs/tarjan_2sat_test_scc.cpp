@@ -1,11 +1,6 @@
 // SPOJ WEBISL - AC
 // http://www.spoj.com/problems/WEBISL/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 #define MAXN (1<<20)
@@ -19,7 +14,7 @@ stack<int> st;
 void tjn(int u){
 	lw[u]=idx[u]=++qidx;
 	st.push(u);cmp[u]=-2;
-	for (int _ = 0, _n = g[u].size(; _ < _n; ++_)){
+	for (int _ = 0; _ < g[u].size(); ++_){
 		int v=g[u][_];
 		if(!idx[v]||cmp[v]==-2){
 			if(!idx[v]) tjn(v);
@@ -36,14 +31,14 @@ void tjn(int u){
 void scc(){
 	memset(idx,0,sizeof(idx));qidx=0;
 	memset(cmp,-1,sizeof(cmp));qcmp=0;
-	for (int i = 0, _n = n; i < _n; ++i)if(!idx[i])tjn(i);
+	for (int i = 0; i < n; ++i)if(!idx[i])tjn(i);
 }
 // Only for 2SAT:
 //#define addor(a, b) (g[neg(a)].push_back(b), g[neg(b)].push_back(a))
 //void init_2sat(int _nvar){nvar=_nvar;n=2*nvar;} // call before addor!
 //bool satisf(){
 //	scc();
-//	for (int i = 0, _n = nvar; i < _n; ++i)if(cmp[i]==cmp[neg(i)])return false;
+//	for (int i = 0; i < nvar; ++i)if(cmp[i]==cmp[neg(i)])return false;
 //	return true;
 //}
 
@@ -58,8 +53,8 @@ int main(){
 		g[x].push_back(y);
 	}
 	scc();
-	for (int i = 0, _n = qcmp; i < _n; ++i)s[i]=1<<30;
-	for (int i = 0, _n = n; i < _n; ++i)s[cmp[i]]=min(s[cmp[i]],i);
-	for (int i = 0, _n = n; i < _n; ++i)printf("%d\n",s[cmp[i]]);
+	for (int i = 0; i < qcmp; ++i)s[i]=1<<30;
+	for (int i = 0; i < n; ++i)s[cmp[i]]=min(s[cmp[i]],i);
+	for (int i = 0; i < n; ++i)printf("%d\n",s[cmp[i]]);
 	return 0;
 }

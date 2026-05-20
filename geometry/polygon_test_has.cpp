@@ -1,11 +1,6 @@
 // Kattis pointinpolygon - AC
 // https://open.kattis.com/problems/pointinpolygon
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -81,9 +76,9 @@ struct pol {
 	pol(){}
 	pol(vector<pt> _p){p=_p;n=p.size();}
 	int has(pt q){
-		for (int i = 0, _n = n; i < _n; ++i)if(ln(p[i],p[(i+1)%n]).seghas(q))return 2; // minor change to distinguish on and in
+		for (int i = 0; i < n; ++i)if(ln(p[i],p[(i+1)%n]).seghas(q))return 2; // minor change to distinguish on and in
 		int cnt=0;
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			int j=(i+1)%n;
 			int k=sgn((q-p[j])%(p[i]-p[j]));
 			int u=sgn(p[i].y-q.y),v=sgn(p[j].y-q.y);
@@ -99,7 +94,7 @@ int main(){
 	while(scanf("%d",&n),n){
 		vector<pt> pp;
 		double x,y;
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			scanf("%lf%lf",&x,&y);
 			pp.push_back(pt(x,y));
 		}

@@ -1,9 +1,9 @@
 typedef ll tp;
-#define add(n,s,d,k) for (int i = 0, _n = n; i < _n; ++i)(d)[i]+=(s)[i]*k
+#define add(n,s,d,k) for (int i = 0; i < n; ++i)(d)[i]+=(s)[i]*k
 tp* ini(int n){tp *r=new tp[n];fill(r,r+n,0);return r;}
 void karatsura(int n, tp* p, tp* q, tp* r){
 	if(n<=0)return;
-	if(n<35)for (int i = 0, _n = n; i < _n; ++i)for (int j = 0, _n = n; j < _n; ++j)r[i+j]+=p[i]*q[j];
+	if(n<35)for (int i = 0; i < n; ++i)for (int j = 0; j < n; ++j)r[i+j]+=p[i]*q[j];
 	else {
 		int nac=n/2,nbd=n-n/2;
 		tp *a=p,*b=p+nac,*c=q,*d=q+nac;
@@ -20,8 +20,8 @@ void karatsura(int n, tp* p, tp* q, tp* r){
 vector<tp> multiply(vector<tp> p0, vector<tp> p1){
 	int n=max(p0.size(),p1.size());
 	tp *p=ini(n),*q=ini(n),*r=ini(2*n);
-	for (int i = 0, _n = p0.size(; i < _n; ++i))p[i]=p0[i];
-	for (int i = 0, _n = p1.size(; i < _n; ++i))q[i]=p1[i];
+	for (int i = 0; i < p0.size(); ++i)p[i]=p0[i];
+	for (int i = 0; i < p1.size(); ++i)q[i]=p1[i];
 	karatsura(n,p,q,r);
 	vector<tp> rr(r,r+p0.size()+p1.size()-1);
 	free(p);free(q);free(r);

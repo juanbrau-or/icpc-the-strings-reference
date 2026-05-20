@@ -40,7 +40,7 @@ struct circle {
 		q.push_back(b);
 		if(q.size()==4&&(q[0]-q[1])*(q[2]-q[1])>EPS)swap(q[1],q[2]);
 		double s=0;
-		for (int i = 0, _n = q.size(; i < _n; ++i)-1){
+		for (int i = 0; i < q.size()-1; ++i){
 			if(!has(q[i])||!has(q[i+1]))s+=r*r*(q[i]-o).angle(q[i+1]-o)/2;
 			else s+=abs((q[i]-o)%(q[i+1]-o)/2);
 		}
@@ -48,18 +48,18 @@ struct circle {
 	}
 };
 vector<double> intercircles(vector<circle> c){
-	vector<double> r(((int)(c).size())+1); // r[k]: area covered by at least k circles
-	for (int i = 0, _n = ((int)(c; i < _n; ++i).size())){           // O(n^2 log n) (high constant)
+	vector<double> r(SZ(c)+1); // r[k]: area covered by at least k circles
+	for (int i = 0; i < SZ(c); ++i){           // O(n^2 log n) (high constant)
 		int k=1;Cmp s(c[i].o);
 		vector<pair<pt,int> > p={
 			{c[i].o+pt(1,0)*c[i].r,0},
 			{c[i].o-pt(1,0)*c[i].r,0}};
-		for (int j = 0, _n = ((int)(c; j < _n; ++j).size()))if(j!=i){
+		for (int j = 0; j < SZ(c); ++j)if(j!=i){
 			bool b0=c[i].in(c[j]),b1=c[j].in(c[i]);
 			if(b0&&(!b1||i<j))k++;
 			else if(!b0&&!b1){
 				auto v=c[i]^c[j];
-				if(((int)(v).size())==2){
+				if(SZ(v)==2){
 					p.push_back({v[0],1});p.push_back({v[1],-1});
 					if(s(v[1],v[0]))k++;
 				}
@@ -67,8 +67,8 @@ vector<double> intercircles(vector<circle> c){
 		}
 		sort(p.begin(),p.end(),
 			[&](pair<pt,int> a, pair<pt,int> b){return s(a.first,b.first);});
-		for (int j = 0, _n = ((int)(p; j < _n; ++j).size())){
-			pt p0=p[j?j-1:((int)(p).size())-1].first,p1=p[j].first;
+		for (int j = 0; j < SZ(p); ++j){
+			pt p0=p[j?j-1:SZ(p)-1].first,p1=p[j].first;
 			double a=(p0-c[i].o).angle(p1-c[i].o);
 			r[k]+=(p0.x-p1.x)*(p0.y+p1.y)/2+c[i].r*c[i].r*(a-sin(a))/2;
 			k+=p[j].second;

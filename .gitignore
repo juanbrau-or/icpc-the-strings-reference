@@ -1,7 +1,8 @@
-vasito.pdf
-vasito.aux
-vasito.log
-vasito.out
-vasito.toc
+reference.aux
+reference.log
+reference.out
+reference.toc
+reference.synctex.gz
+clean_ref.py
 **/a.out
 

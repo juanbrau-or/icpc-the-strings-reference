@@ -87,21 +87,21 @@ pair<Q,Q> build_tr(vector<pt>& p, int l, int r){
 }
 
 vector<vector<int>> delaunay(vector<pt> v){
-	int n=((int)(v).size()); auto tmp=v;
+	int n=SZ(v); auto tmp=v;
 	vector<int> id(n); iota(ALL(id),0);
 	sort(ALL(id),[&](int l, int r){return v[l]<v[r];});
-	for (int i = 0, _n = n; i < _n; ++i) v[i]=tmp[id[i]];
+	for (int i = 0; i < n; ++i) v[i]=tmp[id[i]];
 	assert(unique(ALL(v))==v.end());
 	vector<vector<int>> g(n);
 	int col=1;
-	for (int i = 2, _n = n; i < _n; ++i) col&=abs(area(v[i],v[i-1],v[i-2]))<=EPS;
+	for (int i = 2; i < n; ++i) col&=abs(area(v[i],v[i-1],v[i-2]))<=EPS;
 	if(col){
-		for (int i = 1, _n = n; i < _n; ++i) g[id[i-1]].push_back(id[i]),g[id[i]].push_back(id[i-1]);
+		for (int i = 1; i < n; ++i) g[id[i-1]].push_back(id[i]),g[id[i]].push_back(id[i-1]);
 	}
 	else{
 		Q e=build_tr(v,0,n-1).first;
 		vector<Q> edg={e};
-		for(int i=0;i<((int)(edg).size());e=edg[i++]){
+		for(int i=0;i<SZ(edg);e=edg[i++]){
 			for(Q at=e;!at->used;at=at->next()){
 				at->used=1;
 				g[id[at->id]].push_back(id[at->rev()->id]);

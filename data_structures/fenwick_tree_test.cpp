@@ -1,11 +1,6 @@
 // SPOJ KQUERY - AC
 // http://www.spoj.com/problems/KQUERY/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -33,19 +28,19 @@ int n,q;
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		int x;
 		scanf("%d",&x);
 		e.push_back({-x,{i,{-1,-1}}});
 	}
 	scanf("%d",&q);
-	for (int qi = 0, _n = q; qi < _n; ++qi){
+	for (int qi = 0; qi < q; ++qi){
 		int i,j,k;
 		scanf("%d%d%d",&i,&j,&k);i--;
 		e.push_back({-k,{-qi-1,{i,j}}});
 	}
 	sort(e.begin(),e.end());
-	for (int i = 0, _n = e.size(; i < _n; ++i)){
+	for (int i = 0; i < e.size(); ++i){
 		if(e[i].second.first>=0){
 			int p=e[i].second.first;
 			upd(p,1);
@@ -57,6 +52,6 @@ int main(){
 			r[qi]=get_sum(x,y);
 		}
 	}
-	for (int i = 0, _n = q; i < _n; ++i)printf("%d\n",r[i]);
+	for (int i = 0; i < q; ++i)printf("%d\n",r[i]);
 	return 0;
 }

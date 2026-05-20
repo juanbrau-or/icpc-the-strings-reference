@@ -1,12 +1,8 @@
 // Stress test for exp/log functions - AC
 #include <bits/stdc++.h>
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
-#define push_back push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
-#define ((int)(s).size()) int(s.size())
+#define SZ(s) int(s.size())
 using namespace std;
 typedef long long ll;
 typedef pair<int,int> ii;
@@ -40,7 +36,7 @@ CD root(int n, bool inv){
 CD cp1[MAXN+9],cp2[MAXN+9];
 int R[MAXN+9];
 void dft(CD* a, int n, bool inv){
-	for (int i = 0, _n = n; i < _n; ++i)if(R[i]<i)swap(a[R[i]],a[i]);
+	for (int i = 0; i < n; ++i)if(R[i]<i)swap(a[R[i]],a[i]);
 	for(int m=2;m<=n;m*=2){
 		CD wi=root(m,inv);
 		for(int j=0;j<n;j+=m){
@@ -52,53 +48,53 @@ void dft(CD* a, int n, bool inv){
 	}
 	if(inv){
 		CD z(fpow(n,MOD-2));
-		for (int i = 0, _n = n; i < _n; ++i)a[i]=a[i]*z;
+		for (int i = 0; i < n; ++i)a[i]=a[i]*z;
 	}
 }
 poly multiply(poly& p1, poly& p2){
 	int n=p1.size()+p2.size()+1;
 	int m=1,cnt=0;
 	while(m<=n)m+=m,cnt++;
-	for (int i = 0, _n = m; i < _n; ++i){R[i]=0;for (int j = 0, _n = cnt; j < _n; ++j)R[i]=(R[i]<<1)|((i>>j)&1);}
-	for (int i = 0, _n = m; i < _n; ++i)cp1[i]=0,cp2[i]=0;
-	for (int i = 0, _n = p1.size(; i < _n; ++i))cp1[i]=p1[i];
-	for (int i = 0, _n = p2.size(; i < _n; ++i))cp2[i]=p2[i];
+	for (int i = 0; i < m; ++i){R[i]=0;for (int j = 0; j < cnt; ++j)R[i]=(R[i]<<1)|((i>>j)&1);}
+	for (int i = 0; i < m; ++i)cp1[i]=0,cp2[i]=0;
+	for (int i = 0; i < p1.size(); ++i)cp1[i]=p1[i];
+	for (int i = 0; i < p2.size(); ++i)cp2[i]=p2[i];
 	dft(cp1,m,false);dft(cp2,m,false);
-	for (int i = 0, _n = m; i < _n; ++i)cp1[i]=cp1[i]*cp2[i];
+	for (int i = 0; i < m; ++i)cp1[i]=cp1[i]*cp2[i];
 	dft(cp1,m,true);
 	poly res;
 	n-=2;
-	for (int i = 0, _n = n; i < _n; ++i)res.push_back(cp1[i].x);
+	for (int i = 0; i < n; ++i)res.push_back(cp1[i].x);
 	return res;
 }
 
 poly add(poly &a, poly &b){
-	int n=((int)(a).size()),m=((int)(b).size());
+	int n=SZ(a),m=SZ(b);
 	poly ans(max(n,m));
-	fore(i,0,max(n,m)) ans[i]=addmod(i<((int)(a).size())?a[i]:0, i<((int)(b).size())?b[i]:0);
-	while(((int)(ans).size())>1&&!ans.back())ans.pop_back();
+	for (int i = 0; i < max(n,m); ++i) ans[i]=addmod(i<SZ(a)?a[i]:0, i<SZ(b)?b[i]:0);
+	while(SZ(ans)>1&&!ans.back())ans.pop_back();
 	return ans;
 }
 
 // derivative of p
 poly derivate(poly &p){
-	poly ans(max(1, ((int)(p).size())-1));
-	for (int i = 1, _n = ((int)(p; i < _n; ++i).size())) ans[i-1]=mulmod(p[i],i);
+	poly ans(max(1, SZ(p)-1));
+	for (int i = 1; i < SZ(p); ++i) ans[i-1]=mulmod(p[i],i);
 	return ans;
 }
 
 // integral of p
 poly integrate(poly &p){
-	poly ans(((int)(p).size())+1);
-	for (int i = 0, _n = ((int)(p; i < _n; ++i).size())) ans[i+1]=mulmod(p[i], inv(i+1));
+	poly ans(SZ(p)+1);
+	for (int i = 0; i < SZ(p); ++i) ans[i+1]=mulmod(p[i], inv(i+1));
 	return ans;
 }
 
 // p % (x^n)
 poly takemod(poly &p, int n){
 	poly res=p;
-	res.resize(min(((int)(res).size()),n));
-	while(((int)(res).size())>1&&res.back()==0) res.pop_back();
+	res.resize(min(SZ(res),n));
+	while(SZ(res)>1&&res.back()==0) res.pop_back();
 	return res;
 }
 
@@ -109,9 +105,9 @@ poly invert(poly &p, int d){
 	int sz=1;
 	while(sz<d){
 		sz*=2;
-		poly pre(p.begin(), p.begin()+min(((int)(p).size()),sz));
+		poly pre(p.begin(), p.begin()+min(SZ(p),sz));
 		poly cur=multiply(res,pre);
-		for (int i = 0, _n = ((int)(cur; i < _n; ++i).size())) cur[i]=submod(0,cur[i]);
+		for (int i = 0; i < SZ(cur); ++i) cur[i]=submod(0,cur[i]);
 		cur[0]=addmod(cur[0],2);
 		res=multiply(res,cur);
 		res=takemod(res,sz);
@@ -139,7 +135,7 @@ poly exp(poly &p, int d){
 	while(sz<d){
 		sz*=2;
 		poly lg=log(res, sz), cur(sz);
-		for (int i = 0, _n = sz; i < _n; ++i) cur[i]=submod(i<((int)(p).size())?p[i]:0, i<((int)(lg).size())?lg[i]:0);
+		for (int i = 0; i < sz; ++i) cur[i]=submod(i<SZ(p)?p[i]:0, i<SZ(lg)?lg[i]:0);
 		cur[0]=addmod(cur[0],1);
 		res=multiply(res,cur);
 		res=takemod(res, sz);
@@ -152,7 +148,7 @@ poly exp(poly &p, int d){
 poly fast(vector<int> &a, int top){
 	// the answer is exp(sum (log(1+x^a[i])))
 	poly ans={0};
-	for (int i = 0, _n = ((int)(a; i < _n; ++i).size())){
+	for (int i = 0; i < SZ(a); ++i){
 		poly p(a[i]+1);
 		p[0]=p[a[i]]=1;
 		poly now=log(p, top+1);
@@ -170,14 +166,14 @@ poly brute(vector<int> &a, int top){
 }
 
 int main(){FIN;
-	for (int it = 1, _n = 101; it < _n; ++it){
+	for (int it = 1; it < 101; ++it){
 		int n=100;
 		int mx=100;
 		
 		auto rnd=bind(uniform_int_distribution<int>(1,mx), mt19937(time(0)));
 		
 		vector<int> a(n);
-		for (int i = 0, _n = n; i < _n; ++i) a[i]=rnd();
+		for (int i = 0; i < n; ++i) a[i]=rnd();
 		
 		auto me=fast(a,mx);
 		auto he=brute(a,mx);

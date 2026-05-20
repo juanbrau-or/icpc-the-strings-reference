@@ -15,9 +15,9 @@ struct Node {
 			x0=min(x0,p.x); x1=max(x1,p.x);
 			y0=min(y0,p.y); y1=max(y1,p.y);
 		}
-		if(((int)(vp).size())>1){
+		if(SZ(vp)>1){
 			sort(ALL(vp),x1-x0>=y1-y0?onx:ony);
-			int m=((int)(vp).size())/2;
+			int m=SZ(vp)/2;
 			first=new Node({vp.begin(),vp.begin()+m});
 			second=new Node({vp.begin()+m,vp.end()});
 		}

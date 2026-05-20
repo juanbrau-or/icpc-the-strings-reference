@@ -2,13 +2,9 @@
 // https://cses.fi/problemset/task/3227/
 
 #include <bits/stdc++.h>
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
-#define push_back push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
-#define ((int)(s).size()) int(s.size())
+#define SZ(s) int(s.size())
 using namespace std;
 typedef long long ll;
 typedef pair<int,int> ii;
@@ -78,12 +74,12 @@ struct LiChaoTree{
 int main(){FIN;
 	int n,k; cin>>n>>k;
 	vector<ll> a(n);
-	for (int i = 0, _n = n; i < _n; ++i) cin>>a[i];
+	for (int i = 0; i < n; ++i) cin>>a[i];
  
 	vector<vector<ll>> v;
-	for (int it = 0, _n = 2; it < _n; ++it){
+	for (int it = 0; it < 2; ++it){
 		vector<ll> st={-1},to(n);
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			while(st.back()!=-1 && a[st.back()]>=a[i]) st.pop_back();
 			to[i]=i-st.back()-1;
 			st.push_back(i);
@@ -95,12 +91,12 @@ int main(){FIN;
 	}
  
 	vector<ii> wh(n);
-	for (int i = 0, _n = n; i < _n; ++i) wh[i]={i-v[0][i], i+v[1][i]};
+	for (int i = 0; i < n; ++i) wh[i]={i-v[0][i], i+v[1][i]};
  
 	LiChaoTree lc(n);
  
 	// p<=l && r<=p+k-1
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		auto [l,r]=wh[i];
 		int st=i-k+1, en=i;
  
@@ -112,7 +108,7 @@ int main(){FIN;
 	}
  
 	// p<=l && r>p+k-1
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		auto [l,r]=wh[i];
 		int st=i-k+1, en=i;
  
@@ -124,7 +120,7 @@ int main(){FIN;
 	}
  
 	// p>l && r<=p+k-1
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		auto [l,r]=wh[i];
 		int st=i-k+1, en=i;
  
@@ -136,7 +132,7 @@ int main(){FIN;
 	}
  
 	// p>l && r>p+k-1
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		auto [l,r]=wh[i];
 		int st=i-k+1, en=i;
  
@@ -147,5 +143,5 @@ int main(){FIN;
 		lc.add(Line(0, a[i]*k), st, en+1);
 	}
  
-	for (int i = 0, _n = n-k+1; i < _n; ++i) cout<<lc.query(i)<<" ";cout<<"\n";
+	for (int i = 0; i < n-k+1; ++i) cout<<lc.query(i)<<" ";cout<<"\n";
 }

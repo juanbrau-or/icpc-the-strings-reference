@@ -19,27 +19,27 @@ struct FFT {
 		for(int i=(2<<LG)-1;i>=0;i--) r[i]=red(p, m(r[i+1], k)), i&(i-1)?0:k=m(k,k);
 	}
 	poly cv(const poly &as, const poly &bs, u *v) {
-		int c=max(((int)(as).size())+((int)(bs).size())-1, 0), n=1;
+		int c=max(SZ(as)+SZ(bs)-1, 0), n=1;
 		assert(c <= (1<<LG));
 		u h=u(uu(-p)*-p%p), a=m(h, p/2+1), x, y;
 		while(n<c) n*=2, h=red(p, m(h, a));
-		for (int i = 0, _n = n; i < _n; ++i){
-			v[i]=i<((int)(as).size())?u(as[i]):0,
-			v[i+n]=i<((int)(bs).size())?u(bs[i]):0;
+		for (int i = 0; i < n; ++i){
+			v[i]=i<SZ(as)?u(as[i]):0,
+			v[i+n]=i<SZ(bs)?u(bs[i]):0;
 
 		}
-		for(auto s:{v,v+n}) for(int j=n;j>=2;j--) for(int k=j&-j; k/=2;) for (int i = j-k, _n = j; i < _n; ++i){
+		for(auto s:{v,v+n}) for(int j=n;j>=2;j--) for(int k=j&-j; k/=2;) for (int i = j-k; i < j; ++i){
 			x=s[i], y=s[i-k];
 			s[i-k] = red(2*p, x+y);
 			s[i] = m(2*p+y-x, r[3*k-j+i]);
 		}
-		for (int i = 0, _n = n; i < _n; ++i) v[i]=m(v[i], v[i+n]);
-		for (int j = 2, _n = n+1; j < _n; ++j) for(int k=1; !(k&j); k*=2) for (int i = j-k, _n = j; i < _n; ++i){
+		for (int i = 0; i < n; ++i) v[i]=m(v[i], v[i+n]);
+		for (int j = 2; j < n+1; ++j) for(int k=1; !(k&j); k*=2) for (int i = j-k; i < j; ++i){
 			x = m(v[i], r[3*k+j-i]);
 			y = red(2*p, v[i-k]);
 			v[i-k]=x+y, v[i]=2*p+y-x;
 		}
-		for (int i = 0, _n = c; i < _n; ++i) v[i]=red(p, m(v[i], h));
+		for (int i = 0; i < c; ++i) v[i]=red(p, m(v[i], h));
 		return poly(v, v+c);
 	}
 };
@@ -70,7 +70,7 @@ poly conv_sunzi(const poly &v1, const poly &v2, ll m) {
 	static FFT<uint64_t, __uint128_t, mod1, 3> fft1;
 	static FFT<uint64_t, __uint128_t, mod2, 17> fft2;
 	auto as=fft1.cv(v1, v2, v), bs=fft2.cv(v1, v2, v);
-	for (int i = 0, _n = ((int)(as; i < _n; ++i).size())){
+	for (int i = 0; i < SZ(as); ++i){
 		auto d = fft1.m(mod1+as[i]-bs[i], inv);
 		d -= mod1*(d >= mod1); d %= m;
 		as[i] = (bs[i] + mod2%m*d)%m;

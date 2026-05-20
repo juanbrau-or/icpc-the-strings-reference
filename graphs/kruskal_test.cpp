@@ -1,11 +1,6 @@
 // SPOJ MST - AC
 // http://www.spoj.com/problems/MST/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,to=b;i<to;++i)
 using namespace std;
 typedef long long ll;
 
@@ -25,7 +20,7 @@ vector<pair<ll,pair<int,int> > > es; // edges (cost,(u,v))
 ll kruskal(){  // assumes graph is connected
 	sort(es.begin(),es.end());uf_init();
 	ll r=0;
-	for (int i = 0, _n = es.size(; i < _n; ++i)){
+	for (int i = 0; i < es.size(); ++i){
 		int x=es[i].second.first,y=es[i].second.second;
 		if(uf_join(x,y))r+=es[i].first; // (x,y,c) belongs to mst
 	}

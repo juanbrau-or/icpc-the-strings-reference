@@ -1,11 +1,6 @@
 // SPOJ ILKQUERYIII - AC
 // http://www.spoj.com/problems/ILKQUERYIII/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -57,20 +52,20 @@ WT wt;
 
 int main(){
 	scanf("%d%d",&n,&q);
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		int k;
 		scanf("%d",&k);
 		xx[i]={k,i};
 	}
 	sort(xx,xx+n);
 	c=0;
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		if(i>0&&xx[i].first!=xx[i-1].first)c++;
 		x[xx[i].second]=c;
 	}
 	c++;
 	wt.init(c);
-	for (int i = 0, _n = n; i < _n; ++i)wt.add(x[i]),z[x[i]].push_back(i);
+	for (int i = 0; i < n; ++i)wt.add(x[i]),z[x[i]].push_back(i);
 	while(q--){
 		int t;
 		scanf("%d",&t);

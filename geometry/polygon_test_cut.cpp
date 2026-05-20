@@ -1,11 +1,6 @@
 // Codeforces 280A - AC
 // http://codeforces.com/problemset/problem/280/A
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -84,13 +79,13 @@ struct pol {
 	pol(vector<pt> _p){p=_p;n=p.size();}
 	double area(){
 		double r=0.;
-		for (int i = 0, _n = n; i < _n; ++i)r+=p[i]%p[(i+1)%n];
+		for (int i = 0; i < n; ++i)r+=p[i]%p[(i+1)%n];
 		return abs(r)/2; // negative if CW, positive if CCW
 	}
 	bool has(pt q){
-		for (int i = 0, _n = n; i < _n; ++i)if(ln(p[i],p[(i+1)%n]).seghas(q))return true;
+		for (int i = 0; i < n; ++i)if(ln(p[i],p[(i+1)%n]).seghas(q))return true;
 		int cnt=0;
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			int j=(i+1)%n;
 			int k=sgn((q-p[j])%(p[i]-p[j]));
 			int u=sgn(p[i].y-q.y),v=sgn(p[j].y-q.y);
@@ -101,7 +96,7 @@ struct pol {
 	}
 	pol cut(ln l){   // cut CONVEX polygon by line l
 		vector<pt> q;  // returns part at left of l.pq
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			int d0=sgn(l.pq%(p[i]-l.p)),d1=sgn(l.pq%(p[(i+1)%n]-l.p));
 			if(d0>=0)q.push_back(p[i]);
 			ln m(p[i],p[(i+1)%n]);
@@ -120,8 +115,8 @@ int main(){
 	pp.push_back(pt(-w/2,-h/2));
 	pp.push_back(pt(w/2,-h/2));
 	pol p(pp);
-	for (int i = 0, _n = 4; i < _n; ++i)q.push_back(pp[i].rot(a));
-	for (int i = 0, _n = 4; i < _n; ++i)p=p.cut(ln(q[i],q[(i+1)%4]));
+	for (int i = 0; i < 4; ++i)q.push_back(pp[i].rot(a));
+	for (int i = 0; i < 4; ++i)p=p.cut(ln(q[i],q[(i+1)%4]));
 	printf("%.12lf\n",p.area());
 	return 0;
 }

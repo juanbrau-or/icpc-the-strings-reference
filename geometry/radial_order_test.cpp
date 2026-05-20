@@ -1,9 +1,4 @@
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -37,7 +32,7 @@ struct Cmp { // IMPORTANT: add const in pt operator -
 vector<pt> p;
 
 int main(){
-	for (int x = 0, _n = 9; x < _n; ++x)for (int y = 0, _n = 9; y < _n; ++y)p.push_back(pt(x,y));
+	for (int x = 0; x < 9; ++x)for (int y = 0; y < 9; ++y)p.push_back(pt(x,y));
 	random_shuffle(p.begin(),p.end());
 	sort(p.begin(),p.end(),Cmp(pt(4,4)));
 	for(pt q:p)printf("%d %d\n",q.x,q.y);

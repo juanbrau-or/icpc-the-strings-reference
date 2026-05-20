@@ -1,11 +1,6 @@
 // Codeforces gym 101128J - AC
 // http://codeforces.com/gym/101128/problem/J
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -28,7 +23,7 @@ struct pt {  // for 3D add z coordinate
 vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
-	for (int i = 0, _n = p.size(; i < _n; ++i)){ // lower hull
+	for (int i = 0; i < p.size(); ++i){ // lower hull
 		while(r.size()>=2&&r.back().leftc(r[r.size()-2],p[i]))r.pop_back();
 		r.push_back(p[i]);
 	}
@@ -49,7 +44,7 @@ struct pol {
 		if(p[2].left(p[0],p[1]))reverse(p.begin(),p.end());
 		int pi=min_element(p.begin(),p.end())-p.begin();
 		vector<pt> s(n);
-		for (int i = 0, _n = n; i < _n; ++i)s[i]=p[(pi+i)%n];
+		for (int i = 0; i < n; ++i)s[i]=p[(pi+i)%n];
 		p.swap(s);
 	}
 	bool haslog(pt q){ // O(log(n)) only CONVEX. Call normalize first

@@ -1,7 +1,6 @@
 //http://codeforces.com/problemset/gymProblem/100960/H
 //no querys on path
 #include <bits/stdc++.h>
-#define for (int x = a, _n = b; x < _n; ++x) for(int x=a,qwe=b; x<qwe; x++)
 using namespace std;
 
 //based on indy256 linkcut in java
@@ -33,10 +32,10 @@ struct Node_t{
   void push(){
     if(rev){
       rev=0; swap(ch[0], ch[1]);
-      for (int x = 0, _n = 2; x < _n; ++x)if(ch[x])ch[x]->rev^=1;
+      for (int x = 0; x < 2; ++x)if(ch[x])ch[x]->rev^=1;
     }
     nVal=joinVD(nVal, d); stVal=joinVD(stVal, dOnSeg(d, sz));
-    for (int x = 0, _n = 2; x < _n; ++x)if(ch[x])ch[x]->d=joinDeltas(ch[x]->d, d);
+    for (int x = 0; x < 2; ++x)if(ch[x])ch[x]->d=joinDeltas(ch[x]->d, d);
     d=N_DELTA;
   }
   void upd();
@@ -92,7 +91,7 @@ Node x[N];
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0, _n = n; i < _n; ++i)x[i]=new Node_t(0);
+	for (int i = 0; i < n; ++i)x[i]=new Node_t(0);
 	char s[16];int a,b;
 	while(scanf("%s",s),s[0]!='E'){
 		scanf("%d%d",&a,&b);a--;b--;

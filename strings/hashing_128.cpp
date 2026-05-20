@@ -7,7 +7,7 @@ struct Hash {
 		h.resize(s.size()+1);pi.resize(s.size()+1);
 		h[0]=0;pi[0]=1;
 		bint p=1;
-		for (int i = 1, _n = s.size(; i < _n; ++i)+1){
+		for (int i = 1; i < s.size()+1; ++i){
 			h[i]=(h[i-1]+p*s[i-1])%MOD;
 			pi[i]=(pi[i-1]*PI)%MOD;
 			p=(p*P)%MOD;

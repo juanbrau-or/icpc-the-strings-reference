@@ -2,7 +2,7 @@
 int n,rnk[MAXN],pre[MAXN],anc[MAXN],idom[MAXN],semi[MAXN],low[MAXN];
 vector<int> g[MAXN],rev[MAXN],dom[MAXN],ord;
 void dfspre(int pos){
-	rnk[pos]=((int)(ord).size()); ord.push_back(pos);
+	rnk[pos]=SZ(ord); ord.push_back(pos);
 	for(auto x:g[pos]){
 		rev[x].push_back(pos);
 		if(rnk[x]==n) pre[x]=pos,dfspre(x);
@@ -17,13 +17,13 @@ int eval(int v){
 	return low[v];
 }
 void dominators(int rt){
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		dom[i].clear(); rev[i].clear();
 		rnk[i]=pre[i]=anc[i]=idom[i]=n;
 		semi[i]=low[i]=i;
 	}
 	ord.clear(); dfspre(rt);
-	for(int i=((int)(ord).size())-1;i;i--){
+	for(int i=SZ(ord)-1;i;i--){
 		int w=ord[i];
 		for(int v:rev[w]){
 			int u=eval(v);
@@ -37,5 +37,5 @@ void dominators(int rt){
 		dom[pre[w]].clear();
 	}
 	for(int w:ord) if(w!=rt&&idom[w]!=semi[w]) idom[w]=idom[idom[w]];
-	for (int i = 0, _n = n; i < _n; ++i) if(idom[i]==n)idom[i]=-1;
+	for (int i = 0; i < n; ++i) if(idom[i]==n)idom[i]=-1;
 }

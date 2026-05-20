@@ -10,8 +10,8 @@ struct MCF{
 	vector<vector<edge>> g;
 	MCF(int n):n(n),prio(n),curflow(n),prevedge(n),prevnode(n),pot(n),g(n){}
 	void add_edge(int s, int t, tf cap, tc cost) {
-		g[s].push_back((edge){t,((int)(g[t]).size()),0,cap,cost});
-		g[t].push_back((edge){s,((int)(g[s]).size())-1,0,0,-cost});
+		g[s].push_back((edge){t,SZ(g[t]),0,cap,cost});
+		g[t].push_back((edge){s,SZ(g[s])-1,0,0,-cost});
 	}
 	pair<tf,tc> get_flow(int s, int t) {
 		tf flow=0; tc flowcost=0;
@@ -25,7 +25,7 @@ struct MCF{
 				int u=cur.second;
 				q.pop();
 				if(d!=prio[u]) continue;
-				for(int i=0; i<((int)(g[u]).size()); ++i) {
+				for(int i=0; i<SZ(g[u]); ++i) {
 					edge &e=g[u][i];
 					int v=e.to;
 					if(e.cap<=e.f) continue;
@@ -39,7 +39,7 @@ struct MCF{
 				}
 			}
 			if(prio[t]==INFCOST) break;
-			for (int i = 0, _n = n; i < _n; ++i) pot[i]+=prio[i];
+			for (int i = 0; i < n; ++i) pot[i]+=prio[i];
 			tf df=min(curflow[t], INFFLOW-flow);
 			flow+=df;
 			for(int v=t; v!=s; v=prevnode[v]) {

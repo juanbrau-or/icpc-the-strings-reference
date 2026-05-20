@@ -1,11 +1,6 @@
 // Codeforces 154B - AC
 // http://codeforces.com/problemset/problem/154/B
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -14,7 +9,7 @@ typedef long long ll;
 int cr[MAXN]; // -1 if prime, some not trivial divisor if not
 void init_sieve(){
 	memset(cr,-1,sizeof(cr));
-	for (int i = 2, _n = MAXN; i < _n; ++i)if(cr[i]<0)for(ll j=1LL*i*i;j<MAXN;j+=i)cr[j]=i;
+	for (int i = 2; i < MAXN; ++i)if(cr[i]<0)for(ll j=1LL*i*i;j<MAXN;j+=i)cr[j]=i;
 }
 map<int,int> fact(int n){  // must call init_cribe before
 	map<int,int> r;
@@ -25,7 +20,7 @@ map<int,int> fact(int n){  // must call init_cribe before
 
 void div_rec(vector<ll>& r, vector<pair<ll,int> >& f, int k, ll c){
 	if(k==f.size()){r.push_back(c);return;}
-	for (int i = 0, _n = f[k].second+1; i < _n; ++i)div_rec(r,f,k+1,c),c*=f[k].first;
+	for (int i = 0; i < f[k].second+1; ++i)div_rec(r,f,k+1,c),c*=f[k].first;
 }
 vector<ll> divisors(vector<pair<ll,int> > f){
 	vector<ll> r;

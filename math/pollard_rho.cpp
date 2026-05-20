@@ -14,7 +14,7 @@ bool is_prime_prob(ll n, int a){
 	while(d%2==0)s++,d/=2;
 	ll x=expmod(a,d,n);
 	if((x==1)||(x+1==n))return true;
-	for (int _ = 0, _n = s-1; _ < _n; ++_){
+	for (int _ = 0; _ < s-1; ++_){
 		x=mulmod(x,x,n);
 		if(x==1)return false;
 		if(x+1==n)return true;
@@ -24,7 +24,7 @@ bool is_prime_prob(ll n, int a){
 bool rabin(ll n){ // true iff n is prime
 	if(n==1)return false;
 	int ar[]={2,3,5,7,11,13,17,19,23};
-	for (int i = 0, _n = 9; i < _n; ++i)if(!is_prime_prob(n,ar[i]))return false;
+	for (int i = 0; i < 9; ++i)if(!is_prime_prob(n,ar[i]))return false;
 	return true;
 }
 ll rho(ll n){
@@ -70,7 +70,7 @@ ll rho(ll n){
 	}
 }
 void init_sv(){
-	for (int i = 2, _n = MAXP; i < _n; ++i)if(!sv[i])for(ll j=i;j<MAXP;j+=i)sv[j]=i;
+	for (int i = 2; i < MAXP; ++i)if(!sv[i])for(ll j=i;j<MAXP;j+=i)sv[j]=i;
 }
 void fact(ll n, map<ll,int>& f){ // call init_sv first!!!
 	for(auto&& p:f){

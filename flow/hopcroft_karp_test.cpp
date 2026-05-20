@@ -1,6 +1,16 @@
 // SPOJ MATCHING - AC
 // http://www.spoj.com/problems/MATCHING/
 #include <bits/stdc++.h>
+#ifdef DEMETRIO
+#define deb(...) fprintf(stderr,__VA_ARGS__)
+#define deb1(x) cerr << #x << " = " << x << endl
+#else
+#define deb(...) 0
+#define deb1(x) 0
+#endif
+#define SZ(x) ((int)x.size())
+using namespace std;
+typedef long long ll;
 
 #define MAXN 50005
 
@@ -10,7 +20,7 @@ int mt[MAXN],mt2[MAXN],ds[MAXN];
 bool bfs(){
 	queue<int> q;
 	memset(ds,-1,sizeof(ds));
-	for (int i = 0, _n = n; i < _n; ++i)if(mt2[i]<0)ds[i]=0,q.push(i);
+	for (int i = 0; i < n; ++i)if(mt2[i]<0)ds[i]=0,q.push(i);
 	bool r=false;
 	while(!q.empty()){
 		int x=q.front();q.pop();
@@ -33,7 +43,7 @@ int mm(){
 	int r=0;
 	memset(mt,-1,sizeof(mt));memset(mt2,-1,sizeof(mt2));
 	while(bfs()){
-		for (int i = 0, _n = n; i < _n; ++i)if(mt2[i]<0)r+=dfs(i);
+		for (int i = 0; i < n; ++i)if(mt2[i]<0)r+=dfs(i);
 	}
 	return r;
 }

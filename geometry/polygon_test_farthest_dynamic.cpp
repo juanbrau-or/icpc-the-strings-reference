@@ -1,6 +1,16 @@
 // AC
 // http://codeforces.com/group/3qadGzUdR4/contest/101707/problem/I
 #include <bits/stdc++.h>
+#ifdef DEMETRIO
+#define deb(...) fprintf(stderr,__VA_ARGS__)
+#define deb1(x) cerr << #x << " = " << x << endl
+#else
+#define deb(...) 0
+#define deb1(x) 0
+#endif
+#define SZ(x) ((int)x.size())
+using namespace std;
+typedef long long ll;
 
 #define double ll
 #define EPS 0
@@ -39,9 +49,9 @@ ll nq,tq,ta,nit;
 // CCW order
 // Includes collinear points (change sign of EPS in left to exclude)
 vector<pt> chull(vector<pt> p){
-	vector<pt> r;//r.reserve(((int)(p).size()));
+	vector<pt> r;//r.reserve(SZ(p));
 	sort(p.begin(),p.end()); // first x, then y
-	for (int i = 0, _n = p.size(; i < _n; ++i)){ // lower hull
+	for (int i = 0; i < p.size(); ++i){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
 		r.push_back(p[i]);
 	}
@@ -52,7 +62,7 @@ vector<pt> chull(vector<pt> p){
 		r.push_back(p[i]);
 	}
 	r.pop_back();
-	if(!((int)(r).size()))return p;
+	if(!SZ(r))return p;
 	return r;
 }
 
@@ -63,10 +73,10 @@ struct pol {
 	pt farthest(pt v){ // O(log(n)) only CONVEX
 		if(n<10){
 			int k=0;
-			for (int i = 1, _n = n; i < _n; ++i)if(v*(p[i]-p[k])>EPS)k=i;
+			for (int i = 1; i < n; ++i)if(v*(p[i]-p[k])>EPS)k=i;
 			return p[k];
 		}
-		if(n==((int)(p).size()))p.push_back(p[0]);
+		if(n==SZ(p))p.push_back(p[0]);
 		pt a=p[1]-p[0];
 		int s=0,e=n,ua=v*a>EPS;
 		if(!ua&&v*(p[n-1]-p[0])<=EPS)return p[0];
@@ -88,7 +98,7 @@ struct pol {
 vector<pol> w;
 void add(pt q){
 	vector<pt> p={q};
-	while(!w.empty()&&((int)(w.back().size()).p)<2*((int)(p).size())){
+	while(!w.empty()&&SZ(w.back().p)<2*SZ(p)){
 		for(pt v:w.back().p)p.push_back(v);
 		w.pop_back();
 	}
@@ -104,13 +114,13 @@ int n,m;
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		ll x,y;
 		scanf("%lld%lld",&x,&y);
 		add(pt(x,y));
 	}
 	scanf("%d",&m);
-	for (int i = 0, _n = m; i < _n; ++i){
+	for (int i = 0; i < m; ++i){
 		ll x,y;
 		char t[16];
 		scanf("%s%lld%lld",t,&x,&y);

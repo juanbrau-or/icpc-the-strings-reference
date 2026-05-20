@@ -1,6 +1,16 @@
 // szkopul koz - AC
 // https://szkopul.edu.pl/problemset/problem/p73RF9garyZ3keuGDIdyomLv/site/?key=statement
 #include <bits/stdc++.h>
+#ifdef DEMETRIO
+#define deb(...) fprintf(stderr,__VA_ARGS__)
+#define deb1(x) cerr << #x << " = " << x << endl
+#else
+#define deb(...) 0
+#define deb1(x) 0
+#endif
+#define SZ(x) ((int)x.size())
+using namespace std;
+typedef long long ll;
 
 #define EPS 1e-9
 
@@ -80,18 +90,18 @@ struct Cmp { // IMPORTANT: add const in pt operator -
 };
 
 vector<double> intercircles(vector<circle> c){
-	vector<double> r(((int)(c).size())+1); // r[k]: area covered by at least k circles
-	for (int i = 0, _n = ((int)(c; i < _n; ++i).size())){
+	vector<double> r(SZ(c)+1); // r[k]: area covered by at least k circles
+	for (int i = 0; i < SZ(c); ++i){
 		int k=1;Cmp s(c[i].o);
 		vector<pair<pt,int> > p={
 			{c[i].o+pt(1,0)*c[i].r,0},
 			{c[i].o-pt(1,0)*c[i].r,0}};
-		for (int j = 0, _n = ((int)(c; j < _n; ++j).size()))if(j!=i){
+		for (int j = 0; j < SZ(c); ++j)if(j!=i){
 			bool b0=c[i].in(c[j]),b1=c[j].in(c[i]);
 			if(b0&&(!b1||i<j))k++;
 			else if(!b0&&!b1){
 				auto v=c[i]^c[j];
-				if(((int)(v).size())==2){
+				if(SZ(v)==2){
 					p.push_back({v[0],1});p.push_back({v[1],-1});
 					if(s(v[1],v[0]))k++;
 				}
@@ -99,8 +109,8 @@ vector<double> intercircles(vector<circle> c){
 		}
 		sort(p.begin(),p.end(),
 			[&](pair<pt,int> a, pair<pt,int> b){return s(a.first,b.first);});
-		for (int j = 0, _n = ((int)(p; j < _n; ++j).size())){
-			pt p0=p[j?j-1:((int)(p).size())-1].first,p1=p[j].first;
+		for (int j = 0; j < SZ(p); ++j){
+			pt p0=p[j?j-1:SZ(p)-1].first,p1=p[j].first;
 			double a=(p0-c[i].o).angle(p1-c[i].o);
 			r[k]+=(p0.x-p1.x)*(p0.y+p1.y)/2+c[i].r*c[i].r*(a-sin(a))/2;
 			k+=p[j].second;
@@ -114,15 +124,15 @@ vector<circle> c;
 
 int main(){
 	scanf("%d%d%lf",&n,&k,&r);
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		double x,y;
 		scanf("%lf%lf",&x,&y);
 		c.push_back(circle(pt(x,y),r));
 	}
 	auto v=intercircles(c);
 	double s=0.;
-	for (int i = 1, _n = ((int)(v; i < _n; ++i).size())){
-		if(i<((int)(v).size())-1)v[i]-=v[i+1];
+	for (int i = 1; i < SZ(v); ++i){
+		if(i<SZ(v)-1)v[i]-=v[i+1];
 		double p=1-pow(1-1.*i/n,k);
 		s+=p*v[i];
 	}

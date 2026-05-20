@@ -1,11 +1,6 @@
 // Codeforces 166B - AC
 // http://codeforces.com/problemset/problem/166/B
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -42,7 +37,7 @@ vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
 	p.erase(unique(p.begin(),p.end()), p.end());
-	for (int i = 0, _n = p.size(; i < _n; ++i)){ // lower hull
+	for (int i = 0; i < p.size(); ++i){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
 		r.push_back(p[i]);
 	}
@@ -61,14 +56,14 @@ vector<pt> p;
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		int x,y;
 		scanf("%d%d",&x,&y);
 		p.push_back(pt(x,y));
 	}
 	scanf("%d",&m);
 	vector<pt> q;
-	for (int i = 0, _n = m; i < _n; ++i){
+	for (int i = 0; i < m; ++i){
 		int x,y;
 		scanf("%d%d",&x,&y);
 		p.push_back(pt(x,y));

@@ -1,9 +1,4 @@
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -67,14 +62,14 @@ vector<int> nodes[MAXN]; // nodes delimiting region (in CW order)
 map<pair<int,int>,int> ps,es;
 void get_dual(vector<pt> p){ // p: points corresponding to nodes
 	ps.clear();es.clear();
-	for (int x = 0, _n = n; x < _n; ++x){
+	for (int x = 0; x < n; ++x){
 		Cmp pc(p[x]); // (radial order of points)
 		auto comp=[&](int a, int b){return pc(p[a],p[b]);};
 		sort(g[x].begin(),g[x].end(),comp);
-		for (int i = 0, _n = g[x].size(; i < _n; ++i))ps[{x,g[x][i]}]=i;
+		for (int i = 0; i < g[x].size(); ++i)ps[{x,g[x][i]}]=i;
 	}
 	nd=0;
-	for (int xx = 0, _n = n; xx < _n; ++xx)for(auto yy:g[xx])if(!es.count({xx,yy})){
+	for (int xx = 0; xx < n; ++xx)for(auto yy:g[xx])if(!es.count({xx,yy})){
 		int x=xx,y=yy;gd[nd].clear();nodes[nd].clear();
 		while(!es.count({x,y})){
 			es[{x,y}]=nd;nodes[nd].push_back(y);
@@ -87,7 +82,7 @@ void get_dual(vector<pt> p){ // p: points corresponding to nodes
 		assert(es.count(q));
 		if(es[q]!=p.second)gd[p.second].push_back(es[q]);
 	}
-	for (int i = 0, _n = nd; i < _n; ++i){
+	for (int i = 0; i < nd; ++i){
 		sort(gd[i].begin(),gd[i].end());
 		gd[i].erase(unique(gd[i].begin(),gd[i].end()),gd[i].end());
 	}
@@ -96,7 +91,7 @@ void get_dual(vector<pt> p){ // p: points corresponding to nodes
 int main(){
 	int m;vector<pt> p;
 	scanf("%d%d",&n,&m); // number of nodes, number of edges
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		double x,y;
 		scanf("%lf%lf",&x,&y); // points
 		p.push_back(pt(x,y));
@@ -108,11 +103,11 @@ int main(){
 	}
 	get_dual(p);
 	puts("");
-	for (int i = 0, _n = nd; i < _n; ++i){
+	for (int i = 0; i < nd; ++i){
 		for(auto x:nodes[i])printf(" %d",x);puts(""); // print nodes corresponding to regions
 	}
 	puts("");
-	for (int x = 0, _n = nd; x < _n; ++x)for(auto y:gd[x])if(x<y)printf("%d %d\n",x,y); // print edges of dual graph
+	for (int x = 0; x < nd; ++x)for(auto y:gd[x])if(x<y)printf("%d %d\n",x,y); // print edges of dual graph
 	return 0;
 }
 

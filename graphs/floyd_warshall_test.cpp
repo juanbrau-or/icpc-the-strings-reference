@@ -1,11 +1,6 @@
 // SPOJ UCV2013B - AC
 // http://www.spoj.com/problems/UCV2013B/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -16,12 +11,12 @@ typedef long long ll;
 // g[i][i]=0
 ll g[MAXN][MAXN];int n;
 void floyd(){ // O(n^3) . Replaces g with min distances
-	for (int k = 0, _n = n; k < _n; ++k)for (int i = 0, _n = n; i < _n; ++i)if(g[i][k]<INF)for (int j = 0, _n = n; j < _n; ++j)if(g[k][j]<INF)
+	for (int k = 0; k < n; ++k)for (int i = 0; i < n; ++i)if(g[i][k]<INF)for (int j = 0; j < n; ++j)if(g[k][j]<INF)
 		g[i][j]=min(g[i][j],g[i][k]+g[k][j]);
 }
 bool inNegCycle(int v){return g[v][v]<0;}
 bool hasNegCycle(int a, int b){ // true iff there's neg cycle in between
-	for (int i = 0, _n = n; i < _n; ++i)if(g[a][i]<INF&&g[i][b]<INF&&g[i][i]<0)return true;
+	for (int i = 0; i < n; ++i)if(g[a][i]<INF&&g[i][b]<INF&&g[i][i]<0)return true;
 	return false;
 }
 
@@ -30,9 +25,9 @@ char s[MAXN][32];
 int main(){
 	int tc=1;
 	while(scanf("%d",&n),n){
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			scanf("%s",s[i]);
-			for (int j = 0, _n = n; j < _n; ++j){
+			for (int j = 0; j < n; ++j){
 				scanf("%lld",&g[i][j]);
 				if(i!=j&&!g[i][j])g[i][j]=INF;
 				else if(i==j&&g[i][j]>0)g[i][j]=0;

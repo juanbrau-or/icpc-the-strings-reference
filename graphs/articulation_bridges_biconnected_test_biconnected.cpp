@@ -1,11 +1,6 @@
 // Codeforces 487E - AC
 // http://codeforces.com/contest/487/problem/E
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 #define MAXN 200005
@@ -113,7 +108,7 @@ void doit(){
 	memset(D,-1,sizeof(D));
 	memset(art,0,sizeof(art));
 	nbc=T=0;
-	for (int i = 0, _n = n; i < _n; ++i)if(D[i]<0)dfs(i,-1),art[i]--;
+	for (int i = 0; i < n; ++i)if(D[i]<0)dfs(i,-1),art[i]--;
 }
 
 int m,q;
@@ -136,26 +131,26 @@ int ar[MAXN];
 
 int main(){
 	scanf("%d%d%d",&n,&m,&q);
-	for (int i = 0, _n = n; i < _n; ++i)scanf("%d",w+i);
-	for (int _ = 0, _n = m; _ < _n; ++_){
+	for (int i = 0; i < n; ++i)scanf("%d",w+i);
+	for (int _ = 0; _ < m; ++_){
 		int x,y;
 		scanf("%d%d",&x,&y);x--;y--;
 		add_edge(x,y);
 	}
 	doit();
-	for (int i = 0, _n = n; i < _n; ++i)if(art[i])art[i]=nbc+nart++;
-	for (int i = 0, _n = m; i < _n; ++i){
+	for (int i = 0; i < n; ++i)if(art[i])art[i]=nbc+nart++;
+	for (int i = 0; i < m; ++i){
 		add_comp0(e[i].comp,e[i].u);
 		add_comp0(e[i].comp,e[i].v);
 	}
 	hld_init();
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		if(art[i]){
 			for(int c:cc[i])if(c!=dad[art[i]])z[c].erase(z[c].find(w[i]));
 		}
 	}
-	for (int i = 0, _n = nbc; i < _n; ++i)ar[pos[i]]=*z[i].begin();
-	for (int i = 0, _n = n; i < _n; ++i)if(art[i])ar[pos[art[i]]]=w[i];
+	for (int i = 0; i < nbc; ++i)ar[pos[i]]=*z[i].begin();
+	for (int i = 0; i < n; ++i)if(art[i])ar[pos[art[i]]]=w[i];
 	STree rmq(nbc+nart);
 	rmq.init(ar);
 	while(q--){

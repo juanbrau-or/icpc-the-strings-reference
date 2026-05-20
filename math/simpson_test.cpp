@@ -1,17 +1,12 @@
 // ICPC Live Archive 6135 - AC
 // https://icpcarchive.ecs.baylor.edu/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=4146
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
 double integrate(double f(double), double a, double b, int n=10000){
 	double r=0,h=(b-a)/n,fa=f(a),fb;
-	for (int i = 0, _n = n; i < _n; ++i){fb=f(a+h*(i+1));r+=fa+4*f(a+h*(i+0.5))+fb;fa=fb;}
+	for (int i = 0; i < n; ++i){fb=f(a+h*(i+1));r+=fa+4*f(a+h*(i+0.5))+fb;fa=fb;}
 	return r*h/6.;
 }
 
@@ -45,10 +40,10 @@ int main(){
 	while(scanf("%lf%lf%lf%d",&w,&d,&a,&k)!=EOF){
 		p1.c.clear();q1.c.clear();
 		p2.c.clear();q2.c.clear();
-		for (int _ = 0, _n = k+1; _ < _n; ++_){int x;scanf("%d",&x);p1.c.push_back(x);}
-		for (int _ = 0, _n = k+1; _ < _n; ++_){int x;scanf("%d",&x);q1.c.push_back(x);}
-		for (int _ = 0, _n = k+1; _ < _n; ++_){int x;scanf("%d",&x);p2.c.push_back(x);}
-		for (int _ = 0, _n = k+1; _ < _n; ++_){int x;scanf("%d",&x);q2.c.push_back(x);}
+		for (int _ = 0; _ < k+1; ++_){int x;scanf("%d",&x);p1.c.push_back(x);}
+		for (int _ = 0; _ < k+1; ++_){int x;scanf("%d",&x);q1.c.push_back(x);}
+		for (int _ = 0; _ < k+1; ++_){int x;scanf("%d",&x);p2.c.push_back(x);}
+		for (int _ = 0; _ < k+1; ++_){int x;scanf("%d",&x);q2.c.push_back(x);}
 		double s=0.,e=d;
 		while(e-s>1e-8){
 			double m=(s+e)/2;

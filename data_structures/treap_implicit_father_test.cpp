@@ -1,6 +1,18 @@
 // Codeforces gym 101481F - AC
 // https://codeforces.com/gym/101481/problem/F
 #include <bits/stdc++.h>
+#ifdef DEMETRIO
+#define deb(...) fprintf(stderr,__VA_ARGS__)
+#define deb1(x) cerr << #x << " = " << x << endl
+#else
+#define deb(...) 0
+#define deb1(x) 0
+#endif
+#define SZ(x) ((int)(x).size())
+#define mset(a,v) memset(a,v,sizeof(a))
+#define mcpy(a,b) memcpy(a,b,sizeof(a))
+using namespace std;
+typedef long long ll;
 
 int randd(){return abs((rand()<<15)^rand());}
 
@@ -88,11 +100,11 @@ void disjoin(int k, int x, int y){
 }
 
 int main(){
-	for (int i = 0, _n = 105; i < _n; ++i)for (int j = 0, _n = 8005; j < _n; ++j)t[i][j]=new item();
+	for (int i = 0; i < 105; ++i)for (int j = 0; j < 8005; ++j)t[i][j]=new item();
 	while(scanf("%d%d%d%d",&n,&m,&c,&q),n){
-		for (int i = 0, _n = c; i < _n; ++i)for (int j = 0, _n = n; j < _n; ++j)t[i][j]->l=t[i][j]->r=t[i][j]->f=0;
+		for (int i = 0; i < c; ++i)for (int j = 0; j < n; ++j)t[i][j]->l=t[i][j]->r=t[i][j]->f=0;
 		w.clear();
-		for (int i = 0, _n = m; i < _n; ++i){
+		for (int i = 0; i < m; ++i){
 			int x,y,k;
 			scanf("%d%d%d",&x,&y,&k);x--;y--;k--;
 			w[{x,y}]=k;

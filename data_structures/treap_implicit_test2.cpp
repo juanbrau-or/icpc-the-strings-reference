@@ -2,11 +2,6 @@
 // http://www.spoj.com/problems/HORRIBLE/
 // (Test usage as a segment tree with lazy)
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -63,7 +58,7 @@ int main(){
 		int n,q;
 		scanf("%d%d",&n,&q);
 		pitem t=0;
-		for (int i = 0, _n = n; i < _n; ++i)merge(t,t,new item(0));
+		for (int i = 0; i < n; ++i)merge(t,t,new item(0));
 		while(q--){
 			int z,s,e;
 			pitem t1,t2;

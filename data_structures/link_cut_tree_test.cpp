@@ -1,11 +1,6 @@
 // Codeforces gym 100960H - AC
 // http://codeforces.com/gym/100960/problem/H
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -84,7 +79,7 @@ int n,m;
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0, _n = n; i < _n; ++i)x[i]=new item();
+	for (int i = 0; i < n; ++i)x[i]=new item();
 	char s[16];int a,b;
 	while(scanf("%s",s),s[0]!='E'){
 		scanf("%d%d",&a,&b);a--;b--;

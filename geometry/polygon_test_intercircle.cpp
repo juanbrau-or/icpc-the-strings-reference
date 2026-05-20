@@ -1,11 +1,6 @@
 // Codeforces gym 101208J - AC
 // http://codeforces.com/gym/101208/problem/J
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -115,7 +110,7 @@ struct circle {
 		q.push_back(b);
 		if(q.size()==4&&(q[0]-q[1])*(q[2]-q[1])>EPS)swap(q[1],q[2]);
 		double s=0;
-		for (int i = 0, _n = q.size(; i < _n; ++i)-1){
+		for (int i = 0; i < q.size()-1; ++i){
 			if(!has(q[i])||!has(q[i+1]))s+=r*r*(q[i]-o).angle(q[i+1]-o)/2;
 			else s+=abs((q[i]-o)%(q[i+1]-o)/2);
 		}
@@ -130,21 +125,21 @@ struct pol {
 	pol(vector<pt> _p){p=_p;n=p.size();}
 //	double area(){
 //		double r=0.;
-//		for (int i = 0, _n = n; i < _n; ++i)r+=p[i]%p[(i+1)%n];
+//		for (int i = 0; i < n; ++i)r+=p[i]%p[(i+1)%n];
 //		return abs(r)/2; // negative if CW, positive if CCW
 //	}
 //	pt centroid(){ // (barycenter)
 //		pt r(0,0);double t=0;
-//		for (int i = 0, _n = n; i < _n; ++i){
+//		for (int i = 0; i < n; ++i){
 //			r=r+(p[i]+p[(i+1)%n])*(p[i]%p[(i+1)%n]);
 //			t+=p[i]%p[(i+1)%n];
 //		}
 //		return r/t/3;
 //	}
 //	bool has(pt q){
-//		for (int i = 0, _n = n; i < _n; ++i)if(ln(p[i],p[(i+1)%n]).seghas(q))return true;
+//		for (int i = 0; i < n; ++i)if(ln(p[i],p[(i+1)%n]).seghas(q))return true;
 //		int cnt=0;
-//		for (int i = 0, _n = n; i < _n; ++i){
+//		for (int i = 0; i < n; ++i){
 //			int j=(i+1)%n;
 //			int k=sgn((q-p[j])%(p[i]-p[j]));
 //			int u=sgn(p[i].y-q.y),v=sgn(p[j].y-q.y);
@@ -155,7 +150,7 @@ struct pol {
 //	}
 //	pol cut(ln l){   // cut CONVEX polygon by line l
 //		vector<pt> q;  // returns part at left of l.pq
-//		for (int i = 0, _n = n; i < _n; ++i){
+//		for (int i = 0; i < n; ++i){
 //			int d0=sgn(l.pq%(p[i]-l.p)),d1=sgn(l.pq%(p[(i+1)%n]-l.p));
 //			if(d0>=0)q.push_back(p[i]);
 //			ln m(p[i],p[(i+1)%n]);
@@ -165,7 +160,7 @@ struct pol {
 //	}
 	double intercircle(circle c){ // area of intersection with circle
 		double r=0.;
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			int j=(i+1)%n;double w=c.intertriangle(p[i],p[j]);
 			if((p[j]-c.o)%(p[i]-c.o)>0)r+=w;
 			else r-=w;
@@ -178,7 +173,7 @@ int main(){
 	int n;double r;
 	scanf("%d%lf",&n,&r);
 	vector<pt> pp;
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		double x,y;
 		scanf("%lf%lf",&x,&y);
 		pp.push_back(pt(x,y));

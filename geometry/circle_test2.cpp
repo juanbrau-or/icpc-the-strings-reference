@@ -1,11 +1,6 @@
 // SPOJ TAP2015A - AC
 // http://www.spoj.com/problems/TAP2015A/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -82,23 +77,23 @@ int n;
 
 int main(){
 	while(scanf("%d",&n)!=EOF){
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			int x,y,r;
 			scanf("%d%d%d",&x,&y,&r);
 			c[i]=circle(pt(x,y),r);
 		}
 		int r=1;
-		for (int i = 0, _n = n; i < _n; ++i){
-			for (int j = i+1, _n = n; j < _n; ++j){
+		for (int i = 0; i < n; ++i){
+			for (int j = i+1; j < n; ++j){
 				auto v=c[i]^c[j];
 				for(auto p:v){
 					int s=0;
-					for (int k = 0, _n = n; k < _n; ++k)s+=c[k].has(p);
+					for (int k = 0; k < n; ++k)s+=c[k].has(p);
 					r=max(r,s);
 				}
 			}
 			int s=0;
-			for (int k = 0, _n = n; k < _n; ++k)s+=c[k].has(c[i].o);
+			for (int k = 0; k < n; ++k)s+=c[k].has(c[i].o);
 			r=max(r,s);
 		}
 		printf("%d\n",r);

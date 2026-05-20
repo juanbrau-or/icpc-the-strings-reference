@@ -1,11 +1,6 @@
 // Codeforces gym 100765H - AC
 // http://codeforces.com/gym/100765/problem/H
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -26,7 +21,7 @@ bool dinic_bfs(){
 	int qt=0;q[qt++]=src;
 	for(int qh=0;qh<qt;qh++){
 		int u=q[qh];
-		for (int i = 0, _n = g[u].size(; i < _n; ++i)){
+		for (int i = 0; i < g[u].size(); ++i){
 			edge &e=g[u][i];int v=g[u][i].to;
 			if(dist[v]<0&&e.f<e.cap)dist[v]=dist[u]+1,q[qt++]=v;
 		}
@@ -96,14 +91,14 @@ vector<int> nodes[MAXN]; // nodes delimiting region (in CW order)
 map<pair<int,int>,int> ps,es;
 void get_dual(vector<pt> p){ // p: points corresponding to nodes
 	ps.clear();es.clear();
-	for (int x = 0, _n = n; x < _n; ++x){
+	for (int x = 0; x < n; ++x){
 		Cmp pc(p[x]); // (radial order of points)
 		auto comp=[&](int a, int b){return pc(p[a],p[b]);};
 		sort(g[x].begin(),g[x].end(),comp);
-		for (int i = 0, _n = g[x].size(; i < _n; ++i))ps[{x,g[x][i]}]=i;
+		for (int i = 0; i < g[x].size(); ++i)ps[{x,g[x][i]}]=i;
 	}
 	nd=0;
-	for (int xx = 0, _n = n; xx < _n; ++xx)for(auto yy:g[xx])if(!es.count({xx,yy})){
+	for (int xx = 0; xx < n; ++xx)for(auto yy:g[xx])if(!es.count({xx,yy})){
 		int x=xx,y=yy;nodes[nd].clear();
 		while(!es.count({x,y})){
 			es[{x,y}]=nd;nodes[nd].push_back(y);
@@ -127,12 +122,12 @@ struct pol {
 	pol(vector<pt> _p){p=_p;n=p.size();}
 	bool cw(){
 		ll r=0;
-		for (int i = 0, _n = n; i < _n; ++i)r+=p[i]%p[(i+1)%n];
+		for (int i = 0; i < n; ++i)r+=p[i]%p[(i+1)%n];
 		return r<0;
 	}
 	bool has(pt q){
 		int cnt=0;
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			int j=(i+1)%n;
 			int k=sgn((q-p[j])%(p[i]-p[j]));
 			int u=sgn(p[i].y-q.y),v=sgn(p[j].y-q.y);
@@ -157,7 +152,7 @@ int m;
 
 int main(){
 	scanf("%d",&m);
-	for (int i = 0, _n = m; i < _n; ++i){
+	for (int i = 0; i < m; ++i){
 		int x0,y0,x1,y1,c;
 		scanf("%d%d%d%d%d",&x0,&y0,&x1,&y1,&c);
 		int x=id(x0,y0),y=id(x1,y1);
@@ -172,7 +167,7 @@ int main(){
 	pt b(x,y);
 	get_dual(p);
 	int src=-1,dst=-1;
-	for (int i = 0, _n = nd; i < _n; ++i){
+	for (int i = 0; i < nd; ++i){
 		vector<pt> _q;
 		for(auto j:nodes[i])_q.push_back(p[j]);
 		pol q(_q);
@@ -183,9 +178,9 @@ int main(){
 	assert(src!=dst);
 	printf("%lld\n",D::max_flow(src,dst));
 	vector<int> r;
-	for (int x = 0, _n = nd; x < _n; ++x)if(D::dist[x]>=0)for(auto e:D::g[x])if(e.cap&&D::dist[e.to]<0)r.push_back(e.id);
+	for (int x = 0; x < nd; ++x)if(D::dist[x]>=0)for(auto e:D::g[x])if(e.cap&&D::dist[e.to]<0)r.push_back(e.id);
 	printf("%d\n",(int)r.size());
-	for (int i = 0, _n = r.size(; i < _n; ++i)){
+	for (int i = 0; i < r.size(); ++i){
 		if(i)putchar(' ');
 		printf("%d",r[i]+1);
 	}

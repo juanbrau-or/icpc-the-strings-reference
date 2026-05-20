@@ -1,11 +1,6 @@
 // SPOJ LIS2 - AC
 // http://www.spoj.com/problems/LIS2/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -41,7 +36,7 @@ GCS w[100005];
 int lis(){
 	w[0].add(INF,-INF);
 	int r=0;
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		int s=0,e=i+1;
 		while(e-s>1){
 			int m=(s+e)/2;
@@ -57,7 +52,7 @@ int lis(){
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0, _n = n; i < _n; ++i)scanf("%d%d",x+i,y+i);
+	for (int i = 0; i < n; ++i)scanf("%d%d",x+i,y+i);
 	printf("%d\n",lis());
 	return 0;
 }

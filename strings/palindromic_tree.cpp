@@ -20,7 +20,7 @@ struct palindromic_tree{
             int q=ns[p].link;
             while(s[i-ns[q].len-1]!=s[i])q=ns[q].link;
             q=max(1,ns[q].to[c]);
-            last=ns[p].to[c]=((int)(ns).size());
+            last=ns[p].to[c]=SZ(ns);
             ns.push_back(Node(ns[p].len+2,q,1));
         }
     }

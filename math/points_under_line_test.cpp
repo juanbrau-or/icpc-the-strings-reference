@@ -1,12 +1,8 @@
 // https://codeforces.com/contest/1098/problem/E
 #include <bits/stdc++.h>
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
-#define push_back push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
-#define ((int)(s).size()) int(s.size())
+#define SZ(s) int(s.size())
 using namespace std;
 typedef long long ll;
 typedef pair<ll,ll> ii;
@@ -27,7 +23,7 @@ ll g(ll a, ll b, ll c, ll X, ll Y){
 	return f(a,b,c)-f(a,b,c-a*X)-f(a,b,c-b*Y)+f(a,b,c-a*X-b*Y);
 }
  
-ll a[100010],make_pair[100010];
+ll a[100010],cnt_by_gcd[100010];
 vector<ii> b;
 vector<ll> sum,elem;
  
@@ -36,7 +32,7 @@ ll calc(ll n, ll k){	//intervals lower
 }
  
 ll get(ll x){
-	int n=((int)(b).size())-1;
+	int n=SZ(b)-1;
 	ll ans=0;
 	int i=0,j=0;
 	while(i<n){
@@ -56,7 +52,7 @@ ll get(ll x){
 			}
 		}
 	}
-	for (int i = 0, _n = n; i < _n; ++i) ans+=calc(b[i].second,min(b[i].second,x/b[i].first));
+	for (int i = 0; i < n; ++i) ans+=calc(b[i].second,min(b[i].second,x/b[i].first));
 	return ans;
 }
  
@@ -65,9 +61,9 @@ int pl[1<<16][16],pr[1<<16][16];
 int pw[1<<16];
  
 void build(int n){
-	for (int i = 0, _n = n; i < _n; ++i) jl[i][0]=jr[i][0]=a[i],pl[i][0]=i+1,pr[i][0]=i-1;
+	for (int i = 0; i < n; ++i) jl[i][0]=jr[i][0]=a[i],pl[i][0]=i+1,pr[i][0]=i-1;
 	pr[0][0]=0; pl[n-1][0]=n-1;
-	for (int k = 1, _n = 16; k < _n; ++k) for (int i = 0, _n = n; i < _n; ++i){
+	for (int k = 1; k < 16; ++k) for (int i = 0; i < n; ++i){
 		jl[i][k]=__gcd(jl[i][k-1],jl[pl[i][k-1]][k-1]);
 		jr[i][k]=__gcd(jr[i][k-1],jr[pr[i][k-1]][k-1]);
 		pl[i][k]=pl[pl[i][k-1]][k-1];
@@ -82,14 +78,14 @@ int query(int l, int r){
  
 int main(){FIN;
 	int id=0; pw[1]=0;
-	for (int i = 2, _n = 1<<16; i < _n; ++i){
+	for (int i = 2; i < 1<<16; ++i){
 		pw[i]=id;
 		if(!(i&(i-1))) id++;
 	}
 	int n; cin>>n;
-	for (int i = 0, _n = n; i < _n; ++i) cin>>a[i];
+	for (int i = 0; i < n; ++i) cin>>a[i];
 	build(n);
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		int pos=i,pre=a[i];
 		while(pos<n){
 			int l=pos,r=n-1;
@@ -98,14 +94,14 @@ int main(){FIN;
 				if(query(i,mid)==pre) l=mid+1;
 				else r=mid-1;
 			}
-			make_pair[pre]+=l-pos;
+			cnt_by_gcd[pre]+=l-pos;
 			pre=query(i,l); pos=l;
 		}
 	}
-	for (int i = 0, _n = 100010; i < _n; ++i) if(make_pair[i]) b.push_back({i,make_pair[i]});
-	sum.resize(((int)(b).size())); elem.resize(((int)(b).size()));
+	for (int i = 0; i < 100010; ++i) if(cnt_by_gcd[i]) b.push_back({i,cnt_by_gcd[i]});
+	sum.resize(SZ(b)); elem.resize(SZ(b));
 	sum[0]=b[0].first*b[0].second; elem[0]=b[0].second;
-	for (int i = 1, _n = ((int)(b; i < _n; ++i).size())){
+	for (int i = 1; i < SZ(b); ++i){
 		sum[i]=sum[i-1]+b[i].first*b[i].second;
 		elem[i]=elem[i-1]+b[i].second;
 	}

@@ -7,7 +7,7 @@ void dijkstra(int x){
 	while(!q.empty()){
 		x=q.top().second;ll c=-q.top().first;q.pop();
 		if(dist[x]!=c)continue;
-		for (int i = 0, _n = g[x].size(; i < _n; ++i)){
+		for (int i = 0; i < g[x].size(); ++i){
 			int y=g[x][i].first; ll c=g[x][i].second;
 			if(dist[y]<0||dist[x]+c<dist[y])
 				dist[y]=dist[x]+c,q.push({-dist[y],y});

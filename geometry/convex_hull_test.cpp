@@ -1,12 +1,7 @@
 // SPOJ BSHEEP - AC
 // http://www.spoj.com/problems/BSHEEP/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
-#define ((int)(x).size()) ((int)(x).size())
+#define SZ(x) ((int)(x).size())
 using namespace std;
 typedef long long ll;
 
@@ -43,7 +38,7 @@ vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
 	p.erase(unique(p.begin(),p.end()), p.end());
-	for (int i = 0, _n = p.size(; i < _n; ++i)){ // lower hull
+	for (int i = 0; i < p.size(); ++i){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
 		r.push_back(p[i]);
 	}
@@ -67,7 +62,7 @@ int main(){
 	while(tn--){
 		scanf("%d",&n);
 		pp.clear();p.clear();
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			int x,y;
 			scanf("%d%d",&x,&y);
 			if(!pp.count({x,y}))pp[{x,y}]=i;
@@ -78,12 +73,12 @@ int main(){
 		vector<pt> c=chull(p);
 		double r=0.;
 		int k=0;
-		for (int i = 0, _n = c.size(; i < _n; ++i)){
+		for (int i = 0; i < c.size(); ++i){
 			r+=(c[(i+1)%c.size()]-c[i]).norm();
 			if(c[i].y+EPS<c[k].y||abs(c[i].y-c[k].y)<EPS&&c[i].x-EPS<c[k].x)k=i;
 		}
 		printf("%.2lf\n",r);
-		for (int i = 0, _n = c.size(; i < _n; ++i)){
+		for (int i = 0; i < c.size(); ++i){
 			if(i)putchar(' ');
 			printf("%d",c[(k+i)%c.size()].id+1);
 		}

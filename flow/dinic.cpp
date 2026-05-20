@@ -7,15 +7,15 @@ struct Dinic{
 	vector<vector<edge>> g;
 	Dinic(int x):nodes(x),g(x),dist(x),q(x),work(x){}
 	void add_edge(int s, int t, ll cap){
-		g[s].push_back((edge){t,((int)(g[t]).size()),0,cap});
-		g[t].push_back((edge){s,((int)(g[s]).size())-1,0,0});
+		g[s].push_back((edge){t,SZ(g[t]),0,cap});
+		g[t].push_back((edge){s,SZ(g[s])-1,0,0});
 	}
 	bool dinic_bfs(){
 		fill(ALL(dist),-1);dist[src]=0;
 		int qt=0;q[qt++]=src;
 		for(int qh=0;qh<qt;qh++){
 			int u=q[qh];
-			for (int i = 0, _n = ((int)(g[u]; i < _n; ++i).size())){
+			for (int i = 0; i < SZ(g[u]); ++i){
 				edge &e=g[u][i];int v=g[u][i].to;
 				if(dist[v]<0&&e.f<e.cap)dist[v]=dist[u]+1,q[qt++]=v;
 			}
@@ -24,7 +24,7 @@ struct Dinic{
 	}
 	ll dinic_dfs(int u, ll f){
 		if(u==dst)return f;
-		for(int &i=work[u];i<((int)(g[u]).size());i++){
+		for(int &i=work[u];i<SZ(g[u]);i++){
 			edge &e=g[u][i];
 			if(e.cap<=e.f)continue;
 			int v=e.to;

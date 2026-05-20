@@ -1,11 +1,6 @@
 // SPOJ SUBST1 - AC
 // http://www.spoj.com/problems/SUBST1/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,to=b;i<to;++i)
 using namespace std;
 typedef long long ll;
 
@@ -55,7 +50,7 @@ int main(){
 		for(int i=0;s[i];++i)sa_extend(s[i]);
 		memset(dp,-1,sizeof(dp));
 		printf("%lld\n",f(0)-1);
-		for (int i = 0, _n = sz; i < _n; ++i)st[i].next.clear();
+		for (int i = 0; i < sz; ++i)st[i].next.clear();
 	}
 	return 0;
 }

@@ -2,11 +2,6 @@
 // http://www.spoj.com/problems/CERC07S/
 // (yet another example...)
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -70,16 +65,16 @@ int n;
 
 int main(){
 	while(scanf("%d",&n),n){
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i){
 			int x;
 			scanf("%d",&x);
 			w[i]={x,i};
 		}
 		sort(w,w+n);
-		for (int i = 0, _n = n; i < _n; ++i)x[w[i].second]=i;
+		for (int i = 0; i < n; ++i)x[w[i].second]=i;
 		pitem t=0;
-		for (int i = 0, _n = n; i < _n; ++i)merge(t,t,new item(x[i]));
-		for (int i = 0, _n = n; i < _n; ++i){
+		for (int i = 0; i < n; ++i)merge(t,t,new item(x[i]));
+		for (int i = 0; i < n; ++i){
 			if(i)putchar(' ');
 			int k=find_min(t);
 			pitem t1,t2;

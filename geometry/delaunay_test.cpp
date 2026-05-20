@@ -1,13 +1,9 @@
 // Codeforces 104555J - AC
 // https://codeforces.com/gym/104555/problem/J
 #include <bits/stdc++.h>
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
-#define push_back push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
-#define ((int)(s).size()) int(s.size())
+#define SZ(s) int(s.size())
 using namespace std;
 typedef long long ll;
 typedef pair<int,int> ii;
@@ -132,21 +128,21 @@ pair<Q,Q> build_tr(vector<pt>& p, int l, int r){
 }
 
 vector<vector<int>> delaunay(vector<pt> v){
-	int n=((int)(v).size()); auto tmp=v;
+	int n=SZ(v); auto tmp=v;
 	vector<int> id(n); iota(ALL(id),0);
 	sort(ALL(id),[&](int l, int r){return v[l]<v[r];});
-	for (int i = 0, _n = n; i < _n; ++i) v[i]=tmp[id[i]];
+	for (int i = 0; i < n; ++i) v[i]=tmp[id[i]];
 	assert(unique(ALL(v))==v.end());
 	vector<vector<int>> g(n);
 	int col=1;
-	for (int i = 2, _n = n; i < _n; ++i) col&=abs(area(v[i],v[i-1],v[i-2]))<=EPS;
+	for (int i = 2; i < n; ++i) col&=abs(area(v[i],v[i-1],v[i-2]))<=EPS;
 	if(col){
-		for (int i = 1, _n = n; i < _n; ++i) g[id[i-1]].push_back(id[i]),g[id[i]].push_back(id[i-1]);
+		for (int i = 1; i < n; ++i) g[id[i-1]].push_back(id[i]),g[id[i]].push_back(id[i-1]);
 	}
 	else{
 		Q e=build_tr(v,0,n-1).first;
 		vector<Q> edg={e};
-		for(int i=0;i<((int)(edg).size());e=edg[i++]){
+		for(int i=0;i<SZ(edg);e=edg[i++]){
 			for(Q at=e;!at->used;at=at->next()){
 				at->used=1;
 				g[id[at->id]].push_back(id[at->rev()->id]);
@@ -190,7 +186,7 @@ pt2 get(pt2 a, pt2 b, pt2 c){
 
 int main(){FIN;
 	ll mnx=INF,mxx=-INF, mny=INF, mxy=-INF;
-	for (int i = 0, _n = 4; i < _n; ++i){
+	for (int i = 0; i < 4; ++i){
 		ll x,y; cin>>x>>y;
 		mnx=min(mnx,x);
 		mxx=max(mxx,x);
@@ -200,9 +196,9 @@ int main(){FIN;
 
 	int n; cin>>n;
 	vector<pt> v(n);
-	for (int i = 0, _n = n; i < _n; ++i) cin>>v[i].x>>v[i].y;
+	for (int i = 0; i < n; ++i) cin>>v[i].x>>v[i].y;
 	
-	for (int i = 0, _n = n; i < _n; ++i){
+	for (int i = 0; i < n; ++i){
 		if(mnx<v[i].x) v.push_back(pt(2*mnx-v[i].x, v[i].y));
 		if(v[i].x<mxx) v.push_back(pt(2*mxx-v[i].x, v[i].y));
 		if(mny<v[i].y) v.push_back(pt(v[i].x,2*mny-v[i].y));
@@ -213,9 +209,9 @@ int main(){FIN;
 	
 	ld ans=0;
 	
-	for (int i = 0, _n = n; i < _n; ++i) if(((int)(g[i]).size())>1){
-		for (int j = 0, _n = ((int)(g[i]; j < _n; ++j).size())){
-			pt a=v[i], b=v[g[i][j]], c=v[g[i][(j+1)%((int)(g[i]).size())]];
+	for (int i = 0; i < n; ++i) if(SZ(g[i])>1){
+		for (int j = 0; j < SZ(g[i]); ++j){
+			pt a=v[i], b=v[g[i][j]], c=v[g[i][(j+1)%SZ(g[i])]];
 			pt2 circ=get(pt2(a.x,a.y), pt2(b.x,b.y), pt2(c.x,c.y));
 			int inx=mnx <= circ.x+1e-8 && circ.x-1e-8 <= mxx;
 			int iny=mny <= circ.y+1e-8 && circ.y-1e-8 <= mxy;

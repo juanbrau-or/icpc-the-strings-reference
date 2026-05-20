@@ -1,11 +1,6 @@
 // SPOJ QTREE - AC
 // http://www.spoj.com/problems/QTREE/
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -82,13 +77,13 @@ int main(){
 	while(tn--){
 		scanf("%d",&n);
 		STree rmq(n);
-		for (int i = 0, _n = n-1; i < _n; ++i){
+		for (int i = 0; i < n-1; ++i){
 			scanf("%d%d%d",a+i,b+i,c+i);a[i]--;b[i]--;
 			g[a[i]].push_back(b[i]);g[b[i]].push_back(a[i]);
 		}
 		hld_init();
 		z[0]=NEUT;
-		for (int i = 0, _n = n-1; i < _n; ++i){
+		for (int i = 0; i < n-1; ++i){
 			int x=a[i],y=b[i];
 			if(x==dad[y])z[pos[y]]=c[i];
 			else z[pos[x]]=c[i];
@@ -105,7 +100,7 @@ int main(){
 			}
 			else printf("%d\n",query(i-1,j-1,rmq));
 		}
-		for (int i = 0, _n = n; i < _n; ++i)g[i].clear();
+		for (int i = 0; i < n; ++i)g[i].clear();
 	}
 	return 0;
 }

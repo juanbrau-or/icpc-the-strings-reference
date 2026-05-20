@@ -1,12 +1,8 @@
 // Codeforces 105254V - AC
 // https://codeforces.com/gym/105254/problem/V
 #include <bits/stdc++.h>
-#define for (int i = a, _n = b; i < _n; ++i) for(ll i = a,jet = b;i<jet;i++)
-#define first first
-#define second second
-#define push_back push_back
 #define ALL(x) x.begin(),x.end()
-#define ((int)(x).size()) ((ll)x.size())
+#define SZ(x) ((ll)x.size())
 #define mset(a,v) memset((a),(v),sizeof(a))
 #define JET ios::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 using namespace std;
@@ -45,7 +41,7 @@ vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
 	p.erase(unique(ALL(p)), p.end());
-	for (int i = 0, _n = p.size(; i < _n; ++i)){ // lower hull
+	for (int i = 0; i < p.size(); ++i){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
 		r.push_back(p[i]);
 	}
@@ -76,13 +72,13 @@ int main(){
 	JET
 	ll n; cin>>n;
 	vv a(n);
-	for (int i = 0, _n = n; i < _n; ++i)cin>>a[i];
+	for (int i = 0; i < n; ++i)cin>>a[i];
 	ll m; cin>>m;
 	vv b(m);
-	for (int i = 0, _n = m; i < _n; ++i)cin>>b[i];
+	for (int i = 0; i < m; ++i)cin>>b[i];
 	sort(ALL(a)); sort(ALL(b));
 	ll dif=0;
-	for (int i = 0, _n = m; i < _n; ++i){
+	for (int i = 0; i < m; ++i){
 		ll l=lower_bound(ALL(a),b[i])-a.begin();
 		ll r=upper_bound(ALL(a),b[i])-a.begin();
 		dif+=l; dif-=n-r;
@@ -100,17 +96,17 @@ int main(){
 		p.y/=m;
 		bu.push_back(p);
 	};
-	map<ll,ii> make_pair;
+	map<ll,ii> cnt_by_value;
 	
-	make_pair[1]={0,0};
-	for(auto i:a)make_pair[i+1]={0,0};
-	for(auto i:b)make_pair[i+1]={0,0};
+	cnt_by_value[1]={0,0};
+	for(auto i:a)cnt_by_value[i+1]={0,0};
+	for(auto i:b)cnt_by_value[i+1]={0,0};
 	
-	for(auto i:a)make_pair[i].first++;
-	for(auto i:b)make_pair[i].second++;
+	for(auto i:a)cnt_by_value[i].first++;
+	for(auto i:b)cnt_by_value[i].second++;
 
 	pt cur(0,0);
-	for(auto [asd,now]:make_pair){
+	for(auto [asd,now]:cnt_by_value){
 		// exactly equal
 		pt cand=cur;
 		cand.x+=now.first/2.;
@@ -123,14 +119,14 @@ int main(){
 	auto c=chull(bu);
 	// for(auto p:c)cout<<cv(p)<<" ";;cout<<"\n";
 	ld res1=1,res2=0;
-	ll k=((int)(c).size());
+	ll k=SZ(c);
 	auto cand=[&](pt p){
 		if(p.x>=0.5-EPS)res1=min(res1,p.y);
 		if(p.y<=0.5+EPS)res2=max(res2,p.x);
 	};
 	ln ver(pt(0.5,0),pt(0.5,0.5));
 	ln hor(pt(0,0.5),pt(0.5,0.5));
-	for (int i = 0, _n = k; i < _n; ++i){
+	for (int i = 0; i < k; ++i){
 		cand(c[i]);
 		ln l(c[i],c[(i+1)%k]);
 		if(abs(l.pq.x)>EPS){ // !(l/ver)

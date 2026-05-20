@@ -1,11 +1,6 @@
 // Codeforces 715C - AC
 // http://codeforces.com/problemset/problem/715/C
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -102,7 +97,7 @@ int main(){
 	scanf("%d%d",&n,&m);
 	if(m==1){printf("%lld\n",1LL*n*(n-1));return 0;}
 	i10=inv(10,m);
-	for (int _ = 1, _n = n; _ < _n; ++_){
+	for (int _ = 1; _ < n; ++_){
 		int x,y,w;
 		scanf("%d%d%d",&x,&y,&w);
 		g[x].push_back({y,w});g[y].push_back({x,w});

@@ -24,12 +24,12 @@ void tjn(int u){
 void scc(){
 	memset(idx,0,sizeof(idx));qidx=0;
 	memset(cmp,-1,sizeof(cmp));qcmp=0;
-	for (int i = 0, _n = n; i < _n; ++i)if(!idx[i])tjn(i);
+	for (int i = 0; i < n; ++i)if(!idx[i])tjn(i);
 }
 // Only for 2SAT:
 void addor(int a, int b){g[neg(a)].push_back(b);g[neg(b)].push_back(a);}
 bool satisf(int _nvar){
 	nvar=_nvar;n=MAXN;scc();
-	for (int i = 0, _n = nvar; i < _n; ++i)if(cmp[i]==cmp[neg(i)])return false;
+	for (int i = 0; i < nvar; ++i)if(cmp[i]==cmp[neg(i)])return false;
 	return true;
 }

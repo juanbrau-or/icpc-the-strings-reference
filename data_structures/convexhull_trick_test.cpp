@@ -1,11 +1,6 @@
 // Codeforces 319C - AC
 // http://codeforces.com/problemset/problem/319/C
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -51,11 +46,11 @@ ll f;
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0, _n = n; i < _n; ++i){int t;scanf("%d",&t);a[i]=t;}
-	for (int i = 0, _n = n; i < _n; ++i){int t;scanf("%d",&t);b[i]=t;}
+	for (int i = 0; i < n; ++i){int t;scanf("%d",&t);a[i]=t;}
+	for (int i = 0; i < n; ++i){int t;scanf("%d",&t);b[i]=t;}
 	CHT ch;
 	ch.add(b[0],0);
-	for (int i = 1, _n = n; i < _n; ++i){
+	for (int i = 1; i < n; ++i){
 		f=ch.eval(a[i]);
 		ch.add(b[i],f);
 	}

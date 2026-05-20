@@ -1,11 +1,6 @@
 // Codeforces 321E - AC
 // http://codeforces.com/problemset/problem/321/E
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -22,7 +17,7 @@ void doit(int s, int e, int s0, int e0, int i){
 	if(s==e)return;
 	int m=(s+e)/2;
 	int r=INF,rp;
-	fore(j,s0,min(e0,m)){
+	for (int j = s0; j < min(e0,m); ++j){
 		int r0=f[j]+sx[m][m]-sx[m][j]-sx[j][m]+sx[j][j];
 		if(r0<r){
 			r=r0;
@@ -34,8 +29,8 @@ void doit(int s, int e, int s0, int e0, int i){
 	doit(m+1,e,rp,e0,i);
 }
 int doall(){
-	for (int i = 0, _n = n+1; i < _n; ++i)f[i]=sx[i][i];
-	for (int i = 1, _n = k; i < _n; ++i){
+	for (int i = 0; i < n+1; ++i)f[i]=sx[i][i];
+	for (int i = 1; i < k; ++i){
 		doit(1,n+1,0,n,i);
 		memcpy(f,f2,sizeof(f));
 	}
@@ -45,14 +40,14 @@ int doall(){
 
 int main(){
 	scanf("%d%d",&n,&k);
-	for (int i = 0, _n = n; i < _n; ++i){
-		for (int j = 0, _n = n; j < _n; ++j){
+	for (int i = 0; i < n; ++i){
+		for (int j = 0; j < n; ++j){
 			getchar();
 			x[i][j]=getchar()-'0';
 		}
 	}
-	for (int i = 1, _n = n+1; i < _n; ++i){
-		for (int j = 1, _n = n+1; j < _n; ++j){
+	for (int i = 1; i < n+1; ++i){
+		for (int j = 1; j < n+1; ++j){
 			sx[i][j]=sx[i-1][j]+sx[i][j-1]-sx[i-1][j-1]+x[i-1][j-1];
 		}
 	}

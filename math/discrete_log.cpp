@@ -14,13 +14,13 @@ ll discrete_log(ll a,ll b,ll m) {
     map<ll,int> w;
     int s = ceil(sqrt(m));
     ll base = b;
-    for (int i = 0, _n = s; i < _n; ++i) {
+    for (int i = 0; i < s; ++i) {
         w[base] = i;
         base=base*a%m;
     }
     base=fastpow(a,s,m);
     ll key=tmp;
-    for (int i = 1, _n = s+2; i < _n; ++i) {
+    for (int i = 1; i < s+2; ++i) {
         key=base*key%m;
         if(w.count(key)) return i*s-w[key]+cnt;
     }

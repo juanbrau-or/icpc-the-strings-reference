@@ -1,10 +1,5 @@
 // Test vs brute force
 #include <bits/stdc++.h>
-#define push_back push_back
-#define make_pair make_pair
-#define first first
-#define second second
-#define for (int i = a, _n = b; i < _n; ++i) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -56,7 +51,7 @@ struct CHTBrute {
 	}
 	tc eval(tc x){
 		tc r=c[0].m*x+c[0].b;
-		for (int i = 1, _n = c.size(; i < _n; ++i))r=max(r,c[i].m*x+c[i].b);
+		for (int i = 1; i < c.size(); ++i)r=max(r,c[i].m*x+c[i].b);
 		return r;
 	}
 };
@@ -73,7 +68,7 @@ int main() {
 	while(1){
 		cout<<"CLEAR"<< endl;
 		HullDynamic ch;CHTBrute chb;
-		for (int _ = 0, _n = 2000; _ < _n; ++_){
+		for (int _ = 0; _ < 2000; ++_){
 			int t=1;
 			if(_)t=rand()%2;
 			if(t){

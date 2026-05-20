@@ -33,5 +33,5 @@ void dfs(int u,int pe){
 void doit(){
 	memset(D,-1,sizeof(D));memset(art,0,sizeof(art));
 	nbc=T=0;
-	for (int i = 0, _n = n; i < _n; ++i)if(D[i]<0)dfs(i,-1),art[i]--;
+	for (int i = 0; i < n; ++i)if(D[i]<0)dfs(i,-1),art[i]--;
 }

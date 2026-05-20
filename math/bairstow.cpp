@@ -3,7 +3,7 @@ poly<> bairstow(poly<> p){ // returns polynomial of degree 2 that
 	int n=p.c.size()-1;    // divides p
 	assert(n>=3&&abs(p.c.back())>EPS);
 	double u=p[n-1]/p[n],v=p[n-2]/p[n];
-	for (int _ = 0, _n = ITER; _ < _n; ++_){
+	for (int _ = 0; _ < ITER; ++_){
 		auto w=polydiv(p,{v,u,1});
 		poly<> q=w.first,r0=w.second;
 		poly<> r1=polydiv(q,{v,u,1}).second;
@@ -27,7 +27,7 @@ void addr(vector<double>& r, poly<>& p){
 }
 vector<double> roots(poly<> p){
 	while(!p.c.empty()&&abs(p.c.back())<EPS)p.c.pop_back();
-	for (int i = 0, _n = p.c.size(; i < _n; ++i))p[i]/=p.c.back();
+	for (int i = 0; i < p.c.size(); ++i)p[i]/=p.c.back();
 	vector<double> r;int n;
 	while((n=p.c.size()-1)>=3){
 		poly<> q=bairstow(p);addr(r,q);

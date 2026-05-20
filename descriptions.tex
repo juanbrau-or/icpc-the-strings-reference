@@ -1,47 +1,387 @@
-% descriptions.tex
-\section{Algorithm Descriptions}
+\section{Descripción de Algoritmos}
 
-\subsection{Data Structures}
-\begin{itemize}
-    \item \textbf{Segment Tree}: Range queries and updates in $O(\log n)$. Lazy propagation for range updates.
-    \item \textbf{Sparse Table}: Static Range Minimum Query (RMQ) in $O(1)$ with $O(n \log n)$ preprocessing.
-    \item \textbf{Fenwick Tree}: Prefix sums and point updates in $O(\log n)$. Very low constant factor.
-    \item \textbf{Treap}: Randomized binary search tree. Supports split/merge and implicit keys for sequence operations.
-    \item \textbf{Link-Cut Tree}: Maintains a forest of trees under edge addition/deletion and path queries in $O(\log n)$.
-    \item \textbf{Convex Hull Trick}: Maintains a set of lines to find $\min/\max$ value at $x$ in $O(\log n)$ or $O(1)$.
-    \item \textbf{Li-Chao Tree}: Insert line/segments and query $\min/\max$ at a point in $O(\log n)$.
-\end{itemize}
+\subsection{Data structures}
+
+\textbf{Segment tree} --- \textbf{Complexity:} $O(N build, \log N per operation)$ \\
+\textit{Usage:} 1. \texttt{STree(int n)} $\rightarrow$ construye el arbol para n posiciones. 2. \texttt{upd(int p, int v)} $\rightarrow$ actualiza la posicion p con el valor v. 3. \texttt{query(int l, int r)} $\rightarrow$ devuelve el minimo en el rango [l, r). \textit{Note:} Indexacion base 0; adaptar operacion neutra y combine para otro monoid.
+\vspace{0.15cm}
+
+\textbf{Segment tree lazy} --- \textbf{Complexity:} $O(N build, \log N per update/query)$ \\
+\textit{Usage:} 1. \texttt{STree(int n)} $\rightarrow$ crea un arbol con lazy propagation. 2. \texttt{upd(int l, int r, int v)} $\rightarrow$ suma v al rango [l, r). 3. \texttt{query(int l, int r)} $\rightarrow$ devuelve la suma del rango [l, r). \textit{Note:} Ejemplo de suma con incremento por rango; cambiar tipo de lazy segun el problema.
+\vspace{0.15cm}
+
+\textbf{Persistent segment tree} --- \textbf{Complexity:} $O(\log N per version update/query)$ \\
+\textit{Usage:} 1. \texttt{STree(int n)} $\rightarrow$ reserva el arbol persistente sobre n posiciones. 2. \texttt{upd(int root, int p, int v)} $\rightarrow$ crea una nueva version cambiando la posicion p. 3. \texttt{query(int root, int l, int r)} $\rightarrow$ consulta el minimo en [l, r) para una version. \textit{Note:} Mantener los indices de raiz de cada version por fuera.
+\vspace{0.15cm}
+
+\textbf{2D segment tree} --- \textbf{Complexity:} $O(NM build, \log N \log M per operation)$ \\
+\textit{Usage:} 1. \texttt{build()} $\rightarrow$ construye el arbol sobre la matriz global. 2. \texttt{upd(int x, int y, int v)} $\rightarrow$ actualiza una celda. 3. \texttt{query(int x0, int x1, int y0, int y1)} $\rightarrow$ consulta el rectangulo [x0, x1) x [y0, y1). \textit{Note:} Usa arreglos globales; ajustar N y M antes de copiar.
+\vspace{0.15cm}
+
+\textbf{Sparse table} --- \textbf{Complexity:} $O(N \log N build, 1 query)$ \\
+\textit{Usage:} 1. \texttt{st\_init(int *a)} $\rightarrow$ precalcula la tabla para el arreglo a. 2. \texttt{st\_query(int s, int e)} $\rightarrow$ devuelve el minimo en [s, e). \textit{Note:} Solo sirve para operaciones idempotentes como min/max/gcd.
+\vspace{0.15cm}
+
+\textbf{Fenwick tree} --- \textbf{Complexity:} $O(\log N per update/query)$ \\
+\textit{Usage:} 1. \texttt{upd(int i0, int v)} $\rightarrow$ suma v a la posicion i0. 2. \texttt{get(int i0)} $\rightarrow$ devuelve la suma de [0, i0). 3. \texttt{get\_sum(int i0, int i1)} $\rightarrow$ devuelve la suma de [i0, i1). \textit{Note:} API externa base 0; internamente usa base 1.
+\vspace{0.15cm}
+
+\textbf{Wavelet tree} --- \textbf{Complexity:} $O(N \log \sigma build, \log \sigma query)$ \\
+\textit{Usage:} 1. \texttt{WT(int n)} $\rightarrow$ inicializa la estructura para n elementos. 2. \texttt{add(int v)} $\rightarrow$ agrega un valor comprimido al final. 3. \texttt{range(int k, int s, int e, int a, int b)} $\rightarrow$ cuenta valores en [a, b) dentro de posiciones [s, e). \textit{Note:} Comprimir valores antes de insertar.
+\vspace{0.15cm}
+
+\textbf{STL extended set} --- \textbf{Complexity:} $O(\log N per operation)$ \\
+\textit{Usage:} 1. \texttt{ordered\_set} $\rightarrow$ set ordenado con orden estadistico. 2. \texttt{find\_by\_order(k)} $\rightarrow$ devuelve iterador al k-esimo elemento. 3. \texttt{order\_of\_key(x)} $\rightarrow$ cuenta elementos estrictamente menores que x. \textit{Note:} Requiere GNU PBDS; no es C++ estandar puro.
+\vspace{0.15cm}
+
+\textbf{STL rope} --- \textbf{Complexity:} $O(\log N per split/insert/erase)$ \\
+\textit{Usage:} 1. \texttt{rope<T>} $\rightarrow$ secuencia balanceada con operaciones de edicion. 2. \texttt{insert(pos, value)} $\rightarrow$ inserta en una posicion. 3. \texttt{erase(pos, len)} $\rightarrow$ borra un rango contiguo. \textit{Note:} Requiere extension GNU \_\_gnu\_cxx::rope.
+\vspace{0.15cm}
+
+\textbf{Treap as BST} --- \textbf{Complexity:} $O(\log N expected per operation)$ \\
+\textit{Usage:} 1. \texttt{split(pitem t, int key, pitem\& l, pitem\& r)} $\rightarrow$ separa por clave: l < key, r >= key. 2. \texttt{insert(pitem\& t, pitem it)} $\rightarrow$ inserta un nodo. 3. \texttt{kth(pitem t, int k)} $\rightarrow$ devuelve el nodo k-esimo en orden. \textit{Note:} Aleatorizado; crear nodos con prioridad random.
+\vspace{0.15cm}
+
+\textbf{Implicit treap} --- \textbf{Complexity:} $O(\log N expected per operation)$ \\
+\textit{Usage:} 1. \texttt{merge(pitem\& t, pitem l, pitem r)} $\rightarrow$ concatena dos treaps. 2. \texttt{split(pitem t, pitem\& l, pitem\& r, int sz)} $\rightarrow$ deja sz elementos en l. 3. \texttt{output(pitem t)} $\rightarrow$ recorre la secuencia en orden. \textit{Note:} Las claves son posiciones implicitas; propagar lazy con push.
+\vspace{0.15cm}
+
+\textbf{Implicit treap with father} --- \textbf{Complexity:} $O(\log N expected per operation)$ \\
+\textit{Usage:} 1. \texttt{merge(pitem\& t, pitem l, pitem r)} $\rightarrow$ concatena y actualiza padres. 2. \texttt{split(pitem t, pitem\& l, pitem\& r, int sz)} $\rightarrow$ separa por tamano. 3. \texttt{root(pitem t, int\& pos)} $\rightarrow$ devuelve raiz y posicion actual del nodo. \textit{Note:} Util cuando se conservan punteros a nodos individuales.
+\vspace{0.15cm}
+
+\textbf{Link-cut tree} --- \textbf{Complexity:} $O(\log N amortized per operation)$ \\
+\textit{Usage:} 1. \texttt{evert(pitem v)} $\rightarrow$ convierte v en raiz del arbol representado. 2. \texttt{link(pitem v, pitem w)} $\rightarrow$ agrega arista haciendo v hijo de w. 3. \texttt{cut(pitem v, pitem w)} $\rightarrow$ elimina la arista entre v y w. \textit{Note:} Antes de usar, inicializar campos de cada nodo.
+\vspace{0.15cm}
+
+\textbf{Link-cut tree with path aggregate} --- \textbf{Complexity:} $O(\log N amortized per operation)$ \\
+\textit{Usage:} 1. \texttt{mkR(Node x)} $\rightarrow$ hace a x raiz representada. 2. \texttt{link(Node x, Node y)} $\rightarrow$ conecta dos componentes. 3. \texttt{query(Node x, Node y)} $\rightarrow$ consulta el agregado del camino x-y. \textit{Note:} Modificar mOp, qOp y deltas para el agregado requerido.
+\vspace{0.15cm}
+
+\textbf{Static convex hull trick} --- \textbf{Complexity:} $O(\log N per query after monotone insert)$ \\
+\textit{Usage:} 1. \texttt{CHT::add(Line l)} $\rightarrow$ agrega una recta al hull. 2. \texttt{CHT::eval(int p, tc x)} $\rightarrow$ evalua la recta p en x. 3. \texttt{CHT::query(tc x)} $\rightarrow$ devuelve el minimo en x. \textit{Note:} Para maximo, cambiar signos como indica el comentario del archivo.
+\vspace{0.15cm}
+
+\textbf{Dynamic convex hull trick} --- \textbf{Complexity:} $O(\log N per insert/query)$ \\
+\textit{Usage:} 1. \texttt{HullDynamic::add\_line(tc m, tc b)} $\rightarrow$ agrega y = m x + b. 2. \texttt{HullDynamic::eval(Line l, tc x)} $\rightarrow$ evalua una recta. 3. \texttt{HullDynamic::query(tc x)} $\rightarrow$ devuelve el maximo en x. \textit{Note:} Implementado para maximo.
+\vspace{0.15cm}
+
+\textbf{Li Chao tree} --- \textbf{Complexity:} $O(\log C per insert/query)$ \\
+\textit{Usage:} 1. \texttt{LiChaoTree(T xmin, T xmax)} $\rightarrow$ crea el dominio discreto/entero [xmin, xmax). 2. \texttt{add\_line(Line nw)} $\rightarrow$ inserta una recta. 3. \texttt{query(T x)} $\rightarrow$ devuelve el minimo en x. \textit{Note:} Ajustar INF y dominio al rango de coordenadas.
+\vspace{0.15cm}
+
+\textbf{Gain-cost set} --- \textbf{Complexity:} $O(\log N amortized per insert/query)$ \\
+\textit{Usage:} 1. \texttt{GCS::add(ii x)} $\rightarrow$ agrega un par y elimina dominados. 2. \texttt{GCS::query(int v)} $\rightarrow$ calcula el mejor valor para v segun los pares activos. \textit{Note:} Mantiene frontera no dominada en un set.
+\vspace{0.15cm}
+
+\textbf{Disjoint intervals} --- \textbf{Complexity:} $O(K \log N per insertion)$ \\
+\textit{Usage:} 1. \texttt{disjoint\_intervals::add(ii v)} $\rightarrow$ agrega el intervalo y une solapados. 2. \texttt{set<ii> s} $\rightarrow$ contiene intervalos disjuntos ordenados. \textit{Note:} Intervalos semiarbitrarios segun ii; revisar inclusividad antes de copiar.
+\vspace{0.15cm}
 
 \subsection{Graphs}
-\begin{itemize}
-    \item \textbf{Tarjan / SCC}: Finds strongly connected components in directed graphs in $O(V+E)$.
-    \item \textbf{Articulation Points/Bridges}: Finds vertices/edges whose removal increases connected components.
-    \item \textbf{HLD}: Decomposes a tree into paths to perform range queries on paths in $O(\log^2 n)$.
-    \item \textbf{Centroid Decomposition}: Divide and conquer on trees based on centroids for path-related problems.
-    \item \textbf{Dominator Tree}: For a flowgraph, $u$ dominates $v$ if every path from start to $v$ goes through $u$.
-    \item \textbf{Blossom Algorithm}: Finds a maximum matching in general (non-bipartite) graphs in $O(V^2 E)$.
-\end{itemize}
+
+\textbf{Topological sort} --- \textbf{Complexity:} $O(V+E)$ \\
+\textit{Usage:} 1. \texttt{tsort()} $\rightarrow$ devuelve un orden topologico lexicograficamente minimo. 2. \texttt{priority\_queue<int, vector<int>, greater<int>>} $\rightarrow$ elige siempre el nodo libre mas chico. \textit{Note:} Si el resultado tiene menos de n nodos, hay ciclo.
+\vspace{0.15cm}
+
+\textbf{Kruskal MST} --- \textbf{Complexity:} $O(E \log E)$ \\
+\textit{Usage:} 1. \texttt{uf\_init()} $\rightarrow$ inicializa union-find. 2. \texttt{uf\_join(int x, int y)} $\rightarrow$ une componentes si eran distintas. 3. \texttt{kruskal()} $\rightarrow$ devuelve el peso del MST asumiendo grafo conexo. \textit{Note:} Ordenar aristas por peso antes de procesarlas si el archivo no lo hace por ti.
+\vspace{0.15cm}
+
+\textbf{Dijkstra} --- \textbf{Complexity:} $O((V+E) \log V)$ \\
+\textit{Usage:} 1. \texttt{dijkstra(int x)} $\rightarrow$ calcula distancias minimas desde x. 2. \texttt{dist[v]} $\rightarrow$ queda con -1 si v no es alcanzable. \textit{Note:} Requiere pesos no negativos.
+\vspace{0.15cm}
+
+\textbf{Bellman-Ford} --- \textbf{Complexity:} $O(VE)$ \\
+\textit{Usage:} 1. \texttt{bford(int src)} $\rightarrow$ calcula distancias desde src y propaga ciclos negativos. 2. \texttt{d[v]} $\rightarrow$ guarda INF, distancia finita o -INF segun alcanzabilidad. \textit{Note:} Sirve con pesos negativos; detecta nodos afectados por ciclos negativos alcanzables.
+\vspace{0.15cm}
+
+\textbf{Floyd-Warshall} --- \textbf{Complexity:} $O(V^3)$ \\
+\textit{Usage:} 1. \texttt{floyd()} $\rightarrow$ reemplaza g por distancias minimas entre todos los pares. 2. \texttt{inNegCycle(int v)} $\rightarrow$ indica si v esta en un ciclo negativo. 3. \texttt{hasNegCycle(int a, int b)} $\rightarrow$ indica si hay ciclo negativo en algun camino a-b. \textit{Note:} Inicializar g[i][i]=0 y g[u][v]=peso.
+\vspace{0.15cm}
+
+\textbf{SCC and 2-SAT} --- \textbf{Complexity:} $O(V+E)$ \\
+\textit{Usage:} 1. \texttt{scc()} $\rightarrow$ calcula componentes fuertemente conexas. 2. \texttt{addor(int a, int b)} $\rightarrow$ agrega la clausula a OR b. 3. \texttt{satisf(int nvar)} $\rightarrow$ devuelve si la instancia 2-SAT es satisfacible. \textit{Note:} Usa literales codificados con neg(a).
+\vspace{0.15cm}
+
+\textbf{Articulation, bridges and biconnected} --- \textbf{Complexity:} $O(V+E)$ \\
+\textit{Usage:} 1. \texttt{add\_edge(int u, int v)} $\rightarrow$ agrega una arista no dirigida. 2. \texttt{doit()} $\rightarrow$ ejecuta DFS y marca puentes/componentes. 3. \texttt{edge.bridge} $\rightarrow$ queda verdadero para aristas puente. \textit{Note:} Reinicializar vectores globales entre casos.
+\vspace{0.15cm}
+
+\textbf{Chu-Liu Edmonds arborescence} --- \textbf{Complexity:} $O(VE)$ \\
+\textit{Usage:} 1. \texttt{ChuLiu(int n, int r)} $\rightarrow$ crea instancia con n nodos y raiz r. 2. \texttt{add\_edge(int u, int v, tw w)} $\rightarrow$ agrega arco dirigido u -> v. 3. \texttt{doit()} $\rightarrow$ devuelve el costo de la arborescencia minima. \textit{Note:} Los nodos deben ser alcanzables desde la raiz.
+\vspace{0.15cm}
+
+\textbf{LCA binary lifting} --- \textbf{Complexity:} $O(N \log N build, \log N query)$ \\
+\textit{Usage:} 1. \texttt{lca\_init()} $\rightarrow$ precalcula profundidad y tabla binaria. 2. \texttt{lca(int x, int y)} $\rightarrow$ devuelve el ancestro comun mas bajo. \textit{Note:} Asume arbol enraizado en 0.
+\vspace{0.15cm}
+
+\textbf{Heavy-light decomposition} --- \textbf{Complexity:} $O(N build, \log^2 N query)$ \\
+\textit{Usage:} 1. \texttt{hld\_init()} $\rightarrow$ calcula cadenas y posiciones. 2. \texttt{query(int x, int y, STree\& rmq)} $\rightarrow$ consulta el camino x-y usando segment tree. \textit{Note:} Combinar con un segment tree sobre las posiciones linealizadas.
+\vspace{0.15cm}
+
+\textbf{Centroid decomposition} --- \textbf{Complexity:} $O(N \log N)$ \\
+\textit{Usage:} 1. \texttt{centroid()} $\rightarrow$ construye la descomposicion. 2. \texttt{cdfs(int x, int f, int sz)} $\rightarrow$ procesa recursivamente centroides. \textit{Note:} Completar la logica de actualizacion/consulta dentro del DFS segun el problema.
+\vspace{0.15cm}
+
+\textbf{Parallel DFS} --- \textbf{Complexity:} $O(V+E)$ \\
+\textit{Usage:} 1. \texttt{Tree} $\rightarrow$ estructura auxiliar para DFS en paralelo. 2. \texttt{Tree::go(int x)} $\rightarrow$ recorre el arbol manteniendo estado compartido. \textit{Note:} Snippet especializado; revisar invariantes del problema antes de usar.
+\vspace{0.15cm}
+
+\textbf{Eulerian path} --- \textbf{Complexity:} $O(V+E)$ \\
+\textit{Usage:} 1. \texttt{add\_edge(int a, int b)} $\rightarrow$ agrega arista al multigrafo. 2. \texttt{get\_path(int x)} $\rightarrow$ devuelve un camino euleriano que empieza en x. \textit{Note:} Verificar grados/conectividad antes de llamar si el problema no lo garantiza.
+\vspace{0.15cm}
+
+\textbf{Offline dynamic connectivity} --- \textbf{Complexity:} $O((N+Q) \log Q)$ \\
+\textit{Usage:} 1. \texttt{DynCon(int n, int q)} $\rightarrow$ prepara estructura offline. 2. \texttt{add(int l, int r, Query e)} $\rightarrow$ activa una arista en el intervalo [l, r). 3. \texttt{go(int k, int s, int e)} $\rightarrow$ resuelve recursivamente consultas con rollback. \textit{Note:} Procesa consultas offline con union-find rollback.
+\vspace{0.15cm}
+
+\textbf{Dominator tree} --- \textbf{Complexity:} $O((V+E) \alpha(V))$ \\
+\textit{Usage:} 1. \texttt{dominators(int rt)} $\rightarrow$ calcula dominadores desde la raiz rt. 2. \texttt{idom[v]} $\rightarrow$ padre inmediato de v en el arbol de dominadores. \textit{Note:} Algoritmo Lengauer-Tarjan; nodos no alcanzables requieren filtrado.
+\vspace{0.15cm}
+
+\textbf{Edmonds blossom} --- \textbf{Complexity:} $O(V^2 E)$ \\
+\textit{Usage:} 1. \texttt{edmonds()} $\rightarrow$ devuelve tamano de matching maximo en grafo general. 2. \texttt{aug(int s, int t)} $\rightarrow$ busca camino aumentante desde s. \textit{Note:} Grafo no dirigido; limpiar matching global entre casos.
+\vspace{0.15cm}
 
 \subsection{Math}
-\begin{itemize}
-    \item \textbf{Pollard's Rho}: Integer factorization in $O(n^{1/4})$.
-    \item \textbf{FFT / NTT}: Polynomial multiplication in $O(n \log n)$.
-    \item \textbf{Berlekamp-Massey}: Finds the shortest linear recurrence for a given sequence.
-    \item \textbf{Simplex}: Solves linear programming problems (optimization under constraints).
-    \item \textbf{Chinese Remainder Theorem}: Solves systems of congruences with coprime moduli.
-\end{itemize}
+
+\textbf{Integer floor division} --- \textbf{Complexity:} $O(1)$ \\
+\textit{Usage:} 1. \texttt{floordiv(ll x, ll y, ll\& q, ll\& r)} $\rightarrow$ calcula q=floor(x/y) y residuo r. 2. \texttt{q, r} $\rightarrow$ satisfacen x = q*y + r con r ajustado al signo esperado. \textit{Note:} Pensado para x negativo; revisar convencion de residuo si y < 0.
+\vspace{0.15cm}
+
+\textbf{Extended Euclid} --- \textbf{Complexity:} $O(\log min(a,b))$ \\
+\textit{Usage:} 1. \texttt{euclid(ll a, ll b, ll\& x, ll\& y)} $\rightarrow$ devuelve gcd(a,b) y coeficientes x,y. 2. \texttt{x, y} $\rightarrow$ cumplen a*x + b*y = gcd(a,b).
+\vspace{0.15cm}
+
+\textbf{Sieve of Eratosthenes} --- \textbf{Complexity:} $O(N \log \log N)$ \\
+\textit{Usage:} 1. \texttt{init\_sieve()} $\rightarrow$ precalcula primalidad/factor menor hasta MAXN. 2. \texttt{sv[x]} $\rightarrow$ indica factor o estado de x segun el snippet. \textit{Note:} Ajustar MAXN antes de compilar.
+\vspace{0.15cm}
+
+\textbf{Generate divisors} --- \textbf{Complexity:} $O(d(n))$ \\
+\textit{Usage:} 1. \texttt{divisors(vector<pair<ll,int>> f)} $\rightarrow$ genera todos los divisores desde la factorizacion. 2. \texttt{div\_rec(...)} $\rightarrow$ recursion interna para multiplicar potencias. \textit{Note:} La entrada es factorizacion {primo, exponente}.
+\vspace{0.15cm}
+
+\textbf{Pollard Rho factorization} --- \textbf{Complexity:} $O(probabilistic, about n^{1/4})$ \\
+\textit{Usage:} 1. \texttt{rabin(ll n)} $\rightarrow$ test probabilistico/deterministico practico de primalidad. 2. \texttt{rho(ll n)} $\rightarrow$ encuentra un factor no trivial. 3. \texttt{fact(ll n, map<ll,int>\& f)} $\rightarrow$ factoriza n en el mapa f. \textit{Note:} Para la version con primos chicos, llamar init\_sv primero.
+\vspace{0.15cm}
+
+\textbf{Simpson integration} --- \textbf{Complexity:} $O(N)$ \\
+\textit{Usage:} 1. \texttt{integrate(double f(double), double a, double b, int n)} $\rightarrow$ aproxima la integral de f en [a,b]. 2. \texttt{n} $\rightarrow$ cantidad de subintervalos; mayor n mejora precision. \textit{Note:} Usar n par/grande para mejor estabilidad.
+\vspace{0.15cm}
+
+\textbf{Polynomial utilities} --- \textbf{Complexity:} $O(depends on operation)$ \\
+\textit{Usage:} 1. \texttt{poly<T>} $\rightarrow$ representa polinomios por coeficientes. 2. \texttt{roots(poly<> p)} $\rightarrow$ busca raices enteras. 3. \texttt{interpolate(vector<tp> x, vector<tp> y)} $\rightarrow$ construye polinomio interpolante. \textit{Note:} Complejidades son cuadraticas en las operaciones basicas incluidas.
+\vspace{0.15cm}
+
+\textbf{Bairstow roots} --- \textbf{Complexity:} $O(ITER * degree)$ \\
+\textit{Usage:} 1. \texttt{bairstow(poly<> p)} $\rightarrow$ aproxima un factor cuadratico de p. 2. \texttt{roots(poly<> p)} $\rightarrow$ devuelve raices reales aproximadas. \textit{Note:} Requiere el tipo poly del archivo de polinomios.
+\vspace{0.15cm}
+
+\textbf{Fast Fourier Transform} --- \textbf{Complexity:} $O(N \log N)$ \\
+\textit{Usage:} 1. \texttt{dft(CD* a, int n, bool inv)} $\rightarrow$ transforma in-place. 2. \texttt{multiply(poly\& p1, poly\& p2)} $\rightarrow$ multiplica polinomios/convoluciona vectores. \textit{Note:} Elegir version FFT o NTT segun comentarios del archivo.
+\vspace{0.15cm}
+
+\textbf{FFT polynomial operations} --- \textbf{Complexity:} $O(N \log N per high-level operation)$ \\
+\textit{Usage:} 1. \texttt{invert(poly\& p, int d)} $\rightarrow$ inverso formal modulo $x^d$. 2. \texttt{log(poly\& p, int d)} $\rightarrow$ logaritmo formal modulo $x^d$. 3. \texttt{interpolate(vector<tf>\& x, vector<tf>\& y)} $\rightarrow$ interpola puntos usando arbol de productos. \textit{Note:} Depende de multiply y aritmetica modular definida en el notebook.
+\vspace{0.15cm}
+
+\textbf{Fast Hadamard Transform} --- \textbf{Complexity:} $O(N \log N)$ \\
+\textit{Usage:} 1. \texttt{fht(ll* p, int n, bool inv)} $\rightarrow$ transforma para XOR/AND/OR segun variante. 2. \texttt{multiply(vector<ll>\& p1, vector<ll>\& p2)} $\rightarrow$ convoluciona con la transformada elegida. \textit{Note:} Ajustar el operador dentro del archivo segun XOR, AND u OR.
+\vspace{0.15cm}
+
+\textbf{Karatsuba multiplication} --- \textbf{Complexity:} $O(N^{1.585})$ \\
+\textit{Usage:} 1. \texttt{karatsura(int n, tp* p, tp* q, tp* r)} $\rightarrow$ multiplica arreglos de tamano n. 2. \texttt{multiply(vector<tp> p0, vector<tp> p1)} $\rightarrow$ devuelve la convolucion. \textit{Note:} El nombre de la funcion interna esta escrito como en el snippet.
+\vspace{0.15cm}
+
+\textbf{Linear Diophantine equations} --- \textbf{Complexity:} $O(\log min(a,b))$ \\
+\textit{Usage:} 1. \texttt{extendedEuclid(ll a, ll b)} $\rightarrow$ devuelve coeficientes de Bezout. 2. \texttt{diophantine(ll a, ll b, ll r)} $\rightarrow$ resuelve a*x + b*y = r y direccion de soluciones. \textit{Note:} r debe ser multiplo de gcd(a,b).
+\vspace{0.15cm}
+
+\textbf{Modular inverse} --- \textbf{Complexity:} $O(\log mod)$ \\
+\textit{Usage:} 1. \texttt{inv(ll a, ll mod)} $\rightarrow$ devuelve el inverso de a modulo mod. \textit{Note:} Requiere gcd(a, mod)=1.
+\vspace{0.15cm}
+
+\textbf{Chinese remainder theorem} --- \textbf{Complexity:} $O(K \log M)$ \\
+\textit{Usage:} 1. \texttt{sol(tuple<ll,ll,ll> c)} $\rightarrow$ resuelve una congruencia a*x = b mod m. 2. \texttt{crt(vector<tuple<ll,ll,ll>> cond)} $\rightarrow$ combina condiciones y devuelve {solucion, lcm}. \textit{Note:} Requiere inv, diophantine, gcd y que el lcm quepa en ll.
+\vspace{0.15cm}
+
+\textbf{Mobius function} --- \textbf{Complexity:} $O(N \log N)$ \\
+\textit{Usage:} 1. \texttt{mobius()} $\rightarrow$ precalcula mu hasta MAXN. 2. \texttt{mu[i]} $\rightarrow$ queda con la funcion de Mobius de i. \textit{Note:} Ajustar MAXN y limpiar arreglos entre usos.
+\vspace{0.15cm}
+
+\textbf{Matrix fast exponentiation} --- \textbf{Complexity:} $O(N^3 \log E)$ \\
+\textit{Usage:} 1. \texttt{ones(int n)} $\rightarrow$ devuelve matriz identidad n x n. 2. \texttt{be(Matrix b, ll e)} $\rightarrow$ calcula $b^e$ por exponenciacion binaria. \textit{Note:} Cambiar multiplicacion/modulo dentro del operador si hace falta.
+\vspace{0.15cm}
+
+\textbf{Gaussian elimination} --- \textbf{Complexity:} $O(NM min(N,M))$ \\
+\textit{Usage:} 1. \texttt{reduce(vector<vector<double>>\& x)} $\rightarrow$ reduce la matriz y devuelve determinante cuando aplica. 2. \texttt{x} $\rightarrow$ queda en forma escalonada reducida. \textit{Note:} Usa double y EPS; para modulares cambiar division y comparacion.
+\vspace{0.15cm}
+
+\textbf{Simplex} --- \textbf{Complexity:} $O(exponential worst-case, fast in practice)$ \\
+\textit{Usage:} 1. \texttt{simplex(int n, int m)} $\rightarrow$ resuelve LP en forma estandar. 2. \texttt{pivot(int x, int y)} $\rightarrow$ realiza pivoteo interno. \textit{Note:} Revisar convencion de restricciones antes de copiar.
+\vspace{0.15cm}
+
+\textbf{Discrete logarithm} --- \textbf{Complexity:} $O(\sqrt{m})$ \\
+\textit{Usage:} 1. \texttt{discrete\_log(ll a, ll b, ll m)} $\rightarrow$ encuentra $x$ tal que $a^x \equiv b \pmod{m}$. \textit{Note:} Baby-step giant-step; revisar casos gcd(a,m) != 1.
+\vspace{0.15cm}
+
+\textbf{Berlekamp-Massey} --- \textbf{Complexity:} $O(N^2)$ \\
+\textit{Usage:} 1. \texttt{BM(vi x)} $\rightarrow$ devuelve coeficientes de la recurrencia minima. 2. \texttt{cur} $\rightarrow$ coeficientes normalizados modulo MOD. \textit{Note:} La secuencia y MOD son globales/externos.
+\vspace{0.15cm}
+
+\textbf{Linear recurrence} --- \textbf{Complexity:} $O(K^2 \log N)$ \\
+\textit{Usage:} 1. \texttt{LinearRec(vector<int> terms, vector<int> trans)} $\rightarrow$ define terminos iniciales y transicion. 2. \texttt{calc(ll k)} $\rightarrow$ devuelve el k-esimo termino. \textit{Note:} Combina Berlekamp-Massey con exponenciacion de polinomios.
+\vspace{0.15cm}
+
+\textbf{Tonelli-Shanks} --- \textbf{Complexity:} $O(\log^2 p)$ \\
+\textit{Usage:} 1. \texttt{legendre(ll a, ll p)} $\rightarrow$ calcula simbolo de Legendre. 2. \texttt{tonelli\_shanks(ll n, ll p)} $\rightarrow$ devuelve una raiz cuadrada de n modulo p. \textit{Note:} p debe ser primo.
+\vspace{0.15cm}
+
+\textbf{Prime counting} --- \textbf{Complexity:} $O(n^{2/3} / \log n)$ \\
+\textit{Usage:} 1. \texttt{prime\_count(ll n)} $\rightarrow$ devuelve pi(n), cantidad de primos <= n. \textit{Note:} Usar ll; revisar memoria para n grande.
+\vspace{0.15cm}
+
+\textbf{Number Theoretic Transform} --- \textbf{Complexity:} $O(N \log N)$ \\
+\textit{Usage:} 1. \texttt{FFT<u, uu, p, root>} $\rightarrow$ transformada modular parametrizada. 2. \texttt{conv\_small(const poly\& a, const poly\& b)} $\rightarrow$ convolucion bajo modulo NTT. 3. \texttt{conv\_sunzi(const poly\& a, const poly\& b, ll m)} $\rightarrow$ convolucion con CRT para modulo arbitrario. \textit{Note:} Elegir primos/raices compatibles con el tamano.
+\vspace{0.15cm}
+
+\textbf{Lattice points under line} --- \textbf{Complexity:} $O(\log max(a,b,c))$ \\
+\textit{Usage:} 1. \texttt{f(ll a, ll b, ll c)} $\rightarrow$ suma pisos relacionada con ax+b sobre c. 2. \texttt{g(ll a, ll b, ll c, ll X, ll Y)} $\rightarrow$ cuenta puntos bajo una recta en una caja. \textit{Note:} Verificar inclusividad de bordes para el problema.
+\vspace{0.15cm}
+
+\subsection{Geometry}
+
+\textbf{Point} --- \textbf{Complexity:} $O(1 per operation)$ \\
+\textit{Usage:} 1. \texttt{pt} $\rightarrow$ punto/vector 2D con operaciones aritmeticas. 2. \texttt{pt::norm()} $\rightarrow$ devuelve longitud. 3. \texttt{pt::rot(pt r)} $\rightarrow$ rota usando el vector r. \textit{Note:} Para 3D, agregar coordenada z como indica el comentario.
+\vspace{0.15cm}
+
+\textbf{Line} --- \textbf{Complexity:} $O(1 per operation)$ \\
+\textit{Usage:} 1. \texttt{ln(pt p, pt q)} $\rightarrow$ crea recta por dos puntos. 2. \texttt{ln::proj(pt p)} $\rightarrow$ proyecta p sobre la recta. 3. 3. \texttt{operator\string^(ln l, ln m)} $\rightarrow$ interseccion de dos rectas. \textit{Note:} Depende de pt y EPS.
+\vspace{0.15cm}
+
+\textbf{Circle} --- \textbf{Complexity:} $O(1 per primitive, N for intercircles)$ \\
+\textit{Usage:} 1. \texttt{circle(pt o, double r)} $\rightarrow$ define centro y radio. 2. \texttt{circle::has(pt p)} $\rightarrow$ clasifica punto respecto al circulo. 3. \texttt{intercircles(vector<circle> c)} $\rightarrow$ calcula area cubierta por circulos. \textit{Note:} Usa EPS; revisar tangencias.
+\vspace{0.15cm}
+
+\textbf{Polygon} --- \textbf{Complexity:} $O(N per basic query, \log^2 N dynamic hull query)$ \\
+\textit{Usage:} 1. \texttt{pol::area()} $\rightarrow$ devuelve area orientada. 2. \texttt{pol::has(pt q)} $\rightarrow$ clasifica punto respecto del poligono. 3. \texttt{add(pt q) / query(pt v)} $\rightarrow$ mantiene hull dinamico y consulta maximo dot. \textit{Note:} Convenciones de orientacion y borde dependen de sgn/EPS.
+\vspace{0.15cm}
+
+\textbf{Plane} --- \textbf{Complexity:} $O(1 per operation)$ \\
+\textit{Usage:} 1. \texttt{plane(pt p, pt n)} $\rightarrow$ plano por punto y normal. 2. \texttt{plane::side(pt q)} $\rightarrow$ clasifica q respecto al plano. 3. \texttt{operator\string^(plane a, plane b)} $\rightarrow$ interseccion de planos cuando aplica. \textit{Note:} Pensado para geometria 3D con pt extendido.
+\vspace{0.15cm}
+
+\textbf{Radial order} --- \textbf{Complexity:} $O(N \log N sort)$ \\
+\textit{Usage:} 1. \texttt{Cmp} $\rightarrow$ comparador angular para ordenar puntos radialmente. 2. \texttt{sort(v.begin(), v.end(), Cmp())} $\rightarrow$ ordena por semiplano y producto cruz. \textit{Note:} El comentario del archivo pide const en operator- de pt.
+\vspace{0.15cm}
+
+\textbf{Convex hull} --- \textbf{Complexity:} $O(N \log N)$ \\
+\textit{Usage:} 1. \texttt{chull(vector<pt> p)} $\rightarrow$ devuelve el hull convexo de los puntos. \textit{Note:} Revisar si conserva o elimina colineales segun la condicion de giro.
+\vspace{0.15cm}
+
+\textbf{Planar graph dual} --- \textbf{Complexity:} $O(E \log E)$ \\
+\textit{Usage:} 1. \texttt{get\_dual(vector<pt> p)} $\rightarrow$ construye caras/dual desde embedding planar. 2. \texttt{g[u]} $\rightarrow$ lista de adyacencia geometrica del grafo primal. \textit{Note:} Los puntos deben corresponder a nodos del embedding sin cruces.
+\vspace{0.15cm}
+
+\textbf{Halfplane intersection} --- \textbf{Complexity:} $O(N \log N)$ \\
+\textit{Usage:} 1. \texttt{halfplane(pt p, pt q)} $\rightarrow$ define semiplano por borde orientado. 2. \texttt{intersect(vector<halfplane> b)} $\rightarrow$ devuelve poligono de interseccion. \textit{Note:} Agregar caja grande si la interseccion puede ser no acotada.
+\vspace{0.15cm}
+
+\textbf{KD tree} --- \textbf{Complexity:} $O(N \log N build, about \log N query average)$ \\
+\textit{Usage:} 1. \texttt{KDTree(vector<pt> p)} $\rightarrow$ construye KD-tree. 2. \texttt{nearest(pt q)} $\rightarrow$ consulta punto mas cercano. \textit{Note:} Rendimiento depende de distribucion de puntos.
+\vspace{0.15cm}
+
+\textbf{Minkowski sum} --- \textbf{Complexity:} $O(N+M after sorting)$ \\
+\textit{Usage:} 1. \texttt{reorder(vector<pt>\& p)} $\rightarrow$ rota poligono para empezar por el menor punto. 2. \texttt{minkowski\_sum(vector<pt> p, vector<pt> q)} $\rightarrow$ devuelve suma de Minkowski de poligonos convexos. \textit{Note:} Los poligonos deben estar en orden alrededor del borde.
+\vspace{0.15cm}
+
+\textbf{Delaunay triangulation} --- \textbf{Complexity:} $O(N \log N expected)$ \\
+\textit{Usage:} 1. \texttt{delaunay(vector<pt> v)} $\rightarrow$ devuelve triangulacion como adyacencias. 2. \texttt{in\_c(pt a, pt b, pt c, pt p)} $\rightarrow$ test de circuncirculo interno. \textit{Note:} Evitar puntos duplicados; sensible a EPS/orientacion.
+\vspace{0.15cm}
 
 \subsection{Strings}
-\begin{itemize}
-    \item \textbf{Aho-Corasick}: Multiple pattern matching using a trie-based automaton in $O(\sum |pattern|)$.
-    \item \textbf{Suffix Automaton}: DFA that recognizes all substrings of a string in $O(n)$.
-    \item \textbf{Palindromic Tree}: Maintains all unique palindromic substrings in $O(n)$.
-    \item \textbf{Suffix Array}: Lexicographically sorted list of all suffixes of a string.
-\end{itemize}
+
+\textbf{KMP} --- \textbf{Complexity:} $O(N+M)$ \\
+\textit{Usage:} 1. \texttt{kmppre(string\& t)} $\rightarrow$ calcula funcion de prefijo/bordes del patron. 2. \texttt{kmp(string\& s, string\& t)} $\rightarrow$ encuentra ocurrencias de t en s. \textit{Note:} Adaptar el cuerpo de kmp para guardar/imprimir matches.
+\vspace{0.15cm}
+
+\textbf{Z function} --- \textbf{Complexity:} $O(N)$ \\
+\textit{Usage:} 1. \texttt{z\_function(string\& s)} $\rightarrow$ devuelve z[i], largo del prefijo que empieza en i. \textit{Note:} Util para matching concatenando patron + separador + texto.
+\vspace{0.15cm}
+
+\textbf{Manacher} --- \textbf{Complexity:} $O(N)$ \\
+\textit{Usage:} 1. \texttt{manacher(string\& s)} $\rightarrow$ precalcula radios de palindromos pares e impares. 2. \texttt{d1, d2} $\rightarrow$ arreglos de radios segun paridad. \textit{Note:} Revisar convencion de indices del snippet.
+\vspace{0.15cm}
+
+\textbf{Aho-Corasick} --- \textbf{Complexity:} $O(total length + matches)$ \\
+\textit{Usage:} 1. \texttt{aho\_init()} $\rightarrow$ inicializa el automata. 2. \texttt{add\_string(string s, int id)} $\rightarrow$ agrega patron con identificador. 3. \texttt{go(int v, char c)} $\rightarrow$ transicion del automata con links calculados lazy. \textit{Note:} No olvidar llamar aho\_init antes de insertar.
+\vspace{0.15cm}
+
+\textbf{Suffix automaton} --- \textbf{Complexity:} $O(N)$ \\
+\textit{Usage:} 1. \texttt{sa\_init()} $\rightarrow$ inicializa automata vacio. 2. \texttt{sa\_extend(char c)} $\rightarrow$ agrega un caracter al final. 3. \texttt{state::next} $\rightarrow$ transiciones por caracter. \textit{Note:} Limpiar next en cada estado nuevo.
+\vspace{0.15cm}
+
+\textbf{Palindromic tree} --- \textbf{Complexity:} $O(N)$ \\
+\textit{Usage:} 1. \texttt{palindromic\_tree} $\rightarrow$ estructura Eertree para palindromos distintos. 2. \texttt{add(int c)} $\rightarrow$ agrega un caracter y actualiza sufijo palindromico. 3. \texttt{node} $\rightarrow$ almacena longitud, link y transiciones. \textit{Note:} Usar alfabeto/offset adecuados.
+\vspace{0.15cm}
+
+\textbf{Suffix array slow} --- \textbf{Complexity:} $O(N \log^2 N)$ \\
+\textit{Usage:} 1. \texttt{constructSA(string\& s)} $\rightarrow$ devuelve suffix array usando comparacion de substrings. 2. \texttt{sacomp(int lhs, int rhs)} $\rightarrow$ comparador de sufijos. \textit{Note:} Simple pero lento; preferir la version O(N log N) para strings grandes.
+\vspace{0.15cm}
+
+\textbf{Suffix array} --- \textbf{Complexity:} $O(N \log N)$ \\
+\textit{Usage:} 1. \texttt{constructSA(string\& s)} $\rightarrow$ construye suffix array. 2. \texttt{csort(vector<int>\& sa, vector<int>\& r, int k)} $\rightarrow$ counting sort por ranking desplazado. \textit{Note:} Agregar sentinel si el problema lo requiere.
+\vspace{0.15cm}
+
+\textbf{LCP array} --- \textbf{Complexity:} $O(N)$ \\
+\textit{Usage:} 1. \texttt{computeLCP(string\& s, vector<int>\& sa)} $\rightarrow$ devuelve LCP entre sufijos consecutivos en sa. \textit{Note:} Requiere suffix array valido de s.
+\vspace{0.15cm}
+
+\textbf{Suffix tree} --- \textbf{Complexity:} $O(N)$ \\
+\textit{Usage:} 1. \texttt{SuffixTree(string s)} $\rightarrow$ construye arbol de sufijos con Ukkonen. 2. \texttt{go(...)} $\rightarrow$ navega por transiciones internas. 3. \texttt{split(...)} $\rightarrow$ divide una arista durante la extension. \textit{Note:} Agregar sentinel unico al string para hojas explicitas.
+\vspace{0.15cm}
+
+\textbf{String hashing} --- \textbf{Complexity:} $O(N build, 1 query)$ \\
+\textit{Usage:} 1. \texttt{Hash(string s)} $\rightarrow$ precalcula hashes/potencias. 2. \texttt{get(int l, int r)} $\rightarrow$ devuelve hash del substring [l, r). \textit{Note:} Usar doble hash o modulo robusto si hay riesgo de colision.
+\vspace{0.15cm}
+
+\textbf{String hashing with \_\_int128} --- \textbf{Complexity:} $O(N build, 1 query)$ \\
+\textit{Usage:} 1. \texttt{Hash(string s)} $\rightarrow$ precalcula hash con multiplicacion amplia. 2. \texttt{get(int l, int r)} $\rightarrow$ devuelve hash de substring. \textit{Note:} Usa \_\_int128; requiere compilador GNU/Clang compatible.
+\vspace{0.15cm}
 
 \subsection{Flow}
-\begin{itemize}
-    \item \textbf{Dinic}: Maximum flow in $O(V^2 E)$, much faster in unit networks or bipartite matching.
-    \item \textbf{MCMF}: Minimum cost maximum flow using SPFA or Dijkstra with potentials.
-    \item \textbf{Hungarian}: Solves the assignment problem (perfect matching in bipartite graphs) in $O(n^3)$.
-\end{itemize}
+
+\textbf{Bipartite matching DFS} --- \textbf{Complexity:} $O(VE)$ \\
+\textit{Usage:} 1. \texttt{match(int x)} $\rightarrow$ intenta aumentar desde el nodo izquierdo x. 2. \texttt{mm()} $\rightarrow$ devuelve las parejas encontradas. \textit{Note:} Mas simple que Hopcroft-Karp; usar en grafos chicos.
+\vspace{0.15cm}
+
+\textbf{Hopcroft-Karp} --- \textbf{Complexity:} $O(E \sqrt{V})$ \\
+\textit{Usage:} 1. \texttt{bfs()} $\rightarrow$ construye capas desde libres izquierdos. 2. \texttt{dfs(int x)} $\rightarrow$ aumenta por caminos de capas. 3. \texttt{mm()} $\rightarrow$ devuelve el tamano del matching maximo. \textit{Note:} Particiones izquierda/derecha definidas por los arreglos globales.
+\vspace{0.15cm}
+
+\textbf{Hungarian algorithm} --- \textbf{Complexity:} $O(N^3)$ \\
+\textit{Usage:} 1. \texttt{Hungarian(int n, int m)} $\rightarrow$ resuelve asignacion rectangular. 2. \texttt{assign()} $\rightarrow$ devuelve costo y matching optimo. 3. \texttt{L[i]} $\rightarrow$ columna asignada a la fila i. \textit{Note:} Cambiar signo de costos para maximizacion.
+\vspace{0.15cm}
+
+\textbf{Dinic max flow} --- \textbf{Complexity:} $O(V^2 E)$ \\
+\textit{Usage:} 1. \texttt{Dinic(int nodes)} $\rightarrow$ crea red con nodes vertices. 2. \texttt{add\_edge(int s, int t, ll cap)} $\rightarrow$ agrega arco con capacidad. 3. \texttt{max\_flow(int src, int dst)} $\rightarrow$ devuelve flujo maximo src-dst. \textit{Note:} Despues del flujo, dist permite recuperar corte minimo como indica el comentario.
+\vspace{0.15cm}
+
+\textbf{Min-cost max-flow} --- \textbf{Complexity:} $O(F E \log V)$ \\
+\textit{Usage:} 1. \texttt{MCF(int n)} $\rightarrow$ crea red con n vertices. 2. \texttt{add\_edge(int s, int t, tf cap, tc cost)} $\rightarrow$ agrega arco capacitado con costo. 3. \texttt{get\_flow(int s, int t)} $\rightarrow$ devuelve \{flujo, costo\} maximo de costo minimo. \textit{Note:} Usa potenciales y Dijkstra; costos negativos requieren potencial inicial valido.
+\vspace{0.15cm}
+
+\subsection{Other}
+
+\textbf{Mo algorithm} --- \textbf{Complexity:} $O((N+Q) \sqrt{N})$ \\
+\textit{Usage:} 1. \texttt{mos()} $\rightarrow$ ordena consultas y mantiene ventana activa. 2. \texttt{add(pos) / remove(pos)} $\rightarrow$ actualizan la respuesta al mover extremos. 3. \texttt{qu\{l,r,id\}} $\rightarrow$ representa consulta offline. \textit{Note:} Completar add/remove segun la funcion objetivo.
+\vspace{0.15cm}
+
+\textbf{Divide and conquer DP optimization} --- \textbf{Complexity:} $O(K N \log N)$ \\
+\textit{Usage:} 1. \texttt{doit(int s, int e, int s0, int e0, int i)} $\rightarrow$ calcula una capa DP restringiendo optimo. 2. \texttt{doall()} $\rightarrow$ ejecuta todas las capas necesarias. \textit{Note:} Valido si el optimo es monotono.
+\vspace{0.15cm}
+
+\textbf{Date conversion} --- \textbf{Complexity:} $O(1)$ \\
+\textit{Usage:} 1. \texttt{dateToInt(int y, int m, int d)} $\rightarrow$ convierte fecha gregoriana a entero juliano. 2. \texttt{intToDate(int jd, int\& y, int\& m, int\& d)} $\rightarrow$ convierte entero a fecha. 3. \texttt{DayOfWeek(int d, int m, int y)} $\rightarrow$ devuelve dia de semana empezando en domingo. \textit{Note:} Revisar calendario esperado por el problema.
+\vspace{0.15cm}
