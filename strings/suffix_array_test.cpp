@@ -1,6 +1,11 @@
 // ICPC Live Archive 5794 - AC
 // https://icpcarchive.ecs.baylor.edu/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3805
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,to=b;i<to;++i)
 using namespace std;
 
 typedef long long ll;
@@ -11,20 +16,20 @@ typedef long long ll;
 void csort(vector<int>& sa, vector<int>& r, int k){
 	int n=sa.size(),top=max(255,n+1);
 	vector<int> f(top,0),t(n);
-	for (int i = 0; i < n; ++i)f[RB(i+k)]++;
+	fore(i,0,n)f[RB(i+k)]++;
 	int sum=0;
-	for (int i = 0; i < top; ++i)f[i]=(sum+=f[i])-f[i];
-	for (int i = 0; i < n; ++i)t[f[RB(sa[i]+k)]++]=sa[i];
+	fore(i,0,top)f[i]=(sum+=f[i])-f[i];
+	fore(i,0,n)t[f[RB(sa[i]+k)]++]=sa[i];
 	sa=t;
 }
 vector<int> constructSA(string& s){ // O(n logn)
 	int n=s.size(),rank;
 	vector<int> sa(n),r(n),t(n);
-	for (int i = 0; i < n; ++i)sa[i]=i,r[i]=s[i];
+	fore(i,0,n)sa[i]=i,r[i]=s[i];
 	for(int k=1;k<n;k*=2){
 		csort(sa,r,k);csort(sa,r,0);
 		t[sa[0]]=rank=1;
-		for (int i = 1; i < n; ++i){
+		fore(i,1,n){
 			if(r[sa[i]]!=r[sa[i-1]]||RB(sa[i]+k)!=RB(sa[i-1]+k))rank++;
 			t[sa[i]]=rank;
 		}
@@ -37,14 +42,14 @@ vector<int> computeLCP(string& s, vector<int>& sa){
 	int n=s.size(),L=0;
 	vector<int> lcp(n),plcp(n),phi(n);
 	phi[sa[0]]=-1;
-	for (int i = 1; i < n; ++i)phi[sa[i]]=sa[i-1];
-	for (int i = 0; i < n; ++i){
+	fore(i,1,n)phi[sa[i]]=sa[i-1];
+	fore(i,0,n){
 		if(phi[i]<0){plcp[i]=0;continue;}
 		while(s[i+L]!='$'&&s[i+L]==s[phi[i]+L])L++;  // small modification on this line (specific of the problem)
 		plcp[i]=L;
 		L=max(L-1,0);
 	}
-	for (int i = 0; i < n; ++i)lcp[i]=plcp[sa[i]];
+	fore(i,0,n)lcp[i]=plcp[sa[i]];
 	return lcp;
 }
 
@@ -60,7 +65,7 @@ int main(){
 		sol.clear();
 		string T="$";
 		memset(w,-1,sizeof(w));
-		for (int i = 0; i < m; ++i){
+		fore(i,0,m){
 			scanf("%s",s);
 			for(int j=0;s[j];++j)w[T.size()+j]=i;
 			T+=s;
@@ -68,32 +73,32 @@ int main(){
 			T+="$";
 		}
 		vector<int> SA=constructSA(T);
-		vector<int> LCP=computeLCP(T,SA);LCP.push_back(0);
-		for (int i = 0; i < T.size(); ++i){
+		vector<int> LCP=computeLCP(T,SA);LCP.pb(0);
+		fore(i,0,T.size()){
 			if(w[SA[i]]>=0&&r[SA[i]]>max(LCP[i],LCP[i+1]))sol.insert(1LL<<w[SA[i]]);
 		}
-		for (int i = 0; i < T.size(); ++i){
+		fore(i,0,T.size()){
 			ll r=0;
-			while(!st.empty()&&st.top().first>LCP[i]){
-				sol.insert(st.top().second|r);
-				r|=st.top().second;
+			while(!st.empty()&&st.top().fst>LCP[i]){
+				sol.insert(st.top().snd|r);
+				r|=st.top().snd;
 				st.pop();
 			}
-			if(!st.empty())st.top().second|=r;
+			if(!st.empty())st.top().snd|=r;
 			if(!LCP[i])continue;
-			if(st.empty()||st.top().first<LCP[i]){
+			if(st.empty()||st.top().fst<LCP[i]){
 				assert(w[SA[i-1]]>=0&&w[SA[i]]>=0);
 				st.push({LCP[i],r|(1LL<<w[SA[i-1]])|(1LL<<w[SA[i]])});
 			}
 			else {
-				assert(st.top().first==LCP[i]);
-				st.top().second|=1LL<<w[SA[i]];
+				assert(st.top().fst==LCP[i]);
+				st.top().snd|=1LL<<w[SA[i]];
 			}
 		}
 		ll r=0;
 		while(!st.empty()){
-			sol.insert(st.top().second|r);
-			r|=st.top().second;
+			sol.insert(st.top().snd|r);
+			r|=st.top().snd;
 			st.pop();
 		}
 		printf("%d\n",(int)sol.size());

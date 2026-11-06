@@ -1,6 +1,11 @@
 // SPOJ ILKQUERYIII - AC
 // http://www.spoj.com/problems/ILKQUERYIII/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -8,15 +13,15 @@ struct WT {
 	vector<int> wt[1<<20];int n;
 	void init(int k, int s, int e){
 		if(s+1==e)return;
-		wt[k].clear();wt[k].push_back(0);
+		wt[k].clear();wt[k].pb(0);
 		int m=(s+e)/2;
 		init(2*k,s,m);init(2*k+1,m,e);
 	}
 	void add(int k, int s, int e, int v){
 		if(s+1==e)return;
 		int m=(s+e)/2;
-		if(v<m)wt[k].push_back(wt[k].back()),add(2*k,s,m,v);
-		else wt[k].push_back(wt[k].back()+1),add(2*k+1,m,e,v);
+		if(v<m)wt[k].pb(wt[k].back()),add(2*k,s,m,v);
+		else wt[k].pb(wt[k].back()+1),add(2*k+1,m,e,v);
 	}
 	int query0(int k, int s, int e, int a, int b, int i){
 		if(s+1==e)return s;
@@ -52,20 +57,20 @@ WT wt;
 
 int main(){
 	scanf("%d%d",&n,&q);
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		int k;
 		scanf("%d",&k);
 		xx[i]={k,i};
 	}
 	sort(xx,xx+n);
 	c=0;
-	for (int i = 0; i < n; ++i){
-		if(i>0&&xx[i].first!=xx[i-1].first)c++;
-		x[xx[i].second]=c;
+	fore(i,0,n){
+		if(i>0&&xx[i].fst!=xx[i-1].fst)c++;
+		x[xx[i].snd]=c;
 	}
 	c++;
 	wt.init(c);
-	for (int i = 0; i < n; ++i)wt.add(x[i]),z[x[i]].push_back(i);
+	fore(i,0,n)wt.add(x[i]),z[x[i]].pb(i);
 	while(q--){
 		int t;
 		scanf("%d",&t);

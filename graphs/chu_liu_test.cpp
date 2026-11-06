@@ -1,6 +1,10 @@
 // Topcoder SRM 584 Div1, 900 - AC
 // https://community.topcoder.com/stat?c=problem_statement&pm=12614&rd=15696
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -20,23 +24,23 @@ struct ChuLiu{
 	vector<int> inc,dec,take,pre,num,id,vis;
 	vector<tw> inw;
 	void add_edge(int x, int y, tw w){
-		inc.push_back(0); dec.push_back(0); take.push_back(0);
-		e.push_back({x,y,SZ(e),w});
+		inc.pb(0); dec.pb(0); take.pb(0);
+		e.pb({x,y,SZ(e),w});
 	}
 	ChuLiu(int n):n(n),pre(n),num(n),id(n),vis(n),inw(n){}
 	tw doit(int root){
 		auto e2=e;
 		tw ans=0; int eg=SZ(e)-1,pos=SZ(e)-1;
 		while(1){
-			for (int i = 0; i < n; ++i) inw[i]=INF,id[i]=vis[i]=-1;
+			fore(i,0,n) inw[i]=INF,id[i]=vis[i]=-1;
 			for(auto ed:e2) if(ed.len<inw[ed.v]){
 				inw[ed.v]=ed.len; pre[ed.v]=ed.u;
 				num[ed.v]=ed.id;
 			}
 			inw[root]=0;
-			for (int i = 0; i < n; ++i) if(inw[i]==INF) return -1;
+			fore(i,0,n) if(inw[i]==INF) return -1;
 			int tot=-1;
-			for (int i = 0; i < n; ++i){
+			fore(i,0,n){
 				ans+=inw[i];
 				if(i!=root)take[num[i]]++;
 				int j=i;
@@ -47,17 +51,17 @@ struct ChuLiu{
 				}
 			}
 			if(tot<0)break;
-			for (int i = 0; i < n; ++i) if(id[i]<0)id[i]=++tot;
+			fore(i,0,n) if(id[i]<0)id[i]=++tot;
 			n=tot+1; int j=0;
-			for (int i = 0; i < SZ(e2); ++i){
+			fore(i,0,SZ(e2)){
 				int v=e2[i].v;
 				e2[j].v=id[e2[i].v];
 				e2[j].u=id[e2[i].u];
 				if(e2[j].v!=e2[j].u){
 					e2[j].len=e2[i].len-inw[v];
-					inc.push_back(e2[i].id);
-					dec.push_back(num[v]);
-					take.push_back(0);
+					inc.pb(e2[i].id);
+					dec.pb(num[v]);
+					take.pb(0);
 					e2[j++].id=++pos;
 				}
 			}
@@ -92,23 +96,23 @@ int minimalHours(int n, vector<string> courseInfo){
 		else y=(s[i+4]-'A')*9+s[i+5]-'0';
 		w=(s[i+7]-'0')*1000+(s[i+8]-'0')*100+(s[i+9]-'0')*10+(s[i+10]-'0');
 		c.add_edge(x,y,w);
-		g[x].push_back(y);
+		g[x].pb(y);
 	}
-	for (int i = 0; i < n; ++i)for (int j = 1; j < 10; ++j){
+	fore(i,0,n)fore(j,1,10){
 		int x,y;
 		x=i*9+j;
 		if(j==1)y=0;
 		else y=x-1;
 		c.add_edge(x,y,0);
-		g[x].push_back(y);
+		g[x].pb(y);
 	}
 	vis=vector<bool>(9*n+1,false);
 	dfs(0);
-	for (int i = 0; i < 9*n+1; ++i)if(!vis[i])return -1;
+	fore(i,0,9*n+1)if(!vis[i])return -1;
 	//return (int)c.doit(0);;
 	int r=c.doit(0);
-	//for (int x = 0; x < 9*n+1; ++x)printf("%d %d\n",x,c.pr[x]);
-	//for (int x = 0; x < 9*n+1; ++x){
+	//fore(x,0,9*n+1)printf("%d %d\n",x,c.pr[x]);
+	//fore(x,0,9*n+1){
 	//	printf("%d ",x);
 	//	for(int y:c.comp[x])printf(" %d",y);
 	//	puts("");

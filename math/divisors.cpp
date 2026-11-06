@@ -1,6 +1,9 @@
 void div_rec(vector<ll>& r, vector<pair<ll,int> >& f, int k, ll c){
-	if(k==f.size()){r.push_back(c);return;}
-	for (int i = 0; i < f[k].second+1; ++i)div_rec(r,f,k+1,c),c*=f[k].first;
+	if(k==f.size()){r.pb(c);return;}
+	fore(i,0,f[k].snd+1){
+		div_rec(r,f,k+1,c);
+		if(i<f[k].snd)c*=f[k].fst;
+	}
 }
 vector<ll> divisors(vector<pair<ll,int> > f){
 	vector<ll> r; // returns divisors given factorization

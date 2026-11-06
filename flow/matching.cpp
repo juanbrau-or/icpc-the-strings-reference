@@ -10,7 +10,7 @@ int match(int x){
 vector<pair<int,int> > max_matching(){
 	vector<pair<int,int> > r;
 	memset(mat,-1,sizeof(mat));
-	for (int i = 0; i < n; ++i)memset(vis,false,sizeof(vis)),match(i);
-	for (int i = 0; i < m; ++i)if(mat[i]>=0)r.push_back({mat[i],i});
+	fore(i,0,n)memset(vis,false,sizeof(vis)),match(i);
+	fore(i,0,m)if(mat[i]>=0)r.pb({mat[i],i});
 	return r;
 }

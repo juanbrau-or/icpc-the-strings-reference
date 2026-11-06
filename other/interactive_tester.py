@@ -1,26 +1,56 @@
-#Easier method with bash commands:
-#mkfifo fifo
-#(./solution < fifo) | (./interactor > fifo)
-
-# tester for cf 101021A (guess a number, queries: is it >=k?)
+# Python 3. Local judge for guessing an integer in [1, 1000000].
+# Query: an integer k; reply: ">=" if secret >= k, otherwise "<".
+# Answer: ! x. At most 25 queries. Adapt to the actual problem protocol.
+import argparse
+import queue
 import random
-import subprocess as sp
-seed = random.randint(0, sys.maxint);random.seed(seed)
-n=random.randint(1,1000000)
-try:
-	p=sp.Popen(['./a.out'],stdin=sp.PIPE,stdout=sp.PIPE)
-	it=0
-	s=p.stdout.readline()
-	while it<25 and s and s[0]!='!':
-		k=int(s)
-		assert k>=1 and k<=1000000
-		if n>=k: p.stdin.write('>=\n')
-		else: p.stdin.write('<\n')
-		s=p.stdout.readline()
-		it+=1
-	assert s and s[0]=='!'
-	k=int(s.split()[1])
-	assert k==n
-except:
-	print 'failed with seed %s' % seed
-	raise
+import subprocess
+import threading
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("solution", nargs="?", default="./a.out")
+    parser.add_argument("--seed", type=int, default=712367821)
+    args = parser.parse_args()
+    secret = random.Random(args.seed).randint(1, 1000000)
+    p = subprocess.Popen([args.solution], stdin=subprocess.PIPE,
+                         stdout=subprocess.PIPE, text=True, bufsize=1)
+    lines = queue.Queue()
+
+    def reader():
+        for line in p.stdout:
+            lines.put(line)
+        lines.put(None)
+
+    threading.Thread(target=reader, daemon=True).start()
+    queries = 0
+    try:
+        while True:
+            line = lines.get(timeout=5)
+            assert line is not None, "solution exited without an answer"
+            tokens = line.split()
+            assert tokens, "empty query"
+            if tokens[0] == "!":
+                assert len(tokens) == 2 and int(tokens[1]) == secret, "wrong answer"
+                print(f"OK seed={args.seed}, queries={queries}")
+                break
+            assert len(tokens) == 1 and queries < 25, "invalid query / query limit"
+            k = int(tokens[0])
+            assert 1 <= k <= 1000000, "query out of range"
+            p.stdin.write(">=\n" if secret >= k else "<\n")
+            p.stdin.flush()
+            queries += 1
+    except Exception:
+        print(f"FAILED seed={args.seed}")
+        raise
+    finally:
+        if p.poll() is None:
+            p.kill()
+        p.wait()
+        p.stdin.close()
+        p.stdout.close()
+
+
+if __name__ == "__main__":
+    main()

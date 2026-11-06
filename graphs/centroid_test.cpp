@@ -1,6 +1,11 @@
 // SPOJ QTREE5 - AC
 // http://www.spoj.com/problems/QTREE5/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -28,7 +33,7 @@ void centroid(){memset(tk,false,sizeof(tk));cdfs();}
 
 int F[K][1<<K],D[1<<K];
 void lca_dfs(int x){
-	for (int i = 0; i < g[x].size(); ++i){
+	fore(i,0,g[x].size()){
 		int y=g[x][i];if(y==F[0][x])continue;
 		F[0][y]=x;D[y]=D[x]+1;lca_dfs(y);
 	}
@@ -36,7 +41,7 @@ void lca_dfs(int x){
 void lca_init(){
 	D[0]=0;F[0][0]=-1;
 	lca_dfs(0);
-	for (int k = 1; k < K; ++k)for (int x = 0; x < n; ++x)
+	fore(k,1,K)fore(x,0,n)
 		if(F[k-1][x]<0)F[k][x]=-1;
 		else F[k][x]=F[k-1][F[k-1][x]];
 }
@@ -54,10 +59,10 @@ int c[MAXN];
 
 int main(){
 	scanf("%d",&n);
-	for (int _ = 1; _ < n; ++_){
+	fore(_,1,n){
 		int x,y;
 		scanf("%d%d",&x,&y);x--;y--;
-		g[x].push_back(y);g[y].push_back(x);
+		g[x].pb(y);g[y].pb(x);
 	}
 	lca_init();
 	centroid();

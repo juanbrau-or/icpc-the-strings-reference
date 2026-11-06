@@ -7,18 +7,18 @@ struct vertex {
 };
 vector<vertex> t;
 void aho_init(){ //do not forget!!
-	t.clear();t.push_back(vertex());
+	t.clear();t.pb(vertex());
 }
 void add_string(string s, int id){
 	int v=0;
 	for(char c:s){
 		if(!t[v].next.count(c)){
 			t[v].next[c]=t.size();
-			t.push_back(vertex(v,c));
+			t.pb(vertex(v,c));
 		}
 		v=t[v].next[c];
 	}
-	t[v].leaf.push_back(id);
+	t[v].leaf.pb(id);
 }
 int go(int v, char c);
 int get_link(int v){

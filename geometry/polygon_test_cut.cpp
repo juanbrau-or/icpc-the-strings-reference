@@ -1,6 +1,11 @@
 // Codeforces 280A - AC
 // http://codeforces.com/problemset/problem/280/A
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -79,13 +84,13 @@ struct pol {
 	pol(vector<pt> _p){p=_p;n=p.size();}
 	double area(){
 		double r=0.;
-		for (int i = 0; i < n; ++i)r+=p[i]%p[(i+1)%n];
+		fore(i,0,n)r+=p[i]%p[(i+1)%n];
 		return abs(r)/2; // negative if CW, positive if CCW
 	}
 	bool has(pt q){
-		for (int i = 0; i < n; ++i)if(ln(p[i],p[(i+1)%n]).seghas(q))return true;
+		fore(i,0,n)if(ln(p[i],p[(i+1)%n]).seghas(q))return true;
 		int cnt=0;
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			int j=(i+1)%n;
 			int k=sgn((q-p[j])%(p[i]-p[j]));
 			int u=sgn(p[i].y-q.y),v=sgn(p[j].y-q.y);
@@ -96,11 +101,11 @@ struct pol {
 	}
 	pol cut(ln l){   // cut CONVEX polygon by line l
 		vector<pt> q;  // returns part at left of l.pq
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			int d0=sgn(l.pq%(p[i]-l.p)),d1=sgn(l.pq%(p[(i+1)%n]-l.p));
-			if(d0>=0)q.push_back(p[i]);
+			if(d0>=0)q.pb(p[i]);
 			ln m(p[i],p[(i+1)%n]);
-			if(d0*d1<0&&!(l/m))q.push_back(l^m);
+			if(d0*d1<0&&!(l/m))q.pb(l^m);
 		}
 		return pol(q);
 	}
@@ -110,13 +115,13 @@ int main(){
 	double w,h,a;
 	scanf("%lf%lf%lf",&w,&h,&a);a*=PI/180;
 	vector<pt> pp,q;
-	pp.push_back(pt(w/2,h/2));
-	pp.push_back(pt(-w/2,h/2));
-	pp.push_back(pt(-w/2,-h/2));
-	pp.push_back(pt(w/2,-h/2));
+	pp.pb(pt(w/2,h/2));
+	pp.pb(pt(-w/2,h/2));
+	pp.pb(pt(-w/2,-h/2));
+	pp.pb(pt(w/2,-h/2));
 	pol p(pp);
-	for (int i = 0; i < 4; ++i)q.push_back(pp[i].rot(a));
-	for (int i = 0; i < 4; ++i)p=p.cut(ln(q[i],q[(i+1)%4]));
+	fore(i,0,4)q.pb(pp[i].rot(a));
+	fore(i,0,4)p=p.cut(ln(q[i],q[(i+1)%4]));
 	printf("%.12lf\n",p.area());
 	return 0;
 }

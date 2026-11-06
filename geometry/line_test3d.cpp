@@ -1,4 +1,9 @@
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -81,7 +86,7 @@ pt randpinp(pt p0, pt d0, pt d1){
 
 void test_has(){
 	printf("test has... ");fflush(stdout);
-	for (int _ = 0; _ < ITER; ++_){
+	fore(_,0,ITER){
 		pt p=randp(),q=randp();
 		pt r=p+(q-p)*(randd()-0.5)*2;
 		assert(ln(p,q).has(r));
@@ -94,7 +99,7 @@ void test_has(){
 }
 void test_parallel(){
 	printf("test parallel... ");fflush(stdout);
-	for (int _ = 0; _ < ITER; ++_){
+	fore(_,0,ITER){
 		pt p0=randp(),q0=randp(),p1=randp();
 		pt q1=p1+(q0-p0)*randd();
 		assert(ln(p0,q0)/ln(p1,q1));
@@ -108,7 +113,7 @@ void test_parallel(){
 }
 void test_intersection(){
 	printf("test intersection... ");fflush(stdout);
-	for (int _ = 0; _ < ITER; ++_){
+	fore(_,0,ITER){
 		pt p0=randp(),d0=randp(),d1;
 		do d1=randp();while(ln(p0,p0+d0)/ln(p0,p0+d1));
 		d0=d0.unit();d1=d1.unit();
@@ -152,7 +157,7 @@ void test_intersection(){
 }
 void test_proj_distpl(){
 	printf("test projection and dist point to line... ");fflush(stdout);
-	for (int _ = 0; _ < ITER; ++_){
+	fore(_,0,ITER){
 		pt p=randp(),q=randp();
 		pt r=p+(q-p)*(randd()-0.5)*2;
 		pt n=((q-p)^randp()).unit();
@@ -165,7 +170,7 @@ void test_proj_distpl(){
 }
 void test_distll(){
 	printf("test dist line to line... ");fflush(stdout);
-	for (int _ = 0; _ < ITER; ++_){
+	fore(_,0,ITER){
 		pt p0=randp(),q0=randp();
 		pt r=p0+(q0-p0)*(randd()-0.5)*2;
 		pt n=((q0-p0)^randp()).unit();
@@ -183,7 +188,7 @@ void test_distll(){
 }
 void test_bisector(){
 	printf("test angle bisector... ");fflush(stdout);
-	for (int _ = 0; _ < ITER; ++_){
+	fore(_,0,ITER){
 		pt p0=randp(),d0=randp(),d1;
 		do d1=randp();while(ln(p0,p0+d0)/ln(p0,p0+d1));
 		d0=d0.unit();d1=d1.unit();

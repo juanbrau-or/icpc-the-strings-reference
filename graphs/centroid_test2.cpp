@@ -1,6 +1,11 @@
 // Codeforces 715C - AC
 // http://codeforces.com/problemset/problem/715/C
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -20,7 +25,7 @@ void dfs0(int x, int iv, int p, int f, int c){
 	ci[iv]++;
 	ci2[{iv,c}]++;
 	for(auto z:g[x]){
-		int y=z.first,w=z.second;
+		int y=z.fst,w=z.snd;
 		if(y==f||tk[y])continue;
 		dfs0(y,(iv+1LL*p*w)%m,(p*10LL)%m,x,c);
 	}
@@ -32,7 +37,7 @@ void dfs1(int x, int v, int p, int f, int c){
 	res+=ci[kk];
 	res-=ci2[{kk,c}];
 	for(auto z:g[x]){
-		int y=z.first,w=z.second;
+		int y=z.fst,w=z.snd;
 		if(y==f||tk[y])continue;
 		dfs1(y,(v*10LL+w)%m,(1LL*p*i10)%m,x,c);
 	}
@@ -43,7 +48,7 @@ int szt[MAXN]; // size of subtree
 int calcsz(int x, int f){
 	szt[x]=1;
 	for(auto p:g[x]){
-		int y=p.first;
+		int y=p.fst;
 		if(y!=f&&!tk[y])szt[x]+=calcsz(y,x);
 	}
 	return szt[x];
@@ -51,27 +56,27 @@ int calcsz(int x, int f){
 void cdfs(int x=0, int f=-1, int sz=-1){ // O(nlogn)
 	if(sz<0)sz=calcsz(x,-1);
 	for(auto p:g[x]){
-		int y=p.first;
+		int y=p.fst;
 		if(!tk[y]&&szt[y]*2>=sz){
 			szt[x]=0;cdfs(y,f,sz);return;
 		}
 	}
 	ci.clear();ci2.clear();
 	for(auto p:g[x]){
-		int y=p.first,w=p.second;
+		int y=p.fst,w=p.snd;
 		if(!tk[y]){
 			dfs0(y,w%m,10%m,x,y);
 		}
 	}
 	for(auto p:g[x]){
-		int y=p.first,w=p.second;
+		int y=p.fst,w=p.snd;
 		if(!tk[y]){
 			dfs1(y,w%m,i10,x,y);
 		}
 	}
 	tk[x]=true;fat[x]=f;
 	for(auto p:g[x]){
-		int y=p.first;
+		int y=p.fst;
 		if(!tk[y])cdfs(y,x);
 	}
 }
@@ -97,10 +102,10 @@ int main(){
 	scanf("%d%d",&n,&m);
 	if(m==1){printf("%lld\n",1LL*n*(n-1));return 0;}
 	i10=inv(10,m);
-	for (int _ = 1; _ < n; ++_){
+	fore(_,1,n){
 		int x,y,w;
 		scanf("%d%d%d",&x,&y,&w);
-		g[x].push_back({y,w});g[y].push_back({x,w});
+		g[x].pb({y,w});g[y].pb({x,w});
 	}
 	centroid();
 	printf("%lld\n",res);

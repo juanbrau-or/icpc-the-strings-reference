@@ -1,0 +1,125 @@
+\section{Recetas completas y reducciones}
+Los ejemplos de llamadas suponen que ya copiaste la plantilla y los módulos citados. Son programas de uso pequeños para comprobar el contrato, no nuevas implementaciones del mismo algoritmo. Sustituye datos de ejemplo por lectura del enunciado.
+
+\subsection{HLD: mínimo de valores en una ruta}
+Para \algoref{graphs/hld.cpp}{HLD}, copia primero el ST de mínimo y define \id{INF}. El error típico es construir el ST en el orden original de vértices: debe usar el orden \id{pos} que HLD calculó.
+\begin{lstlisting}
+int n=4;int value[]={7,4,9,2};
+// Arbol: 0-1, 1-2, 1-3. g[] inicialmente vacio.
+for(auto [u,v]:vector<pair<int,int>>{{0,1},{1,2},{1,3}}){
+    g[u].pb(v);g[v].pb(u);
+}
+hld_init();
+vector<int> base(n);
+fore(u,0,n)base[pos[u]]=value[u];
+STree st(n);st.init(base.data());
+assert(query(2,3,st)==2); // nodos 2,1,3
+st.upd(pos[3],8);
+assert(query(2,3,st)==4);
+\end{lstlisting}
+Si los valores están en aristas, el valor de $1$--$3$ se coloca en \id{pos[3]}, y en el último rango de la consulta se excluye la posición del LCA; los rangos de las otras cadenas quedan igual.
+
+\subsection{Persistencia: ramificar sin perder el pasado}
+Usa el \algoref{data_structures/segment_tree_persistent.cpp}{ST persistente}, no el mutable. No supongas que los IDs de raíz son 0,1,2; son índices de nodos asignados internamente.
+\begin{lstlisting}
+int a[]={8,3,6};STree st(3);
+vector<int> root;
+root.pb(st.init(a));
+root.pb(st.upd(root[0],1,10)); // [8,10,6]
+root.pb(st.upd(root[0],2,1));  // [8,3,1], desde version 0
+assert(st.query(root[0],0,3)==3);
+assert(st.query(root[1],0,3)==6);
+assert(st.query(root[2],0,3)==1);
+\end{lstlisting}
+Para k-ésimo de $a[l..r)$: comprime valores, usa \emph{conteos} como agregado, crea \id{root[i+1]} agregando $a_i$ sobre \id{root[i]}; al bajar compara conteo del hijo izquierdo en \id{root[r]} menos el de \id{root[l]}. Si $k$ es base 0 y ese conteo es $c$, baja a izquierda si $k<c$, si no baja a derecha con $k-c$. Es una adaptación, no una consulta soportada por el ST de mínimos impreso.
+
+\subsection{2-SAT: dos opciones con conflictos}
+Usa la codificación \algoref{graphs/tarjan_2sat.cpp}{de este Tarjan}: variable $i$ y \id{neg(i)}; no la mezcles con implementaciones que usan $2i$ y $2i+1$.
+\begin{lstlisting}
+fore(i,0,MAXN)g[i].clear();
+// Exactamente una de x0, x1; ademas x0 es obligatoria.
+addor(0,1);
+addor(neg(0),neg(1));
+addor(0,0);
+bool ok=satisf(2);
+assert(ok);
+assert(truth[cmp[0]] && !truth[cmp[1]]);
+\end{lstlisting}
+Para seleccionar una de dos posiciones por objeto: cada pareja de posiciones incompatibles agrega ``no ambas'', $(\neg a\lor\neg b)$. Una opción puede estar representada por el literal negado de otra; niega \emph{el literal completo}, no sólo el índice del objeto.
+
+\subsection{Aho: contar todos los patrones con solapamientos}
+Con \algoref{strings/aho_corasick.cpp}{Aho--Corasick}, visitar sólo \id{leaf} del estado actual pierde patrones que terminan en enlaces de fallo. Esta receta acumula visitas por el árbol de fallos y obtiene todos los conteos sin recorrer cada enlace por cada carácter.
+\begin{lstlisting}
+aho_init();
+vector<string> patterns={"he","she","hers"};
+vector<int> terminal;
+fore(i,0,SZ(patterns)){
+    add_string(patterns[i],i);
+    int v=0;
+    for(char c:patterns[i])v=t[v].next.at(c);
+    terminal.pb(v);
+}
+// Ya no insertar patrones desde aqui.
+int m=SZ(t);
+vector<vector<int>> children(m);
+fore(v,1,m)children[get_link(v)].pb(v);
+vector<int> order={0};
+for(int i=0;i<SZ(order);++i)
+    for(int v:children[order[i]])order.pb(v);
+vector<ll> count(m);
+string text="ushers";int v=0;
+for(char c:text){v=go(v,c);count[v]++;}
+for(int i=SZ(order)-1;i>0;--i){
+    int u=order[i];count[get_link(u)]+=count[u];
+}
+for(int u:terminal)assert(count[u]==1);
+\end{lstlisting}
+Para otro texto reutiliza el autómata, limpia \id{count} y empieza \id{v=0}. Patrones iguales comparten nodo terminal: cada ID recibe el mismo número de apariciones.
+
+\subsection{Asignación con cupos y costo}
+Dos personas, dos tareas, cada una con cupo 1. Construye fuente$\to$persona$\to$tarea$\to$destino; la capacidad limita cuántas veces se usa un recurso y el costo vive en la decisión persona$\to$tarea.
+\begin{lstlisting}
+// Copiar MCF. personas 0,1; tareas 2,3; S=4,T=5.
+MCF f(6);int S=4,T=5;
+f.add_edge(S,0,1,0);f.add_edge(S,1,1,0);
+f.add_edge(2,T,1,0);f.add_edge(3,T,1,0);
+f.add_edge(0,2,1,5);f.add_edge(0,3,1,1);
+f.add_edge(1,2,1,2);f.add_edge(1,3,1,4);
+auto [sent,cost]=f.get_flow(S,T,2);
+assert(sent==2 && cost==3); // 0->3 y 1->2
+\end{lstlisting}
+Si sólo importa existencia o cantidad de asignaciones, quita costos y usa matching/Dinic. Para exigir exactamente $K$, verifica siempre que el flujo retornado sea $K$; el costo de un flujo insuficiente no responde al problema.
+
+\subsection{Cómo construir una red de flujo}
+\textbf{Rutas disjuntas.} Capacidad 1 por arista para no repetir aristas. Para no repetir vértices, divide cada $v$ en $v_{in}\to v_{out}$ de capacidad 1 y transforma $u\to v$ en $u_{out}\to v_{in}$. Los terminales tienen capacidad distinta si el problema permite compartirlos.
+
+\textbf{Elegir elementos con incompatibilidades bipartitas.} Un conjunto independiente máximo tiene tamaño $|V|-$mínimo vertex cover; en bipartitos el cover tiene tamaño igual al matching máximo. Recupera el cover por alternantes. Esa igualdad falla en grafos generales.
+
+\textbf{Beneficios con dependencias (maximum closure).} Si elegir $a$ obliga a elegir $b$, agrega $a\to b$ de capacidad INF. Beneficio positivo $w$: fuente$\to v$ con capacidad $w$; negativo: $v\to$destino con capacidad $-w$. Resultado $\sum w^+-$mincut; el lado alcanzable contiene lo elegido. INF debe superar la suma de todos los beneficios finitos. Prueba que cada corte finito respeta las dependencias.
+
+\textbf{Cotas inferiores de flujo.} Para $l_e\le f_e\le r_e$, reemplaza por capacidad $r_e-l_e$ y balancea \id{bal[u]-=l}, \id{bal[v]+=l}. Si \id{bal[v]>0}, agrega superfuente$\to v$ con ese valor; si es negativo, $v\to$superdestino con $-bal[v]$. Hay circulación factible si se saturan todas las aristas de la superfuente. Para un flujo de $s$ a $t$, agrega antes $t\to s$ con capacidad suficiente; reconstruye $f_e=l_e+f'_e$. Esta reducción comprueba factibilidad, no calcula por sí sola el máximo adicional ni el mínimo costo.
+
+\subsection{Árboles: diferencias y agregación}
+\textbf{Sumar 1 a todas las aristas de una ruta $u$--$v$.} Calcula $w=LCA(u,v)$ y haz $delta[u]++,delta[v]++,delta[w]-=2$. Acumula hijos hacia padre en orden DFS inverso. Al final \id{delta[x]} cuenta usos de la arista entre $x$ y su padre. Para \emph{vértices}, usa $delta[u]++,delta[v]++,delta[w]--$ y también $delta[parent[w]]--$ si existe; luego la misma acumulación. Sirve offline, después de registrar todas las rutas.
+
+\textbf{Bottleneck.} En un grafo no dirigido ponderado, minimizar el mayor peso de una ruta se resuelve en un MST: el mayor peso en su camino responde la consulta. Para maximizar el menor peso, usa árbol de expansión \emph{máxima} y mínimo en el camino. Justifica con el corte correspondiente; no confundas estas metas con sumar pesos de la ruta.
+
+\textbf{Small-to-large.} Al unir mapas/conjuntos de subárboles, mueve el menor al mayor. Cada elemento cambia a un contenedor de tamaño al menos doble, por lo que se mueve $O(\log n)$ veces; multiplica por el costo de insertar. Vacía o invalida el contenedor consumido y evita copiar el grande en cada unión.
+
+\subsection{Barrido, ventanas e inversiones}
+\textbf{Eventos offline en 2D.} Para contar puntos con $x<X,y<Y$, ordena puntos y consultas por $x$. Inserta cada punto con $x<X$ en un Fenwick de $y$ comprimidas y consulta el prefijo hasta \id{rank(Y)}. Un rectángulo es inclusión-exclusión de cuatro consultas. Decide el orden de empates según si cada desigualdad es estricta; no añadas 1 a coordenadas reales.
+
+\textbf{Inversiones.} Lee el arreglo de izquierda a derecha; con rango $r$ comprimido, anteriores mayores = vistos$-$\id{prefix(r+1)}. Suma en \id{ll}, luego agrega 1 en $r$. Si contaras mayores o iguales usarías \id{prefix(r)}. En ordenar pares 2D, decide cómo tratar iguales en la primera coordenada antes de insertar el grupo.
+
+\textbf{Dos punteros.} Una ventana donde la validez se pierde monótonamente al extender un extremo permite mover ambos punteros sólo hacia delante. Ejemplo: suma $\le B$ con valores no negativos. Con negativos, quitar un elemento no siempre disminuye la suma: usa prefijos ordenados, Fenwick u otro argumento. Define si cuentas, maximizas longitud o sólo verificas existencia.
+
+\subsection{Diseñar DP sin conocer su nombre}
+\textbf{Estado:} describe una familia precisa de soluciones parciales. \textbf{Transición:} separa por una última decisión que no se solape con otras. \textbf{Base:} la solución vacía suele valer 0 para costo o 1 para conteo. \textbf{Orden:} procesa dependencias ya resueltas. \textbf{Reconstrucción:} guarda la decisión que mejora cada estado; si optimizas memoria, ese historial puede necesitar más espacio que la DP de valores.
+
+\textbf{Intervalos.} Si la última operación divide o combina un segmento, intenta $dp[l][r)$ y prueba todos los cortes interiores. Inicializa intervalos de longitud 1 y crece por longitud. Costo típico $O(n^3)$, memoria $O(n^2)$. Para reconstruir guarda el corte. No apliques una optimización sólo porque la recurrencia tiene un mínimo.
+
+\textbf{Knuth.} Para $dp[l][r]=w(l,r)+\min_{l<k<r}(dp[l][k]+dp[k][r])$ con base de longitud 1, se puede reducir a $O(n^2)$ si $opt[l][r-1]\le opt[l][r]\le opt[l+1][r]$. Una condición suficiente habitual es monotonía de costo por inclusión y desigualdad cuadrangular: para $a\le b\le c\le d$, $w(b,c)\le w(a,d)$ y $w(a,c)+w(b,d)\le w(a,d)+w(b,c)$. El costo suma de pesos no negativos es un ejemplo. Es distinta de la DP por capas de divide-and-conquer.
+
+\textbf{Programación por eventos ponderados.} Para intervalos $[s_i,e_i)$ con beneficio, ordena por $e_i$ y busca por binary search el último compatible $e_j\le s_i$. $dp[i]=\max(dp[i-1],w_i+dp[j])$, base 0. Costo $O(n\log n)$; si debes elegir al menos uno, la base y valores negativos cambian.
+
+\textbf{Greedy.} Ordenar y tomar lo primero necesita un argumento de intercambio. Intervalos sin pesos: elegir el que termina antes deja más espacio; con pesos, ese greedy falla y se usa la DP anterior. Verifica con fuerza bruta antes de asumir que un criterio local conserva el óptimo.

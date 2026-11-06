@@ -1,4 +1,9 @@
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -16,19 +21,19 @@ struct poly {  // poly<> : 1 variable, poly<poly<>>: 2 variables, etc.
 	poly operator+(poly<T> o){
 		int m=c.size(),n=o.c.size();
 		poly res(max(m,n));
-		for (int i = 0; i < m; ++i)res[i]=res[i]+c[i];
-		for (int i = 0; i < n; ++i)res[i]=res[i]+o.c[i];
+		fore(i,0,m)res[i]=res[i]+c[i];
+		fore(i,0,n)res[i]=res[i]+o.c[i];
 		return res;
 	}
 	poly operator*(tp k){
 		poly res(c.size());
-		for (int i = 0; i < c.size(); ++i)res[i]=c[i]*k;
+		fore(i,0,c.size())res[i]=c[i]*k;
 		return res;
 	}
 	poly operator*(poly o){
 		int m=c.size(),n=o.c.size();
 		poly res(m+n-1);
-		for (int i = 0; i < m; ++i)for (int j = 0; j < n; ++j)res[i+j]=res[i+j]+c[i]*o.c[j];
+		fore(i,0,m)fore(j,0,n)res[i+j]=res[i+j]+c[i]*o.c[j];
 		return res;
 	}
 	poly operator-(poly<T> o){return *this+(o*-1);}
@@ -49,8 +54,8 @@ struct poly {  // poly<> : 1 variable, poly<poly<>>: 2 variables, etc.
 	tp a0=0,an=abs(p[p.c.size()-1]);
 	for(int k=0;!a0;a0=abs(p[k++]));
 	vector<tp> ps,qs;
-	for (int i = 1; i < sqrt(a0)+1; ++i)if(a0%i==0)ps.push_back(i),ps.push_back(a0/i);
-	for (int i = 1; i < sqrt(an)+1; ++i)if(an%i==0)qs.push_back(i),qs.push_back(an/i);
+	fore(i,1,sqrt(a0)+1)if(a0%i==0)ps.pb(i),ps.pb(a0/i);
+	fore(i,1,sqrt(an)+1)if(an%i==0)qs.pb(i),qs.pb(an/i);
 	for(auto pt:ps)for(auto qt:qs)if(pt%qt==0){
 		tp x=pt/qt;
 		if(!p(x))r.insert(x);
@@ -71,7 +76,7 @@ pair<poly<>,poly<> > polydiv(poly<> p, poly<> q){ // returns pair (result,rem)
 	vector<tp> b(n);
 	for(int k=n-1;k>=0;--k){
 		b[k]=p.c.back()/q.c.back();
-		for (int i = 0; i < q.c.size(); ++i)p[i+k]-=b[k]*q[i];
+		fore(i,0,q.c.size())p[i+k]-=b[k]*q[i];
 		p.c.pop_back();
 	}
 	while(!p.c.empty()&&abs(p.c.back())<EPS)p.c.pop_back();
@@ -81,8 +86,8 @@ pair<poly<>,poly<> > polydiv(poly<> p, poly<> q){ // returns pair (result,rem)
 poly<> interpolate(vector<tp> x, vector<tp> y){ //TODO TEST
 	poly<> q={1},S={0};
 	for(tp a:x)q=poly<>({-a,1})*q;
-	for (int i = 0; i < x.size(); ++i){
-		poly<> Li=ruffini(q,x[i]).first;
+	fore(i,0,x.size()){
+		poly<> Li=ruffini(q,x[i]).fst;
 		Li=Li*(1.0/Li(x[i])); // change for int polynomials
 		S=S+Li*y[i];
 	}
@@ -91,12 +96,12 @@ poly<> interpolate(vector<tp> x, vector<tp> y){ //TODO TEST
 
 poly<> polyder(poly<> a){
 	vector<tp> r(a.c.size()-1);
-	for (int i = 0; i < r.size(); ++i)r[i]=a[i+1]*(i+1);
+	fore(i,0,r.size())r[i]=a[i+1]*(i+1);
 	return poly<>(r);
 }
 poly<> polygcd(poly<> a, poly<> b){
 	while(b.c.size()){
-		poly<> c=polydiv(a,b).second;
+		poly<> c=polydiv(a,b).snd;
 		a=b;
 		b=c;
 	}
@@ -110,7 +115,7 @@ int main(){
 		int n;
 		scanf("%d",&n);
 		vector<tp> a;
-		for (int i = 0; i < n+1; ++i){int x;scanf("%d",&x);a.push_back(x);}
+		fore(i,0,n+1){int x;scanf("%d",&x);a.pb(x);}
 		reverse(a.begin(),a.end());
 		poly<> p(a);
 		puts(polygcd(p,polyder(p)).c.size()<2?"Yes!":"No!");

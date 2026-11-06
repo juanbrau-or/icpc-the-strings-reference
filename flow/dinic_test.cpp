@@ -1,6 +1,11 @@
 // SPOJ FASTFLOW - AC
 // http://www.spoj.com/problems/FASTFLOW/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,to=b;i<to;++i)
 #define ALL(s) s.begin(),s.end()
 #define SZ(x) int((x).size())
 using namespace std;
@@ -16,15 +21,15 @@ struct Dinic{
 	vector<vector<edge>> g;
 	Dinic(int x):nodes(x),g(x),dist(x),q(x),work(x){}
 	void add_edge(int s, int t, ll cap){
-		g[s].push_back((edge){t,SZ(g[t]),0,cap});
-		g[t].push_back((edge){s,SZ(g[s])-1,0,0});
+		g[s].pb((edge){t,SZ(g[t]),0,cap});
+		g[t].pb((edge){s,SZ(g[s])-1,0,0});
 	}
 	bool dinic_bfs(){
 		fill(ALL(dist),-1);dist[src]=0;
 		int qt=0;q[qt++]=src;
 		for(int qh=0;qh<qt;qh++){
 			int u=q[qh];
-			for (int i = 0; i < SZ(g[u]); ++i){
+			fore(i,0,SZ(g[u])){
 				edge &e=g[u][i];int v=g[u][i].to;
 				if(dist[v]<0&&e.f<e.cap)dist[v]=dist[u]+1,q[qt++]=v;
 			}

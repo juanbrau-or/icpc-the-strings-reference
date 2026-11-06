@@ -15,7 +15,7 @@ struct CHT { // for minimum (for maximum just change the sign of lines)
 		while(c.size()>1&&in(c.back(),l)<=in(c[c.size()-2],c.back())){
 			c.pop_back();if(pos)pos--;
 		}
-		c.push_back(l);
+		c.pb(l);
 	}
 	inline bool fbin(tc x, int m){return in(c[m],c[m+1])>x;}
 	tc eval(tc x){

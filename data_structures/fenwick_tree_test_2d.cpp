@@ -1,6 +1,11 @@
 // SPOJ MATSUM - AC
 // http://www.spoj.com/problems/MATSUM/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 

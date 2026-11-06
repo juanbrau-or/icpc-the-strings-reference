@@ -1,6 +1,11 @@
 // Codeforces 166B - AC
 // http://codeforces.com/problemset/problem/166/B
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -37,16 +42,16 @@ vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
 	p.erase(unique(p.begin(),p.end()), p.end());
-	for (int i = 0; i < p.size(); ++i){ // lower hull
+	fore(i,0,p.size()){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
-		r.push_back(p[i]);
+		r.pb(p[i]);
 	}
 	r.pop_back();
 	int k=r.size(),pr=k-1;
 	for(int i=p.size()-1;i>=0;--i){ // upper hull
 		while(r.size()>=k+2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
 		while(pr>=0&&p[i]<r[pr]) pr--;
-		if(pr<0||!(p[i]==r[pr])) r.push_back(p[i]);
+		if(pr<0||!(p[i]==r[pr])) r.pb(p[i]);
 	}
 	return r;
 }
@@ -56,18 +61,18 @@ vector<pt> p;
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		int x,y;
 		scanf("%d%d",&x,&y);
-		p.push_back(pt(x,y));
+		p.pb(pt(x,y));
 	}
 	scanf("%d",&m);
 	vector<pt> q;
-	for (int i = 0; i < m; ++i){
+	fore(i,0,m){
 		int x,y;
 		scanf("%d%d",&x,&y);
-		p.push_back(pt(x,y));
-		q.push_back(pt(x,y));
+		p.pb(pt(x,y));
+		q.pb(pt(x,y));
 	}
 	vector<pt> c=chull(p);
 	set<pt> s(c.begin(),c.end());

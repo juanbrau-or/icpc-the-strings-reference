@@ -1,6 +1,10 @@
 // Codeforces 105254V - AC
 // https://codeforces.com/gym/105254/problem/V
 #include <bits/stdc++.h>
+#define fore(i,a,b) for(ll i = a,jet = b;i<jet;i++)
+#define fst first
+#define snd second
+#define pb push_back
 #define ALL(x) x.begin(),x.end()
 #define SZ(x) ((ll)x.size())
 #define mset(a,v) memset((a),(v),sizeof(a))
@@ -41,16 +45,16 @@ vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
 	p.erase(unique(ALL(p)), p.end());
-	for (int i = 0; i < p.size(); ++i){ // lower hull
+	fore(i,0,p.size()){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
-		r.push_back(p[i]);
+		r.pb(p[i]);
 	}
 	r.pop_back();
 	int k=r.size(),pr=k-1;
 	for(int i=p.size()-1;i>=0;--i){ // upper hull
 		while(r.size()>=k+2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
 		while(pr>=0&&p[i]<r[pr]) pr--;
-		if(pr<0||!(p[i]==r[pr])) r.push_back(p[i]);
+		if(pr<0||!(p[i]==r[pr])) r.pb(p[i]);
 	}
 	return r;
 }
@@ -72,13 +76,13 @@ int main(){
 	JET
 	ll n; cin>>n;
 	vv a(n);
-	for (int i = 0; i < n; ++i)cin>>a[i];
+	fore(i,0,n)cin>>a[i];
 	ll m; cin>>m;
 	vv b(m);
-	for (int i = 0; i < m; ++i)cin>>b[i];
+	fore(i,0,m)cin>>b[i];
 	sort(ALL(a)); sort(ALL(b));
 	ll dif=0;
-	for (int i = 0; i < m; ++i){
+	fore(i,0,m){
 		ll l=lower_bound(ALL(a),b[i])-a.begin();
 		ll r=upper_bound(ALL(a),b[i])-a.begin();
 		dif+=l; dif-=n-r;
@@ -94,7 +98,7 @@ int main(){
 	auto agr=[&](pt p){
 		p.x/=n;
 		p.y/=m;
-		bu.push_back(p);
+		bu.pb(p);
 	};
 	map<ll,ii> cnt_by_value;
 	
@@ -102,19 +106,19 @@ int main(){
 	for(auto i:a)cnt_by_value[i+1]={0,0};
 	for(auto i:b)cnt_by_value[i+1]={0,0};
 	
-	for(auto i:a)cnt_by_value[i].first++;
-	for(auto i:b)cnt_by_value[i].second++;
+	for(auto i:a)cnt_by_value[i].fst++;
+	for(auto i:b)cnt_by_value[i].snd++;
 
 	pt cur(0,0);
 	for(auto [asd,now]:cnt_by_value){
 		// exactly equal
 		pt cand=cur;
-		cand.x+=now.first/2.;
-		cand.y+=now.second/2.;
+		cand.x+=now.fst/2.;
+		cand.y+=now.snd/2.;
 		agr(cand);
 		
-		cur.x+=now.first;
-		cur.y+=now.second;
+		cur.x+=now.fst;
+		cur.y+=now.snd;
 	}
 	auto c=chull(bu);
 	// for(auto p:c)cout<<cv(p)<<" ";;cout<<"\n";
@@ -126,7 +130,7 @@ int main(){
 	};
 	ln ver(pt(0.5,0),pt(0.5,0.5));
 	ln hor(pt(0,0.5),pt(0.5,0.5));
-	for (int i = 0; i < k; ++i){
+	fore(i,0,k){
 		cand(c[i]);
 		ln l(c[i],c[(i+1)%k]);
 		if(abs(l.pq.x)>EPS){ // !(l/ver)

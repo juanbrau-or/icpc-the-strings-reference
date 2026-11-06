@@ -3,7 +3,7 @@ const double DINF=numeric_limits<double>::infinity();
 // Custom comparator for set/map
 struct comp {
 	bool operator()(const double& a, const double& b) const {
-		return a+EPS<b;}
+		return a<b; // exact order; an EPS comparator is not transitive}
 };
 set<double,comp> w; // or map<double,int,comp>
 // Iterate over non empty subsets of bitmask

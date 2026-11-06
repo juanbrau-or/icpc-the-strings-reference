@@ -2,13 +2,15 @@
  * Contest: XVIII Open Cup named after E.V. Pankratiev
  *          Grand Prix of Korea
  * Problem: G
- * 
+ *
  * An example of adapting linkcut for queries of max edge in a path.
  * Change are mostly (if not all) in how Node_t does update and returns
  * value
  */
 
 #include <bits/stdc++.h>
+#define fore(x,a,b) for(int x=a,qwe=b; x<qwe; x++)
+#define pb push_back
 using namespace std;
 typedef long long ll;
 
@@ -27,7 +29,7 @@ struct Node_t{
   void push(){
     if(rev){
       rev=0; swap(ch[0], ch[1]);
-      for (int x = 0; x < 2; ++x)if(ch[x])ch[x]->rev^=1;
+      fore(x,0,2)if(ch[x])ch[x]->rev^=1;
     }
   }
   void upd();
@@ -86,14 +88,14 @@ ll calc(int u){
     vector<tuple<Node,Node,int> > log;
     ll ans = 0;
     for(auto p : g[u]){
-        int v=p.first;
+        int v=p.fst;
         Node e=query(vs[u],vs[v]);
         cut(e,vs[e->v]);cut(vs[e->u],e);
         Node tmp=new Node_t(-1);
         link(tmp,vs[u]);link(vs[v],tmp);
         ans -= e->val;
-        ans += p.second;
-        log.push_back(make_tuple(tmp,e,v));
+        ans += p.snd;
+        log.pb(make_tuple(tmp,e,v));
     }
     //restore
     for(auto t : log){
@@ -108,7 +110,7 @@ ll calc(int u){
     return ans;
 }
 
-struct Edge { 
+struct Edge {
     int u, v; ll c;
     bool operator<(const Edge& o)const{
         return c<o.c;
@@ -119,15 +121,15 @@ int find(int i){return i==P[i]?i:P[i]=find(P[i]);}
 
 int main(){ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
     cin >> n >> m;
-    for (int x = 0; x < n; ++x)P[x]=x,vs[x]=new Node_t(x);
-    for (int x = 0; x < m; ++x){
+    fore(x,0,n)P[x]=x,vs[x]=new Node_t(x);
+    fore(x,0,m){
         int u,v;ll c; cin >> u >> v >> c; u--; v--;
-        g[u].push_back({v,c});g[v].push_back({u,c});
-        edges.push_back(Edge{u,v,c});
+        g[u].pb({v,c});g[v].pb({u,c});
+        edges.pb(Edge{u,v,c});
     }
     sort(edges.begin(),edges.end());
     ll total = 0;
-    for (int x = 0; x < m; ++x){
+    fore(x,0,m){
         int u=edges[x].u,v=edges[x].v;
         es[x]=new Node_t(u,v,edges[x].c);
         int i=find(u), j=find(v);
@@ -137,5 +139,5 @@ int main(){ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
             link(es[x],vs[u]); link(vs[v],es[x]);
         }
     }
-    for (int x = 0; x < n; ++x)cout<<total+calc(x)<<"\n";   
+    fore(x,0,n)cout<<total+calc(x)<<"\n";
 }

@@ -1,6 +1,11 @@
 // Kattis roberthood - AC
 // https://open.kattis.com/problems/roberthood
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 #ifdef DEMETRIO
 #define deb(...) fprintf(stderr,__VA_ARGS__)
 #define deb1(x) cerr << #x << " = " << x << endl
@@ -49,15 +54,15 @@ pt cw90(-1,0);
 vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
-	for (int i = 0; i < p.size(); ++i){ // lower hull
+	fore(i,0,p.size()){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
-		r.push_back(p[i]);
+		r.pb(p[i]);
 	}
 	r.pop_back();
 	int k=r.size();
 	for(int i=p.size()-1;i>=0;--i){ // upper hull
 		while(r.size()>=k+2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
-		r.push_back(p[i]);
+		r.pb(p[i]);
 	}
 	r.pop_back();
 	return r;
@@ -85,10 +90,10 @@ vector<pt> p;
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		double x,y;
 		scanf("%lf%lf",&x,&y);
-		p.push_back(pt(x,y));
+		p.pb(pt(x,y));
 	}
 	printf("%.12lf\n",sqrt(pol(chull(p)).callipers()));
 	return 0;

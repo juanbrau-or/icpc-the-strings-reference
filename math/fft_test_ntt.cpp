@@ -1,4 +1,8 @@
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -57,7 +61,7 @@ CD root(int n, bool inv){
 CD cp1[MAXN+9],cp2[MAXN+9];
 int R[MAXN+9];
 void dft(CD* a, int n, bool inv){
-	for (int i = 0; i < n; ++i)if(R[i]<i)swap(a[R[i]],a[i]);
+	fore(i,0,n)if(R[i]<i)swap(a[R[i]],a[i]);
 	for(int m=2;m<=n;m*=2){
 		//double z=2*pi/m*(inv?-1:1); // FFT
 		//CD wi=CD(cos(z),sin(z)); // FFT
@@ -69,27 +73,27 @@ void dft(CD* a, int n, bool inv){
 			}
 		}
 	}
-	//if(inv)for (int i = 0; i < n; ++i)a[i]/=n; // FFT
+	//if(inv)fore(i,0,n)a[i]/=n; // FFT
 	if(inv){ // NTT
 		CD z(pm(n,MOD-2)); // pm: modular exponentiation
-		for (int i = 0; i < n; ++i)a[i]=a[i]*z;
+		fore(i,0,n)a[i]=a[i]*z;
 	}
 }
 poly multiply(poly& p1, poly& p2){
 	int n=p1.size()+p2.size()+1;
 	int m=1,cnt=0;
 	while(m<=n)m+=m,cnt++;
-	for (int i = 0; i < m; ++i){R[i]=0;for (int j = 0; j < cnt; ++j)R[i]=(R[i]<<1)|((i>>j)&1);}
-	for (int i = 0; i < m; ++i)cp1[i]=0,cp2[i]=0;
-	for (int i = 0; i < p1.size(); ++i)cp1[i]=p1[i];
-	for (int i = 0; i < p2.size(); ++i)cp2[i]=p2[i];
+	fore(i,0,m){R[i]=0;fore(j,0,cnt)R[i]=(R[i]<<1)|((i>>j)&1);}
+	fore(i,0,m)cp1[i]=0,cp2[i]=0;
+	fore(i,0,p1.size())cp1[i]=p1[i];
+	fore(i,0,p2.size())cp2[i]=p2[i];
 	dft(cp1,m,false);dft(cp2,m,false);
-	for (int i = 0; i < m; ++i)cp1[i]=cp1[i]*cp2[i];
+	fore(i,0,m)cp1[i]=cp1[i]*cp2[i];
 	dft(cp1,m,true);
 	poly res;
 	n-=2;
-	//for (int i = 0; i < n; ++i)res.push_back((ll)floor(cp1[i].real()+0.5)); // FFT
-	for (int i = 0; i < n; ++i)res.push_back(cp1[i].x); // NTT
+	//fore(i,0,n)res.pb((ll)floor(cp1[i].real()+0.5)); // FFT
+	fore(i,0,n)res.pb(cp1[i].x); // NTT
 	return res;
 }
 
@@ -98,29 +102,29 @@ ll f[100005],fi[100005];
 int n;ll m;
 
 void doit(vector<ll>& p, bool asd){
-	for (int i = 0; i < n; ++i)p[i]=mulmod(p[i],f[i]);
+	fore(i,0,n)p[i]=mulmod(p[i],f[i]);
 	vector<ll> q;
-	for (int i = 0; i < n; ++i)q.push_back(fi[n-1-i]);
+	fore(i,0,n)q.pb(fi[n-1-i]);
 	if(asd)for(int i=n-2;i>=0;i-=2)q[i]=MOD-q[i];
 	vector<ll> v=multiply(p,q);
 	p.clear();
-	for (int i = 0; i < n; ++i)p.push_back(v[i+n-1]);
-	for (int i = 0; i < n; ++i)p[i]=mulmod(p[i],fi[i]);
+	fore(i,0,n)p.pb(v[i+n-1]);
+	fore(i,0,n)p[i]=mulmod(p[i],fi[i]);
 }
 
 int main(){
 	f[0]=1;
-	for (int i = 1; i < 100005; ++i)f[i]=mulmod(f[i-1],i);
-	for (int i = 0; i < 100005; ++i)fi[i]=inv(f[i]);
+	fore(i,1,100005)f[i]=mulmod(f[i-1],i);
+	fore(i,0,100005)fi[i]=inv(f[i]);
 	scanf("%d%lld",&n,&m);n++;
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		int x;
 		scanf("%d",&x);
-		p.push_back(x);
+		p.pb(x);
 	}
 	doit(p,false);
-	for (int i = 0; i < n; ++i)p[i]=mulmod(p[i],pm(inv(i+1),m));
+	fore(i,0,n)p[i]=mulmod(p[i],pm(inv(i+1),m));
 	doit(p,true);
-	for (int i = 0; i < n; ++i)printf("%lld%c",p[i]," \n"[i==n-1]);
+	fore(i,0,n)printf("%lld%c",p[i]," \n"[i==n-1]);
 	return 0;
 }

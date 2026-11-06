@@ -1,53 +1,55 @@
-typedef ll tf;
-typedef ll tc;
-const tf INFFLOW=1e9;
-const tc INFCOST=1e9;
+// Successive shortest augmenting paths. No reachable negative residual cycle.
+typedef ll tf;typedef ll tc;
+const ll INFCOST=LLONG_MAX/4,INFFLOW=LLONG_MAX/4;
 struct MCF{
-	int n;
-	vector<tc> prio, pot; vector<tf> curflow; vector<int> prevedge,prevnode;
-	priority_queue<pair<tc, int>, vector<pair<tc, int>>, greater<pair<tc, int>>> q;
-	struct edge{int to, rev; tf f, cap; tc cost;};
-	vector<vector<edge>> g;
-	MCF(int n):n(n),prio(n),curflow(n),prevedge(n),prevnode(n),pot(n),g(n){}
-	void add_edge(int s, int t, tf cap, tc cost) {
-		g[s].push_back((edge){t,SZ(g[t]),0,cap,cost});
-		g[t].push_back((edge){s,SZ(g[s])-1,0,0,-cost});
-	}
-	pair<tf,tc> get_flow(int s, int t) {
-		tf flow=0; tc flowcost=0;
-		while(1){
-			q.push({0, s});
-			fill(ALL(prio),INFCOST); 
-			prio[s]=0; curflow[s]=INFFLOW;
-			while(!q.empty()) {
-				auto cur=q.top();
-				tc d=cur.first;
-				int u=cur.second;
-				q.pop();
-				if(d!=prio[u]) continue;
-				for(int i=0; i<SZ(g[u]); ++i) {
-					edge &e=g[u][i];
-					int v=e.to;
-					if(e.cap<=e.f) continue;
-					tc nprio=prio[u]+e.cost+pot[u]-pot[v];
-					if(prio[v]>nprio) {
-						prio[v]=nprio;
-						q.push({nprio, v});
-						prevnode[v]=u; prevedge[v]=i;
-						curflow[v]=min(curflow[u], e.cap-e.f);
-					}
-				}
-			}
-			if(prio[t]==INFCOST) break;
-			for (int i = 0; i < n; ++i) pot[i]+=prio[i];
-			tf df=min(curflow[t], INFFLOW-flow);
-			flow+=df;
-			for(int v=t; v!=s; v=prevnode[v]) {
-				edge &e=g[prevnode[v]][prevedge[v]];
-				e.f+=df; g[v][e.rev].f-=df;
-				flowcost+=df*e.cost;
-			}
-		}
-		return {flow,flowcost};
-	}
+    struct edge{int to,rev;tf f,cap;tc cost;};
+    int n;vector<vector<edge>> g;
+    MCF(int n):n(n),g(n){}
+    void add_edge(int s,int t,tf cap,tc cost){
+        int a=SZ(g[s]),b=SZ(g[t]);
+        g[s].pb({t,b+(s==t),0,cap,cost});
+        g[t].pb({s,a,0,0,-cost});
+    }
+    // Returns additional {flow,cost}; limit is additional requested flow.
+    pair<tf,tc> get_flow(int s,int t,tf limit=INFFLOW){
+        assert(s!=t&&limit>=0);
+        vector<tc> pot(n,INFCOST);pot[s]=0;
+        // Bellman-Ford makes initial negative edge costs safe.
+        fore(it,0,n){
+            bool changed=false;
+            fore(u,0,n)if(pot[u]<INFCOST)for(auto &e:g[u])
+                if(e.f<e.cap&&pot[e.to]>pot[u]+e.cost){
+                    pot[e.to]=pot[u]+e.cost;changed=true;
+                }
+            if(!changed)break;
+            if(it==n-1)throw invalid_argument("negative residual cycle");
+        }
+        for(auto &p:pot)if(p==INFCOST)p=0;
+        tf flow=0;tc cost=0;
+        while(flow<limit){
+            vector<tc> d(n,INFCOST);vector<int> pv(n),pe(n);
+            priority_queue<pair<tc,int>,vector<pair<tc,int>>,greater<pair<tc,int>>> q;
+            d[s]=0;q.push({0,s});
+            while(!q.empty()){
+                auto [du,u]=q.top();q.pop();if(du!=d[u])continue;
+                fore(i,0,SZ(g[u])){
+                    auto &e=g[u][i];if(e.f>=e.cap)continue;
+                    tc nd=du+e.cost+pot[u]-pot[e.to];
+                    if(nd<d[e.to])d[e.to]=nd,pv[e.to]=u,pe[e.to]=i,q.push({nd,e.to});
+                }
+            }
+            if(d[t]==INFCOST)break;
+            fore(u,0,n)if(d[u]<INFCOST)pot[u]+=d[u];
+            tf df=limit-flow;
+            for(int v=t;v!=s;v=pv[v]){
+                auto &e=g[pv[v]][pe[v]];df=min(df,e.cap-e.f);
+            }
+            for(int v=t;v!=s;v=pv[v]){
+                auto &e=g[pv[v]][pe[v]];
+                e.f+=df;g[v][e.rev].f-=df;cost+=df*e.cost;
+            }
+            flow+=df;
+        }
+        return {flow,cost};
+    }
 };

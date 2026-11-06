@@ -1,6 +1,11 @@
 // UVA 10054 - AC
 // https://uva.onlinejudge.org/index.php?option=onlinejudge&page=show_problem&problem=995
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -26,7 +31,7 @@ void go(int x){
 		g[x].pop_front();
 		go(y);
 	}
-	p.push_back(x);
+	p.pb(x);
 }
 vector<int> get_path(int x){ // get a path that begins in x
 // check that a path exists from x before calling to get_path!
@@ -40,25 +45,25 @@ int m;
 int main(){
 	int tn;
 	scanf("%d",&tn);
-	for (int tc = 1; tc < tn+1; ++tc){
+	fore(tc,1,tn+1){
 		if(tc>1)puts("");
 		printf("Case #%d\n",tc);
-		for (int i = 0; i < MAXN; ++i)g[i].clear();
+		fore(i,0,MAXN)g[i].clear();
 		memset(d,0,sizeof(d));
 		scanf("%d",&m);
-		for (int i = 0; i < m; ++i){
+		fore(i,0,m){
 			int x,y;
 			scanf("%d%d",&x,&y);x--;y--;
 			add_edge(x,y);
 			d[x]++;d[y]++;
 		}
 		bool c=true;
-		for (int i = 0; i < MAXN; ++i)c=c&&d[i]%2==0;
+		fore(i,0,MAXN)c=c&&d[i]%2==0;
 		if(!c){puts("some beads may be lost");continue;}
 		vector<int> p;
-		for (int i = 0; i < MAXN; ++i)if(d[i]){p=get_path(i);break;}
+		fore(i,0,MAXN)if(d[i]){p=get_path(i);break;}
 		if(p.size()!=m+1){puts("some beads may be lost");continue;}
-		for (int i = 0; i < m; ++i)printf("%d %d\n",p[i]+1,p[i+1]+1);
+		fore(i,0,m)printf("%d %d\n",p[i]+1,p[i+1]+1);
 	}
 	return 0;
 }

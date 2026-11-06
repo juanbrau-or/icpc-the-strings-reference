@@ -1,6 +1,11 @@
 // SPOJ TAP2014K - AC
 // http://www.spoj.com/problems/TAP2014K/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -63,7 +68,7 @@ int main(){
 	while(tn--){
 		scanf("%s%d",s,&q);n=strlen(s);
 		pitem t=0;
-		for (int i = 0; i < n; ++i)merge(t,t,new item(s[i]-'a'));
+		fore(i,0,n)merge(t,t,new item(s[i]-'a'));
 		while(q--){
 			int s0,e0,s1,e1;
 			scanf("%d%d%d%d",&s0,&e0,&s1,&e1);s0--;s1--;

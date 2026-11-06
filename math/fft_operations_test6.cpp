@@ -1,6 +1,10 @@
 // Test for multi-point evaluation for all points in range [0,MOD)
 // Manual randomized brute force - AC
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -48,23 +52,23 @@ struct FFT {
 		assert(c <= (1<<LG));
 		u h=u(uu(-p)*-p%p), a=m(h, p/2+1), x, y;
 		while(n<c) n*=2, h=red(p, m(h, a));
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			v[i]=i<SZ(as)?u(as[i]):0,
 			v[i+n]=i<SZ(bs)?u(bs[i]):0;
 
 		}
-		for(auto s:{v,v+n}) for(int j=n;j>=2;j--) for(int k=j&-j; k/=2;) for (int i = j-k; i < j; ++i){
+		for(auto s:{v,v+n}) for(int j=n;j>=2;j--) for(int k=j&-j; k/=2;) fore(i,j-k,j){
 			x=s[i], y=s[i-k];
 			s[i-k] = red(2*p, x+y);
 			s[i] = m(2*p+y-x, r[3*k-j+i]);
 		}
-		for (int i = 0; i < n; ++i) v[i]=m(v[i], v[i+n]);
-		for (int j = 2; j < n+1; ++j) for(int k=1; !(k&j); k*=2) for (int i = j-k; i < j; ++i){
+		fore(i,0,n) v[i]=m(v[i], v[i+n]);
+		fore(j,2,n+1) for(int k=1; !(k&j); k*=2) fore(i,j-k,j){
 			x = m(v[i], r[3*k+j-i]);
 			y = red(2*p, v[i-k]);
 			v[i-k]=x+y, v[i]=2*p+y-x;
 		}
-		for (int i = 0; i < c; ++i) v[i]=red(p, m(v[i], h));
+		fore(i,0,c) v[i]=red(p, m(v[i], h));
 		return poly(v, v+c);
 	}
 };
@@ -79,7 +83,7 @@ poly multiply(const poly v1, const poly v2, ll m=MOD) {
 	static FFT<uint64_t, __uint128_t, mod1, 3> fft1;
 	static FFT<uint64_t, __uint128_t, mod2, 17> fft2;
 	auto as=fft1.cv(v1, v2, v), bs=fft2.cv(v1, v2, v);
-	for (int i = 0; i < SZ(as); ++i){
+	fore(i,0,SZ(as)){
 		auto d = fft1.m(mod1+as[i]-bs[i], inv);
 		d -= mod1*(d >= mod1); d %= m;
 		as[i] = (bs[i] + mod2%m*d)%m;
@@ -94,7 +98,7 @@ vector<int> chirpTransform(poly& p, int g, int k) {
 	int inv_g=inv(g), n=SZ(p)-1, sz=min(k,MOD-1), gk=1;
 	poly ap(n+1), bp(n+sz);
 
-	for (int i = 0; i < n+sz; ++i){
+	fore(i,0,n+sz){
 		ll exp=1ll*i*(i-1)/2%(MOD-1);
 		if(i<=n) ap[n-i]=mulmod(p[i],fpow(inv_g, exp));
 		bp[i]=fpow(g, exp);
@@ -103,7 +107,7 @@ vector<int> chirpTransform(poly& p, int g, int k) {
 	poly cp=multiply(ap, bp);
 	vector<int> ans(k);
 
-	for (int i = 0; i < sz; ++i){
+	fore(i,0,sz){
 		ll exp=1ll*i*(i-1)/2%(MOD-1);
 		int val=0;
 		if(n+i<SZ(cp)) val=cp[n+i];
@@ -111,7 +115,7 @@ vector<int> chirpTransform(poly& p, int g, int k) {
 		ans[i]=val;
 		gk=mulmod(gk,g);
 	}
-	for (int i = sz; i < k; ++i) ans[i]=ans[i-MOD+1];
+	fore(i,sz,k) ans[i]=ans[i-MOD+1];
 	return ans;
 }
 
@@ -120,12 +124,12 @@ int get_primitive_root(int p) {
 	int phi=p-1, n=phi;
 	vector<int> fact;
 	for(int i=2;i*i<=n;i++) if(n%i==0){
-		fact.push_back(i);
+		fact.pb(i);
 		while(n%i==0) n/=i;
 	}
-	if(n>1) fact.push_back(n);
+	if(n>1) fact.pb(n);
 
-	for (int res = 2; res < p+1; ++res){
+	fore(res,2,p+1){
 		int ok=1;
 		for(int f:fact){
 			if(fpow(res,phi/f)==1){
@@ -146,7 +150,7 @@ vector<int> evaluate_all_points(poly& p) {
 
 	vector<int> ch=chirpTransform(p,g,MOD-1), ans(MOD, p[0]);
 	
-	for (int i = 0; i < MOD-1; ++i){
+	fore(i,0,MOD-1){
 		ans[gk]=ch[i];
 		gk=mulmod(gk,g);
 	}
@@ -170,8 +174,8 @@ int eval(poly &p, int x){
 
 int main(){FIN;
 	vector<int> spf(MAXN), pr;
-	for (int i = 2; i < MAXN; ++i) if(!spf[i]){
-		pr.push_back(i);
+	fore(i,2,MAXN) if(!spf[i]){
+		pr.pb(i);
 		for(int j=i;j<MAXN;j+=i) if(!spf[j]) spf[j]=i;
 	}
 
@@ -181,11 +185,11 @@ int main(){FIN;
 		MOD=pr[getRand(0,SZ(pr)-1)];
 		int n=10000;
 		poly p(n+1);
-		for (int i = 0; i < n+1; ++i) p[i]=getRand(0,MOD-1);
+		fore(i,0,n+1) p[i]=getRand(0,MOD-1);
 
 		auto res=evaluate_all_points(p);
 		vector<int> brute(MOD);
-		for (int i = 0; i < MOD; ++i) brute[i]=eval(p,i);
+		fore(i,0,MOD) brute[i]=eval(p,i);
 
 		cout<<"checking polynomial of degree "<<n<<" for MOD = "<<MOD<<": ";
 		cout<<(res==brute)<<endl;

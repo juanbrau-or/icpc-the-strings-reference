@@ -1,5 +1,9 @@
 // https://codeforces.com/contest/1098/problem/E
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -38,21 +42,21 @@ ll get(ll x){
 	while(i<n){
 		if(i>j){j++; continue;}
 		ll mid=sum[j]-sum[i];
-		if(mid+b[i].first+b[j+1].first<=x){
+		if(mid+b[i].fst+b[j+1].fst<=x){
 			ll inmid=(i==j)?0:elem[j-1]-elem[i];
-			ans+=inmid*b[j].second;
-			ans+=g(b[i].first,b[j+1].first,x-mid,b[i].second,b[j+1].second);
+			ans+=inmid*b[j].snd;
+			ans+=g(b[i].fst,b[j+1].fst,x-mid,b[i].snd,b[j+1].snd);
 			j++;
 		}
 		else{
 			i++;
 			if(i<j){
 				mid=sum[j-1]-sum[i];
-				ans+=g(b[i].first,b[j].first,x-mid,b[i].second,b[j].second);
+				ans+=g(b[i].fst,b[j].fst,x-mid,b[i].snd,b[j].snd);
 			}
 		}
 	}
-	for (int i = 0; i < n; ++i) ans+=calc(b[i].second,min(b[i].second,x/b[i].first));
+	fore(i,0,n) ans+=calc(b[i].snd,min(b[i].snd,x/b[i].fst));
 	return ans;
 }
  
@@ -61,9 +65,9 @@ int pl[1<<16][16],pr[1<<16][16];
 int pw[1<<16];
  
 void build(int n){
-	for (int i = 0; i < n; ++i) jl[i][0]=jr[i][0]=a[i],pl[i][0]=i+1,pr[i][0]=i-1;
+	fore(i,0,n) jl[i][0]=jr[i][0]=a[i],pl[i][0]=i+1,pr[i][0]=i-1;
 	pr[0][0]=0; pl[n-1][0]=n-1;
-	for (int k = 1; k < 16; ++k) for (int i = 0; i < n; ++i){
+	fore(k,1,16) fore(i,0,n){
 		jl[i][k]=__gcd(jl[i][k-1],jl[pl[i][k-1]][k-1]);
 		jr[i][k]=__gcd(jr[i][k-1],jr[pr[i][k-1]][k-1]);
 		pl[i][k]=pl[pl[i][k-1]][k-1];
@@ -78,14 +82,14 @@ int query(int l, int r){
  
 int main(){FIN;
 	int id=0; pw[1]=0;
-	for (int i = 2; i < 1<<16; ++i){
+	fore(i,2,1<<16){
 		pw[i]=id;
 		if(!(i&(i-1))) id++;
 	}
 	int n; cin>>n;
-	for (int i = 0; i < n; ++i) cin>>a[i];
+	fore(i,0,n) cin>>a[i];
 	build(n);
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		int pos=i,pre=a[i];
 		while(pos<n){
 			int l=pos,r=n-1;
@@ -98,16 +102,16 @@ int main(){FIN;
 			pre=query(i,l); pos=l;
 		}
 	}
-	for (int i = 0; i < 100010; ++i) if(cnt_by_gcd[i]) b.push_back({i,cnt_by_gcd[i]});
+	fore(i,0,100010) if(cnt_by_gcd[i]) b.pb({i,cnt_by_gcd[i]});
 	sum.resize(SZ(b)); elem.resize(SZ(b));
-	sum[0]=b[0].first*b[0].second; elem[0]=b[0].second;
-	for (int i = 1; i < SZ(b); ++i){
-		sum[i]=sum[i-1]+b[i].first*b[i].second;
-		elem[i]=elem[i-1]+b[i].second;
+	sum[0]=b[0].fst*b[0].snd; elem[0]=b[0].snd;
+	fore(i,1,SZ(b)){
+		sum[i]=sum[i-1]+b[i].fst*b[i].snd;
+		elem[i]=elem[i-1]+b[i].snd;
 	}
 	ll l=1,r=sum.back(),all=elem.back()*(elem.back()+1)/2;
-	b.push_back({sum.back()+1,1});
-	sum.push_back(2*sum.back()+1);
+	b.pb({sum.back()+1,1});
+	sum.pb(2*sum.back()+1);
 	while(l<=r){
 		ll mid=(l+r)/2;
 		if(2ll*get(mid)>=all) r=mid-1;

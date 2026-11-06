@@ -1,6 +1,10 @@
 // Codeforces 102920F - AC
 //https://codeforces.com/gym/102920/problem/F
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -13,9 +17,9 @@ const int MAXN=1e5+10;
 int n,rnk[MAXN],pre[MAXN],anc[MAXN],idom[MAXN],semi[MAXN],low[MAXN];
 vector<int> g[MAXN],rev[MAXN],dom[MAXN],ord;
 void dfspre(int pos){
-	rnk[pos]=SZ(ord); ord.push_back(pos);
+	rnk[pos]=SZ(ord); ord.pb(pos);
 	for(auto x:g[pos]){
-		rev[x].push_back(pos);
+		rev[x].pb(pos);
 		if(rnk[x]==n) pre[x]=pos,dfspre(x);
 	}
 }
@@ -28,7 +32,7 @@ int eval(int v){
 	return low[v];
 }
 void dominators(int rt){
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		dom[i].clear(); rev[i].clear();
 		rnk[i]=pre[i]=anc[i]=idom[i]=n;
 		semi[i]=low[i]=i;
@@ -40,7 +44,7 @@ void dominators(int rt){
 			int u=eval(v);
 			if(rnk[semi[w]]>rnk[semi[u]])semi[w]=semi[u];
 		}
-		dom[semi[w]].push_back(w); anc[w]=pre[w];
+		dom[semi[w]].pb(w); anc[w]=pre[w];
 		for(int v:dom[pre[w]]){
 			int u=eval(v);
 			idom[v]=(rnk[pre[w]]>rnk[semi[u]]?u:pre[w]);
@@ -48,19 +52,19 @@ void dominators(int rt){
 		dom[pre[w]].clear();
 	}
 	for(int w:ord) if(w!=rt&&idom[w]!=semi[w]) idom[w]=idom[idom[w]];
-	for (int i = 0; i < n; ++i) if(idom[i]==n)idom[i]=-1;
+	fore(i,0,n) if(idom[i]==n)idom[i]=-1;
 }
 
 int main(){FIN;
 	int m,k; cin>>n>>m>>k;
-	for (int i = 0; i < m; ++i) g[n].push_back(i);
-	for (int i = 0; i < k; ++i){
+	fore(i,0,m) g[n].pb(i);
+	fore(i,0,k){
 		int x,y; cin>>x>>y; x--;y--;
-		g[x].push_back(y);
+		g[x].pb(y);
 	}
 	n++;
 	dominators(n-1);
 	int ans=0;
-	for (int i = 0; i < n-1; ++i) ans+=idom[i]==n-1;
+	fore(i,0,n-1) ans+=idom[i]==n-1;
 	cout<<ans<<"\n";
 }

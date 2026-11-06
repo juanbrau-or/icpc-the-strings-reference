@@ -1,6 +1,10 @@
 // Codeforces 104288G - AC
 // https://codeforces.com/gym/104288/problem/G
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -33,23 +37,23 @@ struct FFT {
 		assert(c <= (1<<LG));
 		u h=u(uu(-p)*-p%p), a=m(h, p/2+1), x, y;
 		while(n<c) n*=2, h=red(p, m(h, a));
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			v[i]=i<SZ(as)?u(as[i]):0,
 			v[i+n]=i<SZ(bs)?u(bs[i]):0;
 
 		}
-		for(auto s:{v,v+n}) for(int j=n;j>=2;j--) for(int k=j&-j; k/=2;) for (int i = j-k; i < j; ++i){
+		for(auto s:{v,v+n}) for(int j=n;j>=2;j--) for(int k=j&-j; k/=2;) fore(i,j-k,j){
 			x=s[i], y=s[i-k];
 			s[i-k] = red(2*p, x+y);
 			s[i] = m(2*p+y-x, r[3*k-j+i]);
 		}
-		for (int i = 0; i < n; ++i) v[i]=m(v[i], v[i+n]);
-		for (int j = 2; j < n+1; ++j) for(int k=1; !(k&j); k*=2) for (int i = j-k; i < j; ++i){
+		fore(i,0,n) v[i]=m(v[i], v[i+n]);
+		fore(j,2,n+1) for(int k=1; !(k&j); k*=2) fore(i,j-k,j){
 			x = m(v[i], r[3*k+j-i]);
 			y = red(2*p, v[i-k]);
 			v[i-k]=x+y, v[i]=2*p+y-x;
 		}
-		for (int i = 0; i < c; ++i) v[i]=red(p, m(v[i], h));
+		fore(i,0,c) v[i]=red(p, m(v[i], h));
 		return poly(v, v+c);
 	}
 };
@@ -80,7 +84,7 @@ poly conv_sunzi(const poly &v1, const poly &v2, ll m) {
 	static FFT<uint64_t, __uint128_t, mod1, 3> fft1;
 	static FFT<uint64_t, __uint128_t, mod2, 17> fft2;
 	auto as=fft1.cv(v1, v2, v), bs=fft2.cv(v1, v2, v);
-	for (int i = 0; i < SZ(as); ++i){
+	fore(i,0,SZ(as)){
 		auto d = fft1.m(mod1+as[i]-bs[i], inv);
 		d -= mod1*(d >= mod1); d %= m;
 		as[i] = (bs[i] + mod2%m*d)%m;
@@ -91,37 +95,37 @@ poly conv_sunzi(const poly &v1, const poly &v2, ll m) {
 poly add(poly p, poly q){
 	int n=SZ(p),m=SZ(q);
 	poly ans(max(n,m));
-	for (int i = 0; i < n; ++i) ans[i]+=p[i];
-	for (int i = 0; i < m; ++i) ans[i]+=q[i];
+	fore(i,0,n) ans[i]+=p[i];
+	fore(i,0,m) ans[i]+=q[i];
 	return ans;
 }
  
 poly sub(poly p, poly q){
 	int n=SZ(p),m=SZ(q);
 	poly ans(max(n,m));
-	for (int i = 0; i < n; ++i) ans[i]+=p[i];
-	for (int i = 0; i < m; ++i) ans[i]-=q[i];
+	fore(i,0,n) ans[i]+=p[i];
+	fore(i,0,m) ans[i]-=q[i];
 	return ans;
 }
  
 int main(){FIN;
 	int n1,m1; cin>>n1>>m1;
 	vector<vector<int>> a(n1,vector<int>(m1));
-	for (int i = 0; i < n1; ++i) for (int j = 0; j < m1; ++j) cin>>a[i][j];
+	fore(i,0,n1) fore(j,0,m1) cin>>a[i][j];
 	
 	int n2,m2; cin>>n2>>m2;
 	vector<vector<int>> b(n2,vector<int>(m2));
-	for (int i = 0; i < n2; ++i) for (int j = 0; j < m2; ++j) cin>>b[i][j];
+	fore(i,0,n2) fore(j,0,m2) cin>>b[i][j];
 	
 	
 	poly p;
-	for (int i = 0; i < n1; ++i){
-		for (int j = 0; j < m1; ++j) p.push_back(a[i][j]);
-		if(i!=n1-1) for (int j = 0; j < m2-m1; ++j) p.push_back(0);
+	fore(i,0,n1){
+		fore(j,0,m1) p.pb(a[i][j]);
+		if(i!=n1-1) fore(j,0,m2-m1) p.pb(0);
 	}
 	
 	poly q;
-	for (int i = 0; i < n2; ++i) for (int j = 0; j < m2; ++j) q.push_back(b[i][j]);
+	fore(i,0,n2) fore(j,0,m2) q.pb(b[i][j]);
 	
 	// (p-q)^2 = p^2 - 2*p*q + q^2
 	
@@ -129,18 +133,18 @@ int main(){FIN;
 	for(auto &x:p) sum2+=x*x;
 	auto sq=q;
 	for(auto &x:sq) x=x*x;
-	for (int i = 1; i < SZ(sq); ++i) sq[i]+=sq[i-1];
+	fore(i,1,SZ(sq)) sq[i]+=sq[i-1];
 	
 	poly qr=p;
 	reverse(ALL(qr));
 	
 	poly now=conv_big(q,qr);
 	poly me;
-	for (int i = 0; i < SZ(q)-SZ(p)+1; ++i){
+	fore(i,0,SZ(q)-SZ(p)+1){
 	  ll val=sq[i+SZ(p)-1]; if(i) val-=sq[i-1];
 	  val-=2ll*now[SZ(p)+i-1];
 	  val+=sum2;
-	  me.push_back(val);
+	  me.pb(val);
 	}
 	
 	//(p0*q^2)
@@ -150,17 +154,17 @@ int main(){FIN;
 	reverse(ALL(p0));
 	poly now2=conv_big(p0,q);
 	poly he;
-	for (int i = 0; i < SZ(q)-SZ(p0)+1; ++i) he.push_back(now2[SZ(p)+i-1]);
+	fore(i,0,SZ(q)-SZ(p0)+1) he.pb(now2[SZ(p)+i-1]);
  
 	// (p-q)^2 - (p0*q^2)
 	poly ans=sub(me,he);
 	
 	vector<ii> res;
 	
-	for (int i = 0; i < n2; ++i) for (int j = 0; j < m2; ++j) if(i+n1<=n2 && j+m1<=m2 && ans[m2*i+j]==0){
-		res.push_back({i,j});
+	fore(i,0,n2) fore(j,0,m2) if(i+n1<=n2 && j+m1<=m2 && ans[m2*i+j]==0){
+		res.pb({i,j});
 	}
 	
 	cout<<SZ(res)<<"\n";
-	for(auto x:res)cout<<x.first+1<<" "<<x.second+1<<"\n";
+	for(auto x:res)cout<<x.fst+1<<" "<<x.snd+1<<"\n";
 }

@@ -1,4 +1,9 @@
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 #define MOD 1000000007
 using namespace std;
 typedef long long ll;
@@ -17,11 +22,11 @@ int pm(int x, int e){
 
 typedef int tp;
 
-#define add(n,s,d,k) for (int i = 0; i < n; ++i)(d)[i]+=(s)[i]*k
+#define add(n,s,d,k) fore(i,0,n)(d)[i]+=(s)[i]*k
 tp* ini(int n){tp *r=new tp[n];fill(r,r+n,0);return r;}
 void karatsura(int n, tp* p, tp* q, tp* r){
 	if(n<=0)return;
-	if(n<35)for (int i = 0; i < n; ++i)for (int j = 0; j < n; ++j)r[i+j]+=p[i]*q[j];
+	if(n<35)fore(i,0,n)fore(j,0,n)r[i+j]+=p[i]*q[j];
 	else {
 		int nac=n/2,nbd=n-n/2;
 		tp *a=p,*b=p+nac,*c=q,*d=q+nac;
@@ -38,8 +43,8 @@ void karatsura(int n, tp* p, tp* q, tp* r){
 vector<tp> multiply(vector<tp> p0, vector<tp> p1){
 	int n=max(p0.size(),p1.size());
 	tp *p=ini(n),*q=ini(n),*r=ini(2*n);
-	for (int i = 0; i < p0.size(); ++i)p[i]=p0[i];
-	for (int i = 0; i < p1.size(); ++i)q[i]=p1[i];
+	fore(i,0,p0.size())p[i]=p0[i];
+	fore(i,0,p1.size())q[i]=p1[i];
 	karatsura(n,p,q,r);
 	vector<tp> rr(r,r+p0.size()+p1.size()-1);
 	free(p);free(q);free(r);
@@ -73,25 +78,25 @@ void cdfs(int x=0, int sz=-1){
 		vector<int> z;
 		dfs0(y,-1,1,z);
 		vector<int> p=multiply(w,z);
-		for (int i = 0; i < p.size(); ++i)r[i]+=p[i],r[i]%=MOD;
+		fore(i,0,p.size())r[i]+=p[i],r[i]%=MOD;
 		if(z.size()>w.size())w.resize(z.size(),0);
-		for (int i = 0; i < z.size(); ++i)w[i]+=z[i];
+		fore(i,0,z.size())w[i]+=z[i];
 	}
 	for(auto y:g[x])if(!tk[y])cdfs(y);
 }
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 1; i < n; ++i){
+	fore(i,1,n){
 		int x,y;
 		scanf("%d%d",&x,&y);x--;y--;
-		g[x].push_back(y);g[y].push_back(x);
+		g[x].pb(y);g[y].pb(x);
 	}
 	cdfs();
-	for (int i = 1; i < n; ++i)r[i]=(2*r[i])%MOD;
+	fore(i,1,n)r[i]=(2*r[i])%MOD;
 	int s=0;
-	for (int i = 0; i < n; ++i)s+=(1LL*r[i]*pm(i+1,MOD-2))%MOD,s%=MOD;
-	for (int i = 1; i < n+1; ++i)s=(1LL*s*i)%MOD;
+	fore(i,0,n)s+=(1LL*r[i]*pm(i+1,MOD-2))%MOD,s%=MOD;
+	fore(i,1,n+1)s=(1LL*s*i)%MOD;
 	printf("%d\n",s);
 	return 0;
 }

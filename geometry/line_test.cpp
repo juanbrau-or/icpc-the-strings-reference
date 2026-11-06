@@ -1,6 +1,11 @@
 // SPOJ TAP2016D - AC
 // http://www.spoj.com/problems/TAP2016D/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -65,7 +70,7 @@ pt ps[1024];
 int main(){
 	while(scanf("%d",&n)!=EOF){
 		w.clear();
-		for (int i = 0; i < n; ++i)scanf("%lf%lf",&ps[i].x,&ps[i].y),w.insert(ps[i]);
+		fore(i,0,n)scanf("%lf%lf",&ps[i].x,&ps[i].y),w.insert(ps[i]);
 		double a=ln(ps[0],ps[1]).angle(ln(ps[0],ps[2]));
 		double b=ln(ps[1],ps[0]).angle(ln(ps[1],ps[2]));
 		pt ra0(sin(a),cos(a));
@@ -73,7 +78,7 @@ int main(){
 		pt rb0(sin(b),cos(b));
 		pt rb1(sin(-b),cos(-b));
 		int r=0;
-		for (int i = 0; i < n; ++i)for (int j = i+1; j < n; ++j){
+		fore(i,0,n)fore(j,i+1,n){
 			pt p=ps[i],q=ps[j];
 			r+=w.count(ln(p,q).rot(ra0)^ln(q,p).rot(rb1));
 			r+=w.count(ln(p,q).rot(rb0)^ln(q,p).rot(ra1));

@@ -1,6 +1,11 @@
 // Codeforces 652E - AC
 // http://codeforces.com/problemset/problem/652/E
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 #define MAXN 300005
@@ -9,8 +14,8 @@ vector<int> g[MAXN];int n;
 struct edge {int u,v,comp;bool bridge;};
 vector<edge> e;
 void add_edge(int u, int v){
-	g[u].push_back(e.size());g[v].push_back(e.size());
-	e.push_back((edge){u,v,-1,false});
+	g[u].pb(e.size());g[v].pb(e.size());
+	e.pb((edge){u,v,-1,false});
 }
 int D[MAXN],B[MAXN],T;
 //int nbc;  // number of biconnected components
@@ -18,7 +23,7 @@ int D[MAXN],B[MAXN],T;
 //stack<int> st;  // only for biconnected
 void dfs(int u,int pe){
 	B[u]=D[u]=T++;
-	for (int _ = 0; _ < g[u].size(); ++_){
+	fore(_,0,g[u].size()){
 		int ne=g[u][_];if(ne==pe)continue;
 		int v=e[ne].u^e[ne].v^u;
 		if(D[v]<0){
@@ -43,7 +48,7 @@ void doit(){
 	memset(D,-1,sizeof(D));
 //	memset(art,0,sizeof(art));
 	/*nbc=*/T=0;
-	for (int i = 0; i < n; ++i)if(D[i]<0)dfs(i,-1)/*,art[i]--*/;
+	fore(i,0,n)if(D[i]<0)dfs(i,-1)/*,art[i]--*/;
 }
 
 int z[300005];
@@ -56,7 +61,7 @@ bool dfs1(int x){
 	if(x==b)return true;
 	if(vis[x])return false;
 	vis[x]=true;
-	for (int _ = 0; _ < g[x].size(); ++_){
+	fore(_,0,g[x].size()){
 		int ne=g[x][_];
 		int y=e[ne].v^e[ne].u^x;
 		if(dfs1(y)){
@@ -70,7 +75,7 @@ bool dfs1(int x){
 bool dfs2(int x){
 	if(vis[x])return false;
 	vis[x]=true;
-	for (int _ = 0; _ < g[x].size(); ++_){
+	fore(_,0,g[x].size()){
 		int ne=g[x][_];
 		if(e[ne].bridge&&!w[ne])continue;
 		if(z[ne])return true;
@@ -82,7 +87,7 @@ bool dfs2(int x){
 
 int main(){
 	scanf("%d%d",&n,&m);
-	for (int i = 0; i < m; ++i){
+	fore(i,0,m){
 		int x,y;
 		scanf("%d%d%d",&x,&y,z+i);x--;y--;
 		add_edge(x,y);

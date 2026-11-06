@@ -1,6 +1,11 @@
 // Codeforces gym 100765H - AC
 // http://codeforces.com/gym/100765/problem/H
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -13,15 +18,15 @@ int dist[MAXN],q[MAXN],work[MAXN];
 struct edge {int to,rev,id;ll f,cap;};
 vector<edge> g[MAXN];
 void add_edge(int s, int t, ll cap, int id){
-	g[s].push_back((edge){t,(int)g[t].size(),id,0,cap});
-	g[t].push_back((edge){s,(int)g[s].size()-1,id,0,0});
+	g[s].pb((edge){t,(int)g[t].size(),id,0,cap});
+	g[t].pb((edge){s,(int)g[s].size()-1,id,0,0});
 }
 bool dinic_bfs(){
 	fill(dist,dist+nodes,-1);dist[src]=0;
 	int qt=0;q[qt++]=src;
 	for(int qh=0;qh<qt;qh++){
 		int u=q[qh];
-		for (int i = 0; i < g[u].size(); ++i){
+		fore(i,0,g[u].size()){
 			edge &e=g[u][i];int v=g[u][i].to;
 			if(dist[v]<0&&e.f<e.cap)dist[v]=dist[u]+1,q[qt++]=v;
 		}
@@ -91,27 +96,27 @@ vector<int> nodes[MAXN]; // nodes delimiting region (in CW order)
 map<pair<int,int>,int> ps,es;
 void get_dual(vector<pt> p){ // p: points corresponding to nodes
 	ps.clear();es.clear();
-	for (int x = 0; x < n; ++x){
+	fore(x,0,n){
 		Cmp pc(p[x]); // (radial order of points)
 		auto comp=[&](int a, int b){return pc(p[a],p[b]);};
 		sort(g[x].begin(),g[x].end(),comp);
-		for (int i = 0; i < g[x].size(); ++i)ps[{x,g[x][i]}]=i;
+		fore(i,0,g[x].size())ps[{x,g[x][i]}]=i;
 	}
 	nd=0;
-	for (int xx = 0; xx < n; ++xx)for(auto yy:g[xx])if(!es.count({xx,yy})){
+	fore(xx,0,n)for(auto yy:g[xx])if(!es.count({xx,yy})){
 		int x=xx,y=yy;nodes[nd].clear();
 		while(!es.count({x,y})){
-			es[{x,y}]=nd;nodes[nd].push_back(y);
+			es[{x,y}]=nd;nodes[nd].pb(y);
 			int z=g[y][(ps[{y,x}]+1)%g[y].size()];x=y;y=z;
 		}
 		nd++;
 	}
 	D::nodes=nd;
 	for(auto p:es){
-		pair<int,int> q={p.first.second,p.first.first};
+		pair<int,int> q={p.fst.snd,p.fst.fst};
 		assert(es.count(q));
-		int i=ei[p.first],c=ec[p.first];
-		if(es[q]!=p.second)D::add_edge(p.second,es[q],c,i);
+		int i=ei[p.fst],c=ec[p.fst];
+		if(es[q]!=p.snd)D::add_edge(p.snd,es[q],c,i);
 	}
 }
 
@@ -122,12 +127,12 @@ struct pol {
 	pol(vector<pt> _p){p=_p;n=p.size();}
 	bool cw(){
 		ll r=0;
-		for (int i = 0; i < n; ++i)r+=p[i]%p[(i+1)%n];
+		fore(i,0,n)r+=p[i]%p[(i+1)%n];
 		return r<0;
 	}
 	bool has(pt q){
 		int cnt=0;
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			int j=(i+1)%n;
 			int k=sgn((q-p[j])%(p[i]-p[j]));
 			int u=sgn(p[i].y-q.y),v=sgn(p[j].y-q.y);
@@ -142,7 +147,7 @@ vector<pt> p;
 map<pair<int,int>,int> ids;
 int id(int x, int y){
 	if(!ids.count({x,y})){
-		p.push_back(pt(x,y));
+		p.pb(pt(x,y));
 		ids[{x,y}]=n++;
 	}
 	return ids[{x,y}];
@@ -152,11 +157,11 @@ int m;
 
 int main(){
 	scanf("%d",&m);
-	for (int i = 0; i < m; ++i){
+	fore(i,0,m){
 		int x0,y0,x1,y1,c;
 		scanf("%d%d%d%d%d",&x0,&y0,&x1,&y1,&c);
 		int x=id(x0,y0),y=id(x1,y1);
-		g[x].push_back(y);g[y].push_back(x);
+		g[x].pb(y);g[y].pb(x);
 		ei[{x,y}]=ei[{y,x}]=i;
 		ec[{x,y}]=ec[{y,x}]=c;
 	}
@@ -167,9 +172,9 @@ int main(){
 	pt b(x,y);
 	get_dual(p);
 	int src=-1,dst=-1;
-	for (int i = 0; i < nd; ++i){
+	fore(i,0,nd){
 		vector<pt> _q;
-		for(auto j:nodes[i])_q.push_back(p[j]);
+		for(auto j:nodes[i])_q.pb(p[j]);
 		pol q(_q);
 		if(!q.cw())continue;
 		if(q.has(a))src=i;
@@ -178,9 +183,9 @@ int main(){
 	assert(src!=dst);
 	printf("%lld\n",D::max_flow(src,dst));
 	vector<int> r;
-	for (int x = 0; x < nd; ++x)if(D::dist[x]>=0)for(auto e:D::g[x])if(e.cap&&D::dist[e.to]<0)r.push_back(e.id);
+	fore(x,0,nd)if(D::dist[x]>=0)for(auto e:D::g[x])if(e.cap&&D::dist[e.to]<0)r.pb(e.id);
 	printf("%d\n",(int)r.size());
-	for (int i = 0; i < r.size(); ++i){
+	fore(i,0,r.size()){
 		if(i)putchar(' ');
 		printf("%d",r[i]+1);
 	}

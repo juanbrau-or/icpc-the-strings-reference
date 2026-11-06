@@ -1,6 +1,11 @@
 // AC
 // http://codeforces.com/group/3qadGzUdR4/contest/101707/problem/I
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 #ifdef DEMETRIO
 #define deb(...) fprintf(stderr,__VA_ARGS__)
 #define deb1(x) cerr << #x << " = " << x << endl
@@ -51,15 +56,15 @@ ll nq,tq,ta,nit;
 vector<pt> chull(vector<pt> p){
 	vector<pt> r;//r.reserve(SZ(p));
 	sort(p.begin(),p.end()); // first x, then y
-	for (int i = 0; i < p.size(); ++i){ // lower hull
+	fore(i,0,p.size()){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
-		r.push_back(p[i]);
+		r.pb(p[i]);
 	}
 	r.pop_back();
 	int k=r.size();
 	for(int i=p.size()-1;i>=0;--i){ // upper hull
 		while(r.size()>=k+2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
-		r.push_back(p[i]);
+		r.pb(p[i]);
 	}
 	r.pop_back();
 	if(!SZ(r))return p;
@@ -73,10 +78,10 @@ struct pol {
 	pt farthest(pt v){ // O(log(n)) only CONVEX
 		if(n<10){
 			int k=0;
-			for (int i = 1; i < n; ++i)if(v*(p[i]-p[k])>EPS)k=i;
+			fore(i,1,n)if(v*(p[i]-p[k])>EPS)k=i;
 			return p[k];
 		}
-		if(n==SZ(p))p.push_back(p[0]);
+		if(n==SZ(p))p.pb(p[0]);
 		pt a=p[1]-p[0];
 		int s=0,e=n,ua=v*a>EPS;
 		if(!ua&&v*(p[n-1]-p[0])<=EPS)return p[0];
@@ -99,10 +104,10 @@ vector<pol> w;
 void add(pt q){
 	vector<pt> p={q};
 	while(!w.empty()&&SZ(w.back().p)<2*SZ(p)){
-		for(pt v:w.back().p)p.push_back(v);
+		for(pt v:w.back().p)p.pb(v);
 		w.pop_back();
 	}
-	w.push_back(pol(chull(p)));
+	w.pb(pol(chull(p)));
 }
 ll query(pt v){
 	ll r=-INF;
@@ -114,13 +119,13 @@ int n,m;
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		ll x,y;
 		scanf("%lld%lld",&x,&y);
 		add(pt(x,y));
 	}
 	scanf("%d",&m);
-	for (int i = 0; i < m; ++i){
+	fore(i,0,m){
 		ll x,y;
 		char t[16];
 		scanf("%s%lld%lld",t,&x,&y);

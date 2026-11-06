@@ -6,7 +6,7 @@ struct item {
 };
 int cnt(pitem t){return t?t->cnt:0;}
 void upd_cnt(pitem t){if(t)t->cnt=cnt(t->l)+cnt(t->r)+1;}
-void split(pitem t, int key, pitem& l, pitem& r){ // l: < key, r: >= key
+void split(pitem t, int key, pitem& l, pitem& r){ // l: <= key, r: > key
 	if(!t)l=r=0;
 	else if(key<t->key)split(t->l,key,l,t->l),r=t;
 	else split(t->r,key,t->r,r),l=t;
@@ -25,6 +25,7 @@ void merge(pitem& t, pitem l, pitem r){
 	upd_cnt(t);
 }
 void erase(pitem& t, int key){
+	if(!t)return;
 	if(t->key==key)merge(t,t->l,t->r);
 	else erase(key<t->key?t->l:t->r,key);
 	upd_cnt(t);
@@ -44,9 +45,9 @@ pitem kth(pitem t, int k){
 pair<int,int> lb(pitem t, int key){ // position and value of lower_bound
 	if(!t)return {0,1<<30}; // (special value)
 	if(key>t->key){
-		auto w=lb(t->r,key);w.first+=cnt(t->l)+1;return w;
+		auto w=lb(t->r,key);w.fst+=cnt(t->l)+1;return w;
 	}
 	auto w=lb(t->l,key);
-	if(w.first==cnt(t->l))w.second=t->key;
+	if(w.fst==cnt(t->l))w.snd=t->key;
 	return w;
 }

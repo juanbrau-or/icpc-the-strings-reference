@@ -1,16 +1,21 @@
 // ICPC Live Archive 7343 - AC
 // https://icpcarchive.ecs.baylor.edu/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=5365
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 #define SZ(x) ((int)x.size())
 using namespace std;
 typedef long long ll;
 
 typedef ll tp;
-#define add(n,s,d,k) for (int i = 0; i < n; ++i)(d)[i]+=(s)[i]*k
+#define add(n,s,d,k) fore(i,0,n)(d)[i]+=(s)[i]*k
 tp* ini(int n){tp *r=new tp[n];fill(r,r+n,0);return r;}
 void karatsura(int n, tp* p, tp* q, tp* r){
 	if(n<=0)return;
-	if(n<35)for (int i = 0; i < n; ++i)for (int j = 0; j < n; ++j)r[i+j]+=p[i]*q[j];
+	if(n<35)fore(i,0,n)fore(j,0,n)r[i+j]+=p[i]*q[j];
 	else {
 		int nac=n/2,nbd=n-n/2;
 		tp *a=p,*b=p+nac,*c=q,*d=q+nac;
@@ -27,8 +32,8 @@ void karatsura(int n, tp* p, tp* q, tp* r){
 vector<tp> multiply(vector<tp> p0, vector<tp> p1){
 	int n=max(p0.size(),p1.size());
 	tp *p=ini(n),*q=ini(n),*r=ini(2*n);
-	for (int i = 0; i < p0.size(); ++i)p[i]=p0[i];
-	for (int i = 0; i < p1.size(); ++i)q[i]=p1[i];
+	fore(i,0,p0.size())p[i]=p0[i];
+	fore(i,0,p1.size())q[i]=p1[i];
 	karatsura(n,p,q,r);
 	vector<tp> rr(r,r+p0.size()+p1.size()-1);
 	free(p);free(q);free(r);
@@ -65,13 +70,13 @@ vector<ll> p0,p1;
 
 int main(){
 	f[0]=1;
-	for (int i = 1; i < 100005; ++i)f[i]=(1LL*f[i-1]*i)%MOD2;
+	fore(i,1,100005)f[i]=(1LL*f[i-1]*i)%MOD2;
 	int tn;
 	scanf("%d",&tn);
-	for (int tc = 1; tc < tn+1; ++tc){
+	fore(tc,1,tn+1){
 		printf("Case %d:\n",tc);
 		scanf("%d",&n);n1=n2=n3=n4=0;
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			int x,y;
 			scanf("%d%d",&x,&y);
 			if(x>0&&y>0)n1++;
@@ -82,12 +87,12 @@ int main(){
 		}
 		int m=(n/2)+1;
 		p0.resize(m);p1.resize(m);
-		for (int i = 0; i < m; ++i){
+		fore(i,0,m){
 			p0[i]=(1LL*c(n1,i)*c(n4,i))%MOD2;
 			p1[i]=(1LL*c(n2,i)*c(n3,i))%MOD2;
 		}
 		vector<ll> r=multiply(p0,p1);
-		for (int i = 1; i < n+1; ++i){
+		fore(i,1,n+1){
 			if(i>1)putchar(' ');
 			if(i%2==1)printf("0");
 			else printf("%lld",r[i/2]%MOD2);

@@ -18,7 +18,7 @@ void go(int x){
 		g[x].pop_front();
 		go(y);
 	}
-	p.push_back(x);
+	p.pb(x);
 }
 vector<int> get_path(int x){ // get a path that begins in x
 // check that a path exists from x before calling to get_path!

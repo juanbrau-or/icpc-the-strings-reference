@@ -1,0 +1,32 @@
+\section{Cobertura para México y fuentes}
+\label{sec:sources}
+\textbf{Corte de consulta: 5 de noviembre de 2026.} La selección busca cubrir familias que aparecen en los sets regionales compartidos con México, además de fundamentos reutilizables. Las prioridades siguientes son una \emph{inferencia de preparación}, no frecuencias medidas ni una predicción del siguiente set.
+
+\subsection{Evidencia de problemas reales}
+Los cuadernillos oficiales de LATAM 2024 y 2025 enumeran a México entre los países participantes. Ejemplos que orientan la cobertura (la familia es nuestra lectura del enunciado, no una editorial oficial):
+\begin{itemize}
+\item \textbf{2024 D, Diverse T-Shirts:} selección sin repetir dos tipos de color; motiva modelar compatibilidad mediante matching bipartito.
+\item \textbf{2024 G, Grand Glory Race:} consultas sobre un árbol ponderado; motiva LCA, distancias y preprocesamiento en árboles.
+\item \textbf{2025 A, Apple Pie:} cada par debe aparecer una vez entre adyacentes; motiva grados y recorridos eulerianos.
+\item \textbf{2025 D, Displaying Decimals:} pide una esperanza expresada módulo primo; motiva aritmética modular, conteos y probabilidades.
+\item \textbf{2025 E, Emergency Rations:} altas/bajas y una respuesta tras cada cambio; motiva frecuencias, orden y estructuras dinámicas, después de derivar la observación del problema.
+\item \textbf{2025 G, Gridoland Power Gauge:} red con capacidad por vértice que varía linealmente; motiva reducción de capacidad de vértices a flujo y análisis del parámetro.
+\item \textbf{2025 L, Lonely Creatures:} cuenta intersecciones dentro de una región abierta; motiva predicados geométricos y conteo eficiente, con especial atención a frontera.
+\end{itemize}
+\textbf{Consecuencia práctica.} Dominar primero BFS/Dijkstra, prefijos, Fenwick/ST, búsqueda binaria, DP básica, modular y modelado. Después SCC/2-SAT, LCA/HLD, matching/flujo, cadenas y convolución. Conservamos herramientas más especializadas (Delaunay, dominadores, LCT, simplex), con sus requisitos, para cuando el modelo las justifique. Que un enunciado hable de geometría o caminos no obliga a usar la herramienta más compleja de su sección.
+
+\subsection{Fuentes verificables y procedencia}
+{\small
+\begin{enumerate}
+\item ICPC LATAM, regional 2024, enunciados oficiales compartidos con México:
+\url{https://scorelatam.naquadah.com.br/latam-2024/contest.pdf}.
+\item ICPC LATAM, regional 2025, enunciados oficiales compartidos con México:
+\url{https://scorelatam.naquadah.com.br/latam-2025/contest.pdf}.
+\item Organización LATAM 2026: formato distribuido con mismo set; a esta fecha no se usa ningún supuesto enunciado futuro como evidencia.
+\url{https://www.icpclatam.org/regionals/lar2026/}.
+\item Base de código: El Vasito. Se restauraron sus abreviaturas y se conservaron los nombres de archivo para comparar implementaciones:
+\url{https://github.com/mhunicken/icpc-team-notebook-el-vasito}.
+\item Bases de Miller--Rabin contrastadas con KACTL (CC0); la multiplicación de esta referencia usa \id{__int128}:
+\url{https://github.com/kth-competitive-programming/kactl/blob/main/content/number-theory/MillerRabin.h}.
+\end{enumerate}}
+Esta edición añade fichas de uso y ejemplos, técnicas básicas que faltaban, NTT y puntos bajo una recta que ya existían pero no se imprimían, y corrige defectos concretos detectados. Las pruebas locales están en \id{tests/notebook_algorithms_test.cpp}; el verificador comprueba también cobertura de fichas y rutas. No se afirma que todos los algoritmos especializados heredados hayan sido revalidados contra un juez externo.

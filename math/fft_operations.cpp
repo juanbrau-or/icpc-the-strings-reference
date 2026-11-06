@@ -10,7 +10,7 @@
 poly add(poly &a, poly &b){
 	int n=SZ(a),m=SZ(b);
 	poly ans(max(n,m));
-	for (int i = 0; i < max(n,m); ++i) ans[i]=addmod(i<SZ(a)?a[i]:0, i<SZ(b)?b[i]:0);
+	fore(i,0,max(n,m)) ans[i]=addmod(i<SZ(a)?a[i]:0, i<SZ(b)?b[i]:0);
 	while(SZ(ans)>1&&!ans.back())ans.pop_back();
 	return ans;
 }
@@ -18,14 +18,14 @@ poly add(poly &a, poly &b){
 // derivative of p
 poly derivate(poly &p){
 	poly ans(max(1, SZ(p)-1));
-	for (int i = 1; i < SZ(p); ++i) ans[i-1]=mulmod(p[i],i);
+	fore(i,1,SZ(p)) ans[i-1]=mulmod(p[i],i);
 	return ans;
 }
 
 // integral of p
 poly integrate(poly &p){
 	poly ans(SZ(p)+1);
-	for (int i = 0; i < SZ(p); ++i) ans[i+1]=mulmod(p[i], inv(i+1));
+	fore(i,0,SZ(p)) ans[i+1]=mulmod(p[i], inv(i+1));
 	return ans;
 }
 
@@ -46,7 +46,7 @@ poly invert(poly &p, int d){
 		sz*=2;
 		poly pre(p.begin(), p.begin()+min(SZ(p),sz));
 		poly cur=multiply(res,pre);
-		for (int i = 0; i < SZ(cur); ++i) cur[i]=submod(0,cur[i]);
+		fore(i,0,SZ(cur)) cur[i]=submod(0,cur[i]);
 		cur[0]=addmod(cur[0],2);
 		res=multiply(res,cur);
 		res=takemod(res,sz);
@@ -74,7 +74,7 @@ poly exp(poly &p, int d){
 	while(sz<d){
 		sz*=2;
 		poly lg=log(res, sz), cur(sz);
-		for (int i = 0; i < sz; ++i) cur[i]=submod(i<SZ(p)?p[i]:0, i<SZ(lg)?lg[i]:0);
+		fore(i,0,sz) cur[i]=submod(i<SZ(p)?p[i]:0, i<SZ(lg)?lg[i]:0);
 		cur[0]=addmod(cur[0],1);
 		res=multiply(res,cur);
 		res=takemod(res, sz);
@@ -87,13 +87,14 @@ poly exp(poly &p, int d){
 pair<poly,poly> divslow(poly &a, poly &b){
 	poly q,r=a;
 	while(SZ(r)>=SZ(b)){
-		q.push_back(mulmod(r.back(),inv(b.back())));
-		if(q.back()) for (int i = 0; i < SZ(b); ++i){
+		q.pb(mulmod(r.back(),inv(b.back())));
+		if(q.back()) fore(i,0,SZ(b)){
 			r[SZ(r)-i-1]=submod(r[SZ(r)-i-1],mulmod(q.back(),b[SZ(b)-i-1]));
 		}
 		r.pop_back();
 	}
 	reverse(ALL(q));
+	if(q.empty())q={0};if(r.empty())r={0};
 	return {q,r};
 }
 
@@ -108,8 +109,9 @@ pair<poly,poly> divide(poly &a, poly &b){	//returns {quotient,remainder}
 	q.resize(SZ(q)+m-n-SZ(q)+1,0);
 	reverse(ALL(q));
 	poly bq=multiply(b,q);
-	for (int i = 0; i < SZ(bq); ++i) bq[i]=submod(0,bq[i]);
+	fore(i,0,SZ(bq)) bq[i]=submod(0,bq[i]);
 	poly r=add(a,bq);
+	if(q.empty())q={0};if(r.empty())r={0};
 	return {q,r};
 }
 
@@ -118,18 +120,19 @@ vector<poly> tree;
 void filltree(vector<tf> &x){
 	int k=SZ(x);
 	tree.resize(2*k);
-	for (int i = k; i < 2*k; ++i) tree[i]={submod(0,x[i-k]),1};
+	fore(i,k,2*k) tree[i]={submod(0,x[i-k]),1};
 	for(int i=k-1;i;i--) tree[i]=multiply(tree[2*i],tree[2*i+1]);
 }
 
 // Multi-point polynomial evaluation for arbitrarily large points
 vector<tf> evaluate(poly &a, vector<tf> &x){
+	if(x.empty())return {};
 	filltree(x);
 	int k=SZ(x);
 	vector<poly> ans(2*k);
-	ans[1]=divide(a,tree[1]).second;
-	for (int i = 2; i < 2*k; ++i) ans[i]=divide(ans[i>>1],tree[i]).second;
-	vector<tf> r; for (int i = 0; i < k; ++i) r.push_back(ans[i+k][0]);
+	ans[1]=divide(a,tree[1]).snd;
+	fore(i,2,2*k) ans[i]=divide(ans[i>>1],tree[i]).snd;
+	vector<tf> r; fore(i,0,k) r.pb(ans[i+k][0]);
 	return r;
 }
 
@@ -137,10 +140,10 @@ vector<tf> evaluate(poly &a, vector<tf> &x){
 // for all points of the form g^i, for each i in [0, k)
 // in O((n+k) * log(n+k))
 vector<int> chirpTransform(poly& p, int g, int k) {
-	int inv_g=inv(g), n=SZ(p)-1, sz=min(k,MOD-1), gk=1;
+	int inv_g=inv(g), n=SZ(p)-1, sz=min<ll>(k,MOD-1), gk=1;
 	poly ap(n+1), bp(n+sz);
 
-	for (int i = 0; i < n+sz; ++i){
+	fore(i,0,n+sz){
 		ll exp=1ll*i*(i-1)/2%(MOD-1);
 		if(i<=n) ap[n-i]=mulmod(p[i],fpow(inv_g, exp));
 		bp[i]=fpow(g, exp);
@@ -149,7 +152,7 @@ vector<int> chirpTransform(poly& p, int g, int k) {
 	poly cp=multiply(ap, bp);
 	vector<int> ans(k);
 
-	for (int i = 0; i < sz; ++i){
+	fore(i,0,sz){
 		ll exp=1ll*i*(i-1)/2%(MOD-1);
 		int val=0;
 		if(n+i<SZ(cp)) val=cp[n+i];
@@ -157,7 +160,7 @@ vector<int> chirpTransform(poly& p, int g, int k) {
 		ans[i]=val;
 		gk=mulmod(gk,g);
 	}
-	for (int i = sz; i < k; ++i) ans[i]=ans[i-MOD+1];
+	fore(i,sz,k) ans[i]=ans[i-MOD+1];
 	return ans;
 }
 
@@ -166,12 +169,12 @@ int get_primitive_root(int p) {
 	int phi=p-1, n=phi;
 	vector<int> fact;
 	for(int i=2;i*i<=n;i++) if(n%i==0){
-		fact.push_back(i);
+		fact.pb(i);
 		while(n%i==0) n/=i;
 	}
-	if(n>1) fact.push_back(n);
+	if(n>1) fact.pb(n);
 
-	for (int res = 2; res < p+1; ++res){
+	fore(res,2,p+1){
 		int ok=1;
 		for(int f:fact){
 			if(fpow(res,phi/f)==1){
@@ -192,7 +195,7 @@ vector<int> evaluate_all_points(poly& p) {
 
 	vector<int> ch=chirpTransform(p,g,MOD-1), ans(MOD, p[0]);
 	
-	for (int i = 0; i < MOD-1; ++i){
+	fore(i,0,MOD-1){
 		ans[gk]=ch[i];
 		gk=mulmod(gk,g);
 	}
@@ -200,12 +203,13 @@ vector<int> evaluate_all_points(poly& p) {
 }
 
 poly interpolate(vector<tf> &x, vector<tf> &y){
+	if(x.empty())return {0};
 	filltree(x);
 	poly p=derivate(tree[1]);
 	int k=SZ(y);
 	vector<tf> d=evaluate(p,x);
 	vector<poly> intree(2*k);
-	for (int i = k; i < 2*k; ++i) intree[i]={mulmod(y[i-k],inv(d[i-k]))};
+	fore(i,k,2*k) intree[i]={mulmod(y[i-k],inv(d[i-k]))};
 	for(int i=k-1;i;i--){
 		poly p1=multiply(tree[2*i],intree[2*i+1]);
 		poly p2=multiply(tree[2*i+1],intree[2*i]);

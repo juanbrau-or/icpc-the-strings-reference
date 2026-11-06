@@ -1,13 +1,18 @@
 // SPOJ NHAY - AC
 // http://www.spoj.com/problems/NHAY/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
 vector<int> kmppre(string& t){ // r[i]: longest border of t[0,i)
 	vector<int> r(t.size()+1);r[0]=-1;
 	int j=-1;
-	for (int i = 0; i < t.size(); ++i){
+	fore(i,0,t.size()){
 		while(j>=0&&t[i]!=t[j])j=r[j];
 		r[i+1]=++j;
 	}

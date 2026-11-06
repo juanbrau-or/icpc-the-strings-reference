@@ -1,6 +1,11 @@
 // Codeforces 508D - AC
 // http://codeforces.com/problemset/problem/508/D
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -25,7 +30,7 @@ void go(int x){
 		g[x].pop_front();
 		go(y);
 	}
-	p.push_back(x);
+	p.pb(x);
 }
 vector<int> get_path(int x){ // get a path that begins in x
 // check that a path exists from x before calling to get_path!
@@ -48,7 +53,7 @@ int id(char a, char b){
 
 int main(){
 	scanf("%d",&m);
-	for (int _ = 0; _ < m; ++_){
+	fore(_,0,m){
 		char s[8];
 		scanf("%s",s);
 		int x=id(s[0],s[1]),y=id(s[1],s[2]);
@@ -56,7 +61,7 @@ int main(){
 		out[x]++;in[y]++;
 	}
 	int x=-1;
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		if(out[i]==in[i]+1){
 			if(x>=0){puts("NO");return 0;}
 			x=i;
@@ -68,7 +73,7 @@ int main(){
 	if(p.size()!=m+1){puts("NO");return 0;}
 	puts("YES");
 	putchar(w[x][0]);putchar(w[x][1]);
-	for (int i = 1; i < p.size(); ++i)putchar(w[p[i]][1]);
+	fore(i,1,p.size())putchar(w[p[i]][1]);
 	puts("");
 	return 0;
 }

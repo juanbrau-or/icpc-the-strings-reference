@@ -1,6 +1,11 @@
 // SPOJ KQUERY - AC
 // http://www.spoj.com/problems/KQUERY/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -28,30 +33,30 @@ int n,q;
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		int x;
 		scanf("%d",&x);
-		e.push_back({-x,{i,{-1,-1}}});
+		e.pb({-x,{i,{-1,-1}}});
 	}
 	scanf("%d",&q);
-	for (int qi = 0; qi < q; ++qi){
+	fore(qi,0,q){
 		int i,j,k;
 		scanf("%d%d%d",&i,&j,&k);i--;
-		e.push_back({-k,{-qi-1,{i,j}}});
+		e.pb({-k,{-qi-1,{i,j}}});
 	}
 	sort(e.begin(),e.end());
-	for (int i = 0; i < e.size(); ++i){
-		if(e[i].second.first>=0){
-			int p=e[i].second.first;
+	fore(i,0,e.size()){
+		if(e[i].snd.fst>=0){
+			int p=e[i].snd.fst;
 			upd(p,1);
 		}
 		else {
-			int qi=-e[i].second.first-1;
-			int x=e[i].second.second.first;
-			int y=e[i].second.second.second;
+			int qi=-e[i].snd.fst-1;
+			int x=e[i].snd.snd.fst;
+			int y=e[i].snd.snd.snd;
 			r[qi]=get_sum(x,y);
 		}
 	}
-	for (int i = 0; i < q; ++i)printf("%d\n",r[i]);
+	fore(i,0,q)printf("%d\n",r[i]);
 	return 0;
 }

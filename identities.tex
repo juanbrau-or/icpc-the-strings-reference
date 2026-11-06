@@ -1,0 +1,36 @@
+\subsection{Identidades con sus hipótesis}
+\textbf{Combinaciones y Catalan.} $\binom nk=\binom n{n-k}$,
+$\binom nk=\binom{n-1}{k-1}+\binom{n-1}k$, $\sum_k\binom nk=2^n$.
+Catalan $C_0=1$, $C_n=\frac1{n+1}\binom{2n}n$ cuenta secuencias de paréntesis balanceados con $n$ pares y caminos que no cruzan la diagonal. También
+$C_n=\sum_{i=0}^{n-1}C_iC_{n-1-i}$ y $C_n=\frac{2(2n-1)}{n+1}C_{n-1}$.
+Para enteros exactos divide sin perder divisibilidad; en modular usa inversos sólo si existen.
+
+\textbf{Distribuciones.} Soluciones $x_1+\cdots+x_k=n$, $x_i\ge0$:
+$\binom{n+k-1}{k-1}$ para $k\ge1$; con $x_i\ge1$, $\binom{n-1}{k-1}$ si $n\ge k$. Para cotas superiores aplica inclusión-exclusión; no basta cambiar el factorial.
+
+\textbf{Divisores.} Si $n=\prod p_i^{e_i}$,
+$\tau(n)=\prod(e_i+1)$ es la \emph{cantidad} de divisores y
+$\sigma(n)=\prod\frac{p_i^{e_i+1}-1}{p_i-1}$ es su \emph{suma}.
+$\varphi(n)=n\prod_{p\mid n}(1-1/p)$ cuenta enteros en $[1,n]$ coprimos con $n$.
+No hay cota $\tau(n)=O(\log\log n)$; usa la tabla de máximos al dimensionar enumeraciones.
+
+\textbf{Möbius.} Si $g(n)=\sum_{d\mid n}f(d)$, entonces
+$f(n)=\sum_{d\mid n}\mu(d)g(n/d)$.
+$\sum_{d\mid n}\varphi(d)=n$ y $\sum_{d\mid n}\mu(d)=[n=1]$.
+$\gcd(a,b)\operatorname{lcm}(a,b)=|ab|$; calcula el lcm como $(a/\gcd(a,b))b$ con tipo ancho.
+
+\textbf{Fibonacci.} Con $F_0=0,F_1=1$:
+$F_{2n+1}=F_n^2+F_{n+1}^2$,
+$F_{2n}=F_n(2F_{n+1}-F_n)$,
+$\sum_{i=0}^nF_i=F_{n+2}-1$.
+Las dos primeras permiten fast doubling en $O(\log n)$; aplica módulo en cada operación y normaliza la resta.
+
+\textbf{Esperanza y probabilidad.} $E[\sum_iX_i]=\sum_iE[X_i]$ sin exigir independencia.
+Una variable indicadora vale 1 cuando ocurre el evento, luego $E[X_i]=P(evento_i)$.
+Para estados con transición $p_{uv}$ y costo por paso $c_u$,
+$E_u=c_u+\sum_vp_{uv}E_v$; terminal $E=0$.
+Un ciclo de dependencias requiere resolver ecuaciones o justificar un orden; en modular las probabilidades requieren denominadores invertibles.
+
+\textbf{Juegos imparciales finitos.} $g(s)=\operatorname{mex}\{g(t):s\to t\}$; mex es el menor entero no negativo ausente.
+En juego normal (pierde quien no mueve), suma de juegos independientes es perdedora si el XOR de sus Grundy es 0. Nim es el caso $g(\text{montón})=\text{tamaño}$.
+Debe terminar y tener iguales movimientos para ambos jugadores; misère o ciclos requieren otro análisis.

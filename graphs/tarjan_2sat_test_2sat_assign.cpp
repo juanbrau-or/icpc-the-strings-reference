@@ -1,4 +1,8 @@
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(x,a,b) for(int x=(a), qwerty=(b); x<qwerty; x++)
+#define pb push_back
 #ifdef DBP
 #define deb(...) fprintf(stderr,__VA_ARGS__)
 #else
@@ -37,13 +41,13 @@ void tjn(int u){
 void scc(){
     memset(idx,0,sizeof(idx));qidx=0;
     memset(cmp,-1,sizeof(cmp));qcmp=0;
-    for (int i = 0; i < n; ++i)if(!idx[i])tjn(i);
+    fore(i,0,n)if(!idx[i])tjn(i);
 }
 // Only for 2SAT:
-void addor(int a, int b){g[neg(a)].push_back(b);g[neg(b)].push_back(a);}
+void addor(int a, int b){g[neg(a)].pb(b);g[neg(b)].pb(a);}
 bool satisf(int _nvar){
     nvar=_nvar;n=MAXN;scc();
-    for (int i = 0; i < nvar; ++i)if(cmp[i]==cmp[neg(i)])return false;
+    fore(i,0,nvar)if(cmp[i]==cmp[neg(i)])return false;
     return true;
 }
  
@@ -52,35 +56,35 @@ int get(int v){if(v<0)return neg(-v-1); return v-1;}
 int main(){FIN;
     cin >> f >> c >> w;
     n = c;
-    for (int x = 0; x < w; ++x){
+    fore(x,0,w){
         int a,b;cin>>a>>b;a--;
-        wishes[a].push_back(b);
+        wishes[a].pb(b);
     }
-    for (int x = 0; x < f; ++x){
+    fore(x,0,f){
         int st = n;
         if(SZ(wishes[x])<=1)continue;
         for(int v:wishes[x]){
-            if(st!=n)g[n].push_back(n-1);
-            g[n].push_back(get(v));
+            if(st!=n)g[n].pb(n-1);
+            g[n].pb(get(v));
             n++;
         }
         int cnt = SZ(wishes[x]);
         for(int v:wishes[x]){
-            if(cnt>1)g[n].push_back(n+1);
-            g[n].push_back(get(v));
+            if(cnt>1)g[n].pb(n+1);
+            g[n].pb(get(v));
             n++;cnt--;
         }
-        g[neg(get(wishes[x][0]))].push_back(st+SZ(wishes[x])+1);
-        g[neg(get(wishes[x].back()))].push_back(st+SZ(wishes[x])-2);
-        for (int i = 1; i < SZ(wishes[x])-1; ++i){
-            g[neg(get(wishes[x][i]))].push_back(st+i-1);
-            g[neg(get(wishes[x][i]))].push_back(st+i+SZ(wishes[x])+1);
+        g[neg(get(wishes[x][0]))].pb(st+SZ(wishes[x])+1);
+        g[neg(get(wishes[x].back()))].pb(st+SZ(wishes[x])-2);
+        fore(i,1,SZ(wishes[x])-1){
+            g[neg(get(wishes[x][i]))].pb(st+i-1);
+            g[neg(get(wishes[x][i]))].pb(st+i+SZ(wishes[x])+1);
         }
     }
     if(satisf(c)){
         vector<int> ans;
-        for (int x = 0; x < c; ++x)if(truth[cmp[x]])ans.push_back(x+1);
+        fore(x,0,c)if(truth[cmp[x]])ans.pb(x+1);
         cout<<SZ(ans)<<"\n";
-        for (int x = 0; x < SZ(ans); ++x)cout<<ans[x]<<" \n"[x+1==SZ(ans)];
+        fore(x,0,SZ(ans))cout<<ans[x]<<" \n"[x+1==SZ(ans)];
     }else cout<<"-1\n";
 }

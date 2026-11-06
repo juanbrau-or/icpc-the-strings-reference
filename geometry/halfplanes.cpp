@@ -7,12 +7,13 @@ struct halfplane:public ln{
 	bool out(pt q){return pq%(q-p)<-EPS;}
 };
 vector<pt> intersect(vector<halfplane> b){
-	vector<pt>bx={{DINF,DINF},{-DINF,DINF},{-DINF,-DINF},{DINF,-DINF}};
-	for (int i = 0; i < 4; ++i) b.push_back(halfplane(bx[i],bx[(i+1)%4]));
+	const double BOUND=1e12; // finite box; adapt to input scale
+	vector<pt>bx={{BOUND,BOUND},{-BOUND,BOUND},{-BOUND,-BOUND},{BOUND,-BOUND}};
+	fore(i,0,4) b.pb(halfplane(bx[i],bx[(i+1)%4]));
 	sort(ALL(b));
 	int n=SZ(b),q=1,h=0;
 	vector<halfplane> c(SZ(b)+10);
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		while(q<h&&b[i].out(c[h]^c[h-1])) h--;
 		while(q<h&&b[i].out(c[q]^c[q+1])) q++;
 		c[++h]=b[i];
@@ -27,6 +28,6 @@ vector<pt> intersect(vector<halfplane> b){
 	if(h-q<=1)return {};
 	c[h+1]=c[q];
 	vector<pt> s;
-	for (int i = q; i < h+1; ++i) s.push_back(c[i]^c[i+1]);
+	fore(i,q,h+1) s.pb(c[i]^c[i+1]);
 	return s;
 }

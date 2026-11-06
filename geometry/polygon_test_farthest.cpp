@@ -1,6 +1,11 @@
 // AC
 // http://codeforces.com/group/3qadGzUdR4/contest/101707/problem/H
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 #ifdef DEMETRIO
 #define deb(...) fprintf(stderr,__VA_ARGS__)
 #define deb1(x) cerr << #x << " = " << x << endl
@@ -49,15 +54,15 @@ pt cw90(-1,0);
 vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
-	for (int i = 0; i < p.size(); ++i){ // lower hull
+	fore(i,0,p.size()){ // lower hull
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
-		r.push_back(p[i]);
+		r.pb(p[i]);
 	}
 	r.pop_back();
 	int k=r.size();
 	for(int i=p.size()-1;i>=0;--i){ // upper hull
 		while(r.size()>=k+2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
-		r.push_back(p[i]);
+		r.pb(p[i]);
 	}
 	r.pop_back();
 	return r;
@@ -72,16 +77,16 @@ struct pol {
 		if(p[2].left(p[0],p[1]))reverse(p.begin(),p.end());
 		int pi=min_element(p.begin(),p.end())-p.begin();
 		vector<pt> s(n);
-		for (int i = 0; i < n; ++i)s[i]=p[(pi+i)%n];
+		fore(i,0,n)s[i]=p[(pi+i)%n];
 		p.swap(s);
 	}
 	pt farthest(pt v){ // O(log(n)) only CONVEX
 		if(n<10){
 			int k=0;
-			for (int i = 1; i < n; ++i)if(v*(p[i]-p[k])>EPS)k=i;
+			fore(i,1,n)if(v*(p[i]-p[k])>EPS)k=i;
 			return p[k];
 		}
-		if(n==SZ(p))p.push_back(p[0]);
+		if(n==SZ(p))p.pb(p[0]);
 		pt a=p[1]-p[0];
 		int s=0,e=n,ua=v*a>EPS;
 		if(!ua&&v*(p[n-1]-p[0])<=EPS)return p[0];
@@ -108,19 +113,19 @@ bool doit(ll a, ll b, ll c){
 
 int main(){
 	scanf("%d%d",&m,&n);
-	for (int i = 0; i < m; ++i)scanf("%lld%lld%lld",a+i,b+i,c+i);
-	for (int i = 0; i < n; ++i){
+	fore(i,0,m)scanf("%lld%lld%lld",a+i,b+i,c+i);
+	fore(i,0,n){
 		ll x,y;
 		scanf("%lld%lld",&x,&y);
-		v.push_back(pt(x,y));
+		v.pb(pt(x,y));
 	}
 	auto q=chull(v);
 	if(q.empty())q=v;
 	p=pol(q);
 	vector<int> r;
-	for (int i = 0; i < m; ++i)if(doit(a[i],b[i],c[i]))r.push_back(i);
+	fore(i,0,m)if(doit(a[i],b[i],c[i]))r.pb(i);
 	printf("%d\n",SZ(r));
-	for (int i = 0; i < SZ(r); ++i){
+	fore(i,0,SZ(r)){
 		if(i)putchar(' ');
 		printf("%d",r[i]+1);
 	}

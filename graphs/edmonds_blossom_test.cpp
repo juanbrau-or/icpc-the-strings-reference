@@ -1,6 +1,7 @@
 // Timus 1099 - AC
 // http://acm.timus.ru/problem.aspx?space=1&num=1099
 #include <bits/stdc++.h>
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 #define MAXN 512
 vector<int> g[MAXN];
@@ -32,7 +33,7 @@ void contr(int s, int x, int y){
 	mark(z,x);mark(z,y);
 	if(bs[x]!=z)ft[x]=y;
 	if(bs[y]!=z)ft[y]=x;
-	for (int x = 0; x < n; ++x)if(inb[bs[x]]){
+	fore(x,0,n)if(inb[bs[x]]){
 		bs[x]=z;
 		if(!inq[x])inq[q[++qt]=x]=true;
 	}
@@ -40,7 +41,7 @@ void contr(int s, int x, int y){
 int findp(int s){
 	memset(inq,0,sizeof(inq));
 	memset(ft,-1,sizeof(ft));
-	for (int i = 0; i < n; ++i)bs[i]=i;
+	fore(i,0,n)bs[i]=i;
 	inq[q[qh=qt=0]=s]=true;
 	while(qh<=qt){
 		int x=q[qh++];
@@ -68,7 +69,7 @@ int aug(int s, int t){
 int edmonds(){ // O(n^2 m)
 	int r=0;
 	memset(mt,-1,sizeof(mt));
-	for (int x = 0; x < n; ++x)if(mt[x]<0)r+=aug(x,findp(x));
+	fore(x,0,n)if(mt[x]<0)r+=aug(x,findp(x));
 	return r;
 }
 
@@ -82,7 +83,7 @@ int main()
 	u--;v--;
 	if (!ed[u][v])
 	{
-	  g[u].push_back(v);g[v].push_back(u);
+	  g[u].pb(v);g[v].pb(u);
 	  ed[u][v]=ed[v][u]=true;
 	}
   }

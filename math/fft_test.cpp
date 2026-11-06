@@ -1,6 +1,10 @@
 // SPOJ VFMUL - AC
 // http://www.spoj.com/problems/VFMUL/
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -45,7 +49,7 @@ CD root(int n, bool inv){
 CD cp1[MAXN+9],cp2[MAXN+9];
 int R[MAXN+9];
 void dft(CD* a, int n, bool inv){
-	for (int i = 0; i < n; ++i)if(R[i]<i)swap(a[R[i]],a[i]);
+	fore(i,0,n)if(R[i]<i)swap(a[R[i]],a[i]);
 	for(int m=2;m<=n;m*=2){
 		double z=2*pi/m*(inv?-1:1); // FFT
 		CD wi=CD(cos(z),sin(z)); // FFT
@@ -57,27 +61,27 @@ void dft(CD* a, int n, bool inv){
 			}
 		}
 	}
-	if(inv)for (int i = 0; i < n; ++i)a[i]/=n; // FFT
+	if(inv)fore(i,0,n)a[i]/=n; // FFT
 	//if(inv){ // NTT
 	//	CD z(pm(n,MOD-2)); // pm: modular exponentiation
-	//	for (int i = 0; i < n; ++i)a[i]=a[i]*z;
+	//	fore(i,0,n)a[i]=a[i]*z;
 	//}
 }
 poly multiply(poly& p1, poly& p2){
 	int n=p1.size()+p2.size()+1;
 	int m=1,cnt=0;
 	while(m<=n)m+=m,cnt++;
-	for (int i = 0; i < m; ++i){R[i]=0;for (int j = 0; j < cnt; ++j)R[i]=(R[i]<<1)|((i>>j)&1);}
-	for (int i = 0; i < m; ++i)cp1[i]=0,cp2[i]=0;
-	for (int i = 0; i < p1.size(); ++i)cp1[i]=p1[i];
-	for (int i = 0; i < p2.size(); ++i)cp2[i]=p2[i];
+	fore(i,0,m){R[i]=0;fore(j,0,cnt)R[i]=(R[i]<<1)|((i>>j)&1);}
+	fore(i,0,m)cp1[i]=0,cp2[i]=0;
+	fore(i,0,p1.size())cp1[i]=p1[i];
+	fore(i,0,p2.size())cp2[i]=p2[i];
 	dft(cp1,m,false);dft(cp2,m,false);
-	for (int i = 0; i < m; ++i)cp1[i]=cp1[i]*cp2[i];
+	fore(i,0,m)cp1[i]=cp1[i]*cp2[i];
 	dft(cp1,m,true);
 	poly res;
 	n-=2;
-	for (int i = 0; i < n; ++i)res.push_back((ll)floor(cp1[i].real()+0.5)); // FFT
-	//for (int i = 0; i < n; ++i)res.push_back(cp1[i].x); // NTT
+	fore(i,0,n)res.pb((ll)floor(cp1[i].real()+0.5)); // FFT
+	//fore(i,0,n)res.pb(cp1[i].x); // NTT
 	return res;
 }
 
@@ -89,14 +93,14 @@ int main(){
 	while(tn--){
 		vector<int> a,b,c;
 		scanf("%s%s",s,t);
-		for(int i=0;s[i];++i)a.push_back(s[i]-'0');reverse(a.begin(),a.end());
-		for(int i=0;t[i];++i)b.push_back(t[i]-'0');reverse(b.begin(),b.end());
+		for(int i=0;s[i];++i)a.pb(s[i]-'0');reverse(a.begin(),a.end());
+		for(int i=0;t[i];++i)b.pb(t[i]-'0');reverse(b.begin(),b.end());
 		c=multiply(a,b);
 		while(!c.empty()&&!c.back())c.pop_back();
 		if(c.empty()){puts("0");continue;}
 		int n=0;
 		ll x=0;
-		for (int i = 0; i < c.size(); ++i){
+		fore(i,0,c.size()){
 			x+=c[i];
 			r[n++]=x%10;
 			x/=10;
@@ -107,7 +111,7 @@ int main(){
 		}
 		reverse(r,r+n);
 		bool p=false;
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			putchar(r[i]+'0');
 		}
 		puts("");

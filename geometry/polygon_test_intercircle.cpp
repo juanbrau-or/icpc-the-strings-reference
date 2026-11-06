@@ -1,6 +1,11 @@
 // Codeforces gym 101208J - AC
 // http://codeforces.com/gym/101208/problem/J
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -84,8 +89,8 @@ struct circle {
 //		double x=(d*d-c.r*c.r+r*r)/(2*d);
 //		double y=sqrt(r*r-x*x);
 //		pt v=(c.o-o)/d;
-//		s.push_back(o+v*x+v.rot(ccw90)*y);
-//		if(y>EPS)s.push_back(o+v*x-v.rot(ccw90)*y);
+//		s.pb(o+v*x+v.rot(ccw90)*y);
+//		if(y>EPS)s.pb(o+v*x-v.rot(ccw90)*y);
 //		return s;
 //	}
 	vector<pt> operator^(ln l){
@@ -93,10 +98,10 @@ struct circle {
 		pt p=l.proj(o);
 		double d=(p-o).norm();
 		if(d-EPS>r)return s;
-		if(abs(d-r)<EPS){s.push_back(p);return s;}
+		if(abs(d-r)<EPS){s.pb(p);return s;}
 		d=sqrt(r*r-d*d);
-		s.push_back(p+l.pq.unit()*d);
-		s.push_back(p-l.pq.unit()*d);
+		s.pb(p+l.pq.unit()*d);
+		s.pb(p-l.pq.unit()*d);
 		return s;
 	}
 //	vector<pt> tang(pt p){
@@ -106,11 +111,11 @@ struct circle {
 	double intertriangle(pt a, pt b){ // area of intersection with oab
 		if(abs((o-a)%(o-b))<EPS)return 0.;
 		vector<pt> q={a},w=*this^ln(a,b);
-		if(w.size()==2)for(auto p:w)if((a-p)*(b-p)<-EPS)q.push_back(p);
-		q.push_back(b);
+		if(w.size()==2)for(auto p:w)if((a-p)*(b-p)<-EPS)q.pb(p);
+		q.pb(b);
 		if(q.size()==4&&(q[0]-q[1])*(q[2]-q[1])>EPS)swap(q[1],q[2]);
 		double s=0;
-		for (int i = 0; i < q.size()-1; ++i){
+		fore(i,0,q.size()-1){
 			if(!has(q[i])||!has(q[i+1]))s+=r*r*(q[i]-o).angle(q[i+1]-o)/2;
 			else s+=abs((q[i]-o)%(q[i+1]-o)/2);
 		}
@@ -125,21 +130,21 @@ struct pol {
 	pol(vector<pt> _p){p=_p;n=p.size();}
 //	double area(){
 //		double r=0.;
-//		for (int i = 0; i < n; ++i)r+=p[i]%p[(i+1)%n];
+//		fore(i,0,n)r+=p[i]%p[(i+1)%n];
 //		return abs(r)/2; // negative if CW, positive if CCW
 //	}
 //	pt centroid(){ // (barycenter)
 //		pt r(0,0);double t=0;
-//		for (int i = 0; i < n; ++i){
+//		fore(i,0,n){
 //			r=r+(p[i]+p[(i+1)%n])*(p[i]%p[(i+1)%n]);
 //			t+=p[i]%p[(i+1)%n];
 //		}
 //		return r/t/3;
 //	}
 //	bool has(pt q){
-//		for (int i = 0; i < n; ++i)if(ln(p[i],p[(i+1)%n]).seghas(q))return true;
+//		fore(i,0,n)if(ln(p[i],p[(i+1)%n]).seghas(q))return true;
 //		int cnt=0;
-//		for (int i = 0; i < n; ++i){
+//		fore(i,0,n){
 //			int j=(i+1)%n;
 //			int k=sgn((q-p[j])%(p[i]-p[j]));
 //			int u=sgn(p[i].y-q.y),v=sgn(p[j].y-q.y);
@@ -150,17 +155,17 @@ struct pol {
 //	}
 //	pol cut(ln l){   // cut CONVEX polygon by line l
 //		vector<pt> q;  // returns part at left of l.pq
-//		for (int i = 0; i < n; ++i){
+//		fore(i,0,n){
 //			int d0=sgn(l.pq%(p[i]-l.p)),d1=sgn(l.pq%(p[(i+1)%n]-l.p));
-//			if(d0>=0)q.push_back(p[i]);
+//			if(d0>=0)q.pb(p[i]);
 //			ln m(p[i],p[(i+1)%n]);
-//			if(d0*d1<0&&!(l/m))q.push_back(l^m);
+//			if(d0*d1<0&&!(l/m))q.pb(l^m);
 //		}
 //		return pol(q);
 //	}
 	double intercircle(circle c){ // area of intersection with circle
 		double r=0.;
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			int j=(i+1)%n;double w=c.intertriangle(p[i],p[j]);
 			if((p[j]-c.o)%(p[i]-c.o)>0)r+=w;
 			else r-=w;
@@ -173,10 +178,10 @@ int main(){
 	int n;double r;
 	scanf("%d%lf",&n,&r);
 	vector<pt> pp;
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		double x,y;
 		scanf("%lf%lf",&x,&y);
-		pp.push_back(pt(x,y));
+		pp.pb(pt(x,y));
 	}
 	printf("%.12lf\n",pol(pp).intercircle(circle(pt(0,0),r)));
 	return 0;

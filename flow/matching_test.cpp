@@ -1,6 +1,11 @@
 // UVA 1184 - AC
 // https://uva.onlinejudge.org/index.php?option=onlinejudge&Itemid=99999999&category=246&page=show_problem&problem=3625
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,to=b;i<to;++i)
 #define SZ(x) int((x).size())
 using namespace std;
 typedef long long ll;
@@ -20,8 +25,8 @@ int match(int x){
 vector<pair<int,int> > max_matching(){
 	vector<pair<int,int> > r;
 	memset(mat,-1,sizeof(mat));
-	for (int i = 0; i < n; ++i)memset(vis,false,sizeof(vis)),match(i);
-	for (int i = 0; i < m; ++i)if(mat[i]>=0)r.push_back({mat[i],i});
+	fore(i,0,n)memset(vis,false,sizeof(vis)),match(i);
+	fore(i,0,m)if(mat[i]>=0)r.pb({mat[i],i});
 	return r;
 }
 
@@ -34,10 +39,10 @@ int main(){
 		while(e--){
 			int x,y;
 			scanf("%d%d",&x,&y);x--;y--;
-			g[x].push_back(y);
+			g[x].pb(y);
 		}
 		printf("%d\n",n-SZ(max_matching()));
-		for (int i = 0; i < n; ++i)g[i].clear();
+		fore(i,0,n)g[i].clear();
 	}
 	return 0;
 }

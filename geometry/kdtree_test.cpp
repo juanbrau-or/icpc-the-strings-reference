@@ -1,6 +1,10 @@
 // Codeforces gym 100402C - AC
 // https://codeforces.com/gym/100402/problem/C
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -59,7 +63,7 @@ struct KDTree {
 		ll bf=f->distance(p), bs=s->distance(p);
 		if(bf>bs)swap(bf,bs),swap(f,s);
 		auto best=search(p,f);
-		if(bs<best.first) best=min(best,search(p,s));
+		if(bs<best.fst) best=min(best,search(p,s));
 		return best;
 	}
 	pair<ll,pt> nearest(pt p){return search(p,root);}
@@ -72,23 +76,23 @@ vector<pair<pt,int>> solve(vector<pair<pt,int>> &v){
 	//left
 	auto lef=vector<pair<pt,int>>(v.begin(),v.begin()+m);
 	lef=solve(lef);
-	vector<pt> now; for(auto x:lef) now.push_back(x.first);
+	vector<pt> now; for(auto x:lef) now.pb(x.fst);
 	auto kd=KDTree(now);
 
 	//right
 	vector<pair<pt,int>> rig;
-	for (int i = m; i < SZ(v); ++i){
-		pt mid=v[i].first/2;
-		auto now=kd.nearest(mid).second;
-		if((now-mid).norm2() > (v[i].first-mid).norm2()) rig.push_back(v[i]);
+	fore(i,m,SZ(v)){
+		pt mid=v[i].fst/2;
+		auto now=kd.nearest(mid).snd;
+		if((now-mid).norm2() > (v[i].fst-mid).norm2()) rig.pb(v[i]);
 	}
 	rig=solve(rig);
 	
-	for(auto x:rig) lef.push_back(x);
+	for(auto x:rig) lef.pb(x);
 	return lef;
 }
 
-bool cmp(pair<pt,int> a, pair<pt,int> b){return a.first.norm2()<b.first.norm2();}
+bool cmp(pair<pt,int> a, pair<pt,int> b){return a.fst.norm2()<b.fst.norm2();}
 
 int main(){FIN;
 	#ifdef ONLINE_JUDGE
@@ -97,14 +101,14 @@ int main(){FIN;
 	#endif
 	int n; cin>>n;
 	vector<pair<pt,int>> v(n);
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		ll x,y; cin>>x>>y; x*=2; y*=2;
 		v[i]={pt(x,y),i};
 	}
 	sort(ALL(v),cmp);
 	v=solve(v);
 	vector<int> r;
-	for(auto x:v) r.push_back(x.second);
+	for(auto x:v) r.pb(x.snd);
 	sort(ALL(r));
 	cout<<SZ(r)<<"\n";
 	for(auto x:r)cout<<x+1<<" "; cout<<"\n";

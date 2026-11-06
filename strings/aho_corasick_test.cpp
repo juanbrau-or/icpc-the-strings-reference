@@ -1,6 +1,11 @@
 // UVA 10679 - AC
 // https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=1620
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,to=b;i<to;++i)
 using namespace std;
 typedef long long ll;
 
@@ -13,18 +18,18 @@ struct vertex {
 };
 vector<vertex> t;
 void aho_init(){ //do not forget!!
-	t.clear();t.push_back(vertex());
+	t.clear();t.pb(vertex());
 }
 void add_string(string s, int id){
 	int v=0;
 	for(char c:s){
 		if(!t[v].next.count(c)){
 			t[v].next[c]=t.size();
-			t.push_back(vertex(v,c));
+			t.pb(vertex(v,c));
 		}
 		v=t[v].next[c];
 	}
-	t[v].leaf.push_back(id);
+	t[v].leaf.pb(id);
 }
 int go(int v, char c);
 int get_link(int v){
@@ -46,7 +51,7 @@ bool vis[1<<20];
 void proc(int x){
 	if(x==-1||vis[x])return;
 	vis[x]=true;
-	for (int i = 0; i < t[x].leaf.size(); ++i)r[t[x].leaf[i]]=true;
+	fore(i,0,t[x].leaf.size())r[t[x].leaf[i]]=true;
 	proc(t[x].link);
 }
 
@@ -60,7 +65,7 @@ int main(){
 	while(tn--){
 		aho_init();
 		scanf("%s%d",s,&n);
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			scanf("%s",tt);
 			add_string(string(tt),i);
 		}
@@ -69,7 +74,7 @@ int main(){
 			k=go(k,s[i]);
 			proc(k);
 		}
-		for (int i = 0; i < n; ++i)puts(r[i]?"y":"n");
+		fore(i,0,n)puts(r[i]?"y":"n");
 	}
 	return 0;
 }

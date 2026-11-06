@@ -5,10 +5,10 @@ void dijkstra(int x){
 	priority_queue<pair<ll,int> > q;
 	dist[x]=0;q.push({0,x});
 	while(!q.empty()){
-		x=q.top().second;ll c=-q.top().first;q.pop();
+		x=q.top().snd;ll c=-q.top().fst;q.pop();
 		if(dist[x]!=c)continue;
-		for (int i = 0; i < g[x].size(); ++i){
-			int y=g[x][i].first; ll c=g[x][i].second;
+		fore(i,0,g[x].size()){
+			int y=g[x][i].fst; ll c=g[x][i].snd;
 			if(dist[y]<0||dist[x]+c<dist[y])
 				dist[y]=dist[x]+c,q.push({-dist[y],y});
 		}

@@ -1,373 +1,673 @@
-\section{Descripción de Algoritmos}
-
-\subsection{Data structures}
-
-\textbf{Segment tree} --- \textbf{Complexity:} $O(N \text{ de construcción}, \log N \text{ por operación})$ \\
-\textit{Usage:} 1. \texttt{STree(int n)} $\rightarrow$ Reserva el espacio para un arreglo de tamaño $n$. 2. \texttt{upd(int p, int v)} $\rightarrow$ Reemplaza el elemento en la posición \texttt{p} por el valor \texttt{v}. 3. \texttt{query(int l, int r)} $\rightarrow$ Devuelve el resultado (ej. mínimo o suma) de los elementos en el rango $[l, r)$. \\
-\textit{Note:} Útil para hacer consultas rápidas sobre un segmento de un arreglo cuando los elementos individuales cambian constantemente. Usa indexación base 0. Para cambiar la operación (ej. de mínimo a máximo), adapta el elemento neutro y la función de combinación.
-\vspace{0.15cm}
-
-\textbf{Segment tree lazy} --- \textbf{Complexity:} $O(N \text{ de construcción}, \log N \text{ por actualización/consulta})$ \\
-\textit{Usage:} 1. \texttt{STree(int n)} $\rightarrow$ Crea el árbol preparado para "lazy propagation". 2. \texttt{upd(int l, int r, int v)} $\rightarrow$ Aplica la modificación \texttt{v} (ej. sumar \texttt{v}) a todos los elementos dentro del rango $[l, r)$ al mismo tiempo. 3. \texttt{query(int l, int r)} $\rightarrow$ Devuelve el resultado del rango $[l, r)$. \\
-\textit{Note:} Igual al Segment Tree, pero este te permite modificar un bloque completo de datos en un solo paso (ej. sumar 5 a todos del índice 2 al 10), sin actualizar celda por celda de manera ineficiente.
-\vspace{0.15cm}
-
-\textbf{Persistent segment tree} --- \textbf{Complexity:} $O(\log N \text{ por versión de actualización/consulta})$ \\
-\textit{Usage:} 1. \texttt{STree(int n)} $\rightarrow$ Inicializa el árbol. 2. \texttt{upd(int root, int p, int v)} $\rightarrow$ Toma la "foto" del árbol en la versión \texttt{root}, cambia la posición \texttt{p} a \texttt{v}, y devuelve el identificador de la nueva versión creada. 3. \texttt{query(int root, int l, int r)} $\rightarrow$ Consulta el rango $[l, r)$ viajando en el tiempo hacia la versión específica \texttt{root}. \\
-\textit{Note:} Es una máquina del tiempo para arreglos. Cada actualización no sobreescribe el pasado, sino que crea una línea temporal alterna. Debes guardar externamente los identificadores devueltos por \texttt{upd} para consultar el pasado.
-\vspace{0.15cm}
-
-\textbf{2D segment tree} --- \textbf{Complexity:} $O(NM \text{ de construcción}, \log N \log M \text{ por operación})$ \\
-\textit{Usage:} 1. \texttt{build()} $\rightarrow$ Inicializa el árbol leyendo una matriz global predefinida. 2. \texttt{upd(int x, int y, int v)} $\rightarrow$ Cambia el valor en la coordenada $(x, y)$ por \texttt{v}. 3. \texttt{query(int x0, int x1, int y0, int y1)} $\rightarrow$ Devuelve el resultado dentro del rectángulo delimitado por las filas $[x0, x1)$ y columnas $[y0, y1)$. \\
-\textit{Note:} Extensión directa para trabajar en grillas 2D. Asegúrate de configurar las variables globales $N$ y $M$ (dimensiones de la matriz) antes de usarlo.
-\vspace{0.15cm}
-
-\textbf{Sparse table} --- \textbf{Complexity:} $O(N \log N \text{ de preálculo}, O(1) \text{ por consulta})$ \\
-\textit{Usage:} 1. \texttt{st\_init(int *a)} $\rightarrow$ Procesa el arreglo inicial \texttt{a} para preparar las respuestas. 2. \texttt{st\_query(int s, int e)} $\rightarrow$ Devuelve la respuesta instantánea en el rango $[s, e)$. \\
-\textit{Note:} Estructura estática. Solo úsala si el arreglo \textbf{nunca} cambia y necesitas responder consultas instantáneamente. Exclusivo para operaciones donde repetir elementos no altera el resultado (idempotentes: min, max, gcd). No sirve para sumas.
-\vspace{0.15cm}
-
-\textbf{Fenwick tree} --- \textbf{Complexity:} $O(\log N \text{ por actualización/consulta})$ \\
-\textit{Usage:} 1. \texttt{upd(int i0, int v)} $\rightarrow$ Le SUMA el valor \texttt{v} a lo que ya exista en la posición \texttt{i0}. 2. \texttt{get(int i0)} $\rightarrow$ Devuelve la suma acumulada desde el inicio hasta la posición antes de \texttt{i0}. 3. \texttt{get\_sum(int i0, int i1)} $\rightarrow$ Suma del rango $[i0, i1)$. \\
-\textit{Note:} Es la versión ligera y rápida de un Segment Tree. Excelente cuando solo necesitas sumas de prefijos y actualizaciones de un solo elemento.
-\vspace{0.15cm}
-
-\textbf{Wavelet tree} --- \textbf{Complexity:} $O(N \log \sigma \text{ de construcción}, \log \sigma \text{ por consulta})$ \\
-\textit{Usage:} 1. \texttt{WT(int n)} $\rightarrow$ Inicializa para $n$ elementos. 2. \texttt{add(int v)} $\rightarrow$ Agrega un valor al final. 3. \texttt{range(int k, int s, int e, int a, int b)} $\rightarrow$ Cuenta cuántos números caen en el rango de valores $[a, b)$ buscando únicamente dentro del subarreglo desde \texttt{s} hasta \texttt{e}. \\
-\textit{Note:} Como un segment tree pero separa valores por bits. Ideal para consultas tipo "cuántos números menores a X hay en este rango del arreglo". Debes comprimir valores muy grandes antes de insertarlos.
-\vspace{0.15cm}
-
-\textbf{STL extended set} --- \textbf{Complexity:} $O(\log N \text{ por operación})$ \\
-\textit{Usage:} 1. \texttt{ordered\_set} $\rightarrow$ Úsalo como un \texttt{set} de C++ normal. 2. \texttt{find\_by\_order(k)} $\rightarrow$ Devuelve un iterador al \texttt{k}-ésimo elemento más pequeño (0-indexado). 3. \texttt{order\_of\_key(x)} $\rightarrow$ Cuenta exactamente cuántos elementos en el set son estrictamente menores que \texttt{x}. \\
-\textit{Note:} Es una caja negra maravillosa que le añade acceso por índice a un Set normal. Requiere directivas GNU de C++, por lo que solo compila en GCC (como en casi todos los jueces).
-\vspace{0.15cm}
-
-\textbf{STL rope} --- \textbf{Complexity:} $O(\log N \text{ por separación/inserción/borrado})$ \\
-\textit{Usage:} 1. \texttt{rope<T>} $\rightarrow$ Declara tu estructura como si fuera un string o vector. 2. \texttt{insert(pos, value)} $\rightarrow$ Inserta \texttt{value} en la posición \texttt{pos} de manera eficiente. 3. \texttt{erase(pos, len)} $\rightarrow$ Borra \texttt{len} elementos a partir de \texttt{pos}. \\
-\textit{Note:} Alternativa para no programar un Treap. Útil si necesitas cortar, pegar y modificar grandes pedazos de un arreglo o cadena de texto. Requiere GNU C++.
-\vspace{0.15cm}
-
-\textbf{Treap as BST} --- \textbf{Complexity:} $O(\log N \text{ esperado por operación})$ \\
-\textit{Usage:} 1. \texttt{split(pitem t, int key, pitem\& l, pitem\& r)} $\rightarrow$ Parte el árbol en dos: los menores a \texttt{key} en \texttt{l}, y el resto en \texttt{r}. 2. \texttt{insert(pitem\& t, pitem it)} $\rightarrow$ Inserta el nodo \texttt{it}. 3. \texttt{kth(pitem t, int k)} $\rightarrow$ Encuentra el \texttt{k}-ésimo menor en el árbol. \\
-\textit{Note:} Es un árbol de búsqueda binaria (como un map/set) balanceado mediante azar. Debes asignar una prioridad aleatoria a cada nodo al crearlo.
-\vspace{0.15cm}
-
-\textbf{Implicit treap} --- \textbf{Complexity:} $O(\log N \text{ esperado por operación})$ \\
-\textit{Usage:} 1. \texttt{merge(pitem\& t, pitem l, pitem r)} $\rightarrow$ Pega el arreglo \texttt{r} justo a la derecha del arreglo \texttt{l}. 2. \texttt{split(pitem t, pitem\& l, pitem\& r, int sz)} $\rightarrow$ Corta el arreglo dejando los primeros \texttt{sz} elementos en \texttt{l} y el resto en \texttt{r}. 3. \texttt{output(pitem t)} $\rightarrow$ Imprime o recupera el arreglo resultante en orden. \\
-\textit{Note:} Funciona como un arreglo mágico en el que puedes cortar un pedazo del medio y pegarlo al inicio en tiempo logarítmico. Las claves son implícitas según la posición.
-\vspace{0.15cm}
-
-\textbf{Implicit treap with father} --- \textbf{Complexity:} $O(\log N \text{ esperado por operación})$ \\
-\textit{Usage:} Igual al Implicit treap normal, pero incluye punteros al padre. 1. \texttt{root(pitem t, int\& pos)} $\rightarrow$ A partir de un nodo aislado, escala hacia arriba para encontrar la raíz y determina qué posición exacta ocupa este nodo dentro del arreglo completo. \\
-\textit{Note:} Útil cuando el problema te da una referencia directa a un elemento y te pregunta "¿en qué posición está actualmente este elemento después de tantas mezclas?".
-\vspace{0.15cm}
-
-\textbf{Link-cut tree} --- \textbf{Complexity:} $O(\log N \text{ amortizado por operación})$ \\
-\textit{Usage:} 1. \texttt{evert(pitem v)} $\rightarrow$ Gira el árbol para que \texttt{v} sea la nueva raíz suprema. 2. \texttt{link(pitem v, pitem w)} $\rightarrow$ Dibuja una nueva arista conectando \texttt{v} con \texttt{w}. 3. \texttt{cut(pitem v, pitem w)} $\rightarrow$ Destruye la arista entre \texttt{v} y \texttt{w}. \\
-\textit{Note:} Mantiene un bosque de árboles que cambia dinámicamente. Útil cuando te piden añadir o borrar aristas sobre la marcha y responder preguntas de conectividad.
-\vspace{0.15cm}
-
-\textbf{Link-cut tree with path aggregate} --- \textbf{Complexity:} $O(\log N \text{ amortizado por operación})$ \\
-\textit{Usage:} 1. \texttt{mkR(Node x)} $\rightarrow$ Hace a \texttt{x} raíz. 2. \texttt{link(Node x, Node y)} $\rightarrow$ Conecta nodos. 3. \texttt{query(Node x, Node y)} $\rightarrow$ Te da la respuesta combinada (ej. suma, máximo) de todos los nodos en el camino más corto entre \texttt{x} e \texttt{y}. \\
-\textit{Note:} Una versión del Link-Cut Tree equipada para responder sobre caminos. Configura las funciones agregadas según lo que necesites calcular.
-\vspace{0.15cm}
-
-\textbf{Static convex hull trick} --- \textbf{Complexity:} $O(\log N \text{ por consulta, tras inserción monótona})$ \\
-\textit{Usage:} 1. \texttt{CHT::add(Line l)} $\rightarrow$ Agrega una nueva ecuación de recta $y = mx + b$. Ojo: las pendientes $m$ deben insertarse estrictamente ordenadas. 2. \texttt{CHT::query(tc x)} $\rightarrow$ Dado un valor de $x$, evalúa en todas las rectas insertadas y te devuelve el valor de $y$ más pequeño. \\
-\textit{Note:} Ideal para optimizar Programación Dinámica. Si buscas máximos en vez de mínimos, multiplica tus pendientes y constantes por $-1$, y multiplica el resultado por $-1$.
-\vspace{0.15cm}
-
-\textbf{Dynamic convex hull trick} --- \textbf{Complexity:} $O(\log N \text{ por inserción/consulta})$ \\
-\textit{Usage:} 1. \texttt{HullDynamic::add\_line(tc m, tc b)} $\rightarrow$ Agrega una recta en cualquier orden, sin restricciones. 2. \texttt{HullDynamic::query(tc x)} $\rightarrow$ Devuelve el valor \textbf{máximo} al evaluar $x$. \\
-\textit{Note:} Funciona igual que el estático pero no requiere que las pendientes lleguen ordenadas. Por defecto, esta implementación busca el MÁXIMO. Para buscar mínimos, inserta $(-m, -b)$ y niega la respuesta.
-\vspace{0.15cm}
-
-\textbf{Li Chao tree} --- \textbf{Complexity:} $O(\log C \text{ por inserción/consulta})$ \\
-\textit{Usage:} 1. \texttt{LiChaoTree(T xmin, T xmax)} $\rightarrow$ Define el rango válido de valores $x$ que podrías consultar. 2. \texttt{add\_line(Line nw)} $\rightarrow$ Inserta una recta o segmento de recta. 3. \texttt{query(T x)} $\rightarrow$ Encuentra el menor valor de $y$ posible en el punto $x$ evaluando todas las funciones insertadas. \\
-\textit{Note:} Es una alternativa moderna y más fácil de modificar que el Convex Hull Trick dinámico.
-\vspace{0.15cm}
-
-\textbf{Gain-cost set} --- \textbf{Complexity:} $O(\log N \text{ amortizado por inserción/consulta})$ \\
-\textit{Usage:} 1. \texttt{GCS::add(ii x)} $\rightarrow$ Agrega una opción descrita por un par y automáticamente descarta las opciones dominadas (peores en todo). 2. \texttt{GCS::query(int v)} $\rightarrow$ Calcula el mejor rendimiento dado tu recurso \texttt{v}. \\
-\textit{Note:} Mantiene una "Frontera de Pareto" limpia usando un set de C++.
-\vspace{0.15cm}
-
-\textbf{Disjoint intervals} --- \textbf{Complexity:} $O(K \log N \text{ por inserción})$ \\
-\textit{Usage:} 1. \texttt{disjoint\_intervals::add(ii v)} $\rightarrow$ Agrega un nuevo intervalo de tiempo o espacio al sistema. Si choca o se empalma con intervalos ya existentes, los fusiona automáticamente. \\
-\textit{Note:} Ideal para colapsar un montón de rangos superpuestos y saber exactamente cuáles son las islas de cobertura resultantes.
-\vspace{0.15cm}
-
-\subsection{Graphs}
-
-\textbf{Topological sort} --- \textbf{Complexity:} $O(V+E)$ \\
-\textit{Usage:} 1. \texttt{tsort()} $\rightarrow$ Ordena todos los nodos del grafo dirigido de tal forma que ninguna arista apunte hacia atrás. Si hay empates, devuelve el orden lexicográficamente más pequeño. \\
-\textit{Note:} Resuelve problemas de dependencia ("hacer A antes que B"). Si el arreglo resultante tiene menos nodos que $V$, significa que hay un ciclo (paradoja).
-\vspace{0.15cm}
-
-\textbf{Kruskal MST} --- \textbf{Complexity:} $O(E \log E)$ \\
-\textit{Usage:} 1. \texttt{uf\_init()} $\rightarrow$ Prepara los nodos para Union-Find. 2. Ordena tu lista global de aristas de menor a mayor peso. 3. \texttt{kruskal()} $\rightarrow$ Recorre las aristas y devuelve el costo total de conectar todos los nodos sin formar ciclos. \\
-\textit{Note:} Árbol de Expansión Mínima. Úsalo para tender redes eléctricas de mínimo costo que conecten todas las ciudades.
-\vspace{0.15cm}
-
-\textbf{Dijkstra} --- \textbf{Complexity:} $O((V+E) \log V)$ \\
-\textit{Usage:} 1. \texttt{dijkstra(int x)} $\rightarrow$ Explora el mapa buscando la ruta más corta desde $x$ hacia el resto de nodos. El arreglo \texttt{dist[]} guardará los costos mínimos. \\
-\textit{Note:} El clásico algoritmo de rutas. Exige que ninguna calle tenga peso negativo. Nodos inaccesibles quedarán marcados con infinito (o -1 según la implementación).
-\vspace{0.15cm}
-
-\textbf{Bellman-Ford} --- \textbf{Complexity:} $O(VE)$ \\
-\textit{Usage:} 1. \texttt{bford(int src)} $\rightarrow$ Calcula distancias desde \texttt{src}. Propaga adecuadamente las reducciones por ciclos negativos. \\
-\textit{Note:} Es como Dijkstra pero soporta costos negativos. Útil para problemas con máquinas del tiempo o intercambios con ganancia neta. Detecta ciclos infinitos de recolección.
-\vspace{0.15cm}
-
-\textbf{Floyd-Warshall} --- \textbf{Complexity:} $O(V^3)$ \\
-\textit{Usage:} 1. Inicializa tu matriz \texttt{g[u][v]} con el peso directo de cada arista y cero en la diagonal. 2. \texttt{floyd()} $\rightarrow$ Transforma la matriz en las distancias más cortas absolutas entre TODO par de nodos. \\
-\textit{Note:} Rápido de programar pero muy lento en tiempo. Úsalo solo para grafos pequeños ($V \le 400$).
-\vspace{0.15cm}
-
-\textbf{SCC and 2-SAT} --- \textbf{Complexity:} $O(V+E)$ \\
-\textit{Usage:} 1. \texttt{scc()} $\rightarrow$ Agrupa los nodos en Componentes Fuertemente Conexas. 2. \texttt{addor(int a, int b)} $\rightarrow$ Agrega una restricción tipo "o A o B deben cumplirse". 3. \texttt{satisf(int nvar)} $\rightarrow$ Devuelve verdadero si existe una configuración lógica que cumpla todas las reglas. \\
-\textit{Note:} La herramienta para problemas de decisiones binarias encadenadas, como rompecabezas de restricciones donde no puedes tener contradicciones lógicas.
-\vspace{0.15cm}
-
-\textbf{Articulation, bridges and biconnected} --- \textbf{Complexity:} $O(V+E)$ \\
-\textit{Usage:} 1. \texttt{doit()} $\rightarrow$ Analiza el grafo. Al terminar, la bandera \texttt{edge.bridge} indica si destruir esa arista específica partiría la red de comunicación en pedazos aislados. \\
-\textit{Note:} Sirve para hallar los puntos débiles de una estructura o una red de servidores.
-\vspace{0.15cm}
-
-\textbf{Chu-Liu Edmonds arborescence} --- \textbf{Complexity:} $O(VE)$ \\
-\textit{Usage:} 1. \texttt{ChuLiu(int n, int r)} $\rightarrow$ Prepara instancia. 2. \texttt{doit()} $\rightarrow$ Devuelve el costo de la red mínima dirigida desde la raíz $r$. \\
-\textit{Note:} Es el análogo de Kruskal (MST) pero para calles de UN SOLO sentido. Garantiza rutas válidas dirigidas desde la base $r$ hacia todo el mundo.
-\vspace{0.15cm}
-
-\textbf{LCA binary lifting} --- \textbf{Complexity:} $O(N \log N \text{ preálculo}, \log N \text{ por consulta})$ \\
-\textit{Usage:} 1. \texttt{lca\_init()} $\rightarrow$ Recorre el árbol y anota saltos de tamaño potencia de 2. 2. \texttt{lca(int x, int y)} $\rightarrow$ Devuelve el nodo Ancestral Común más profundo entre $x$ e $y$. \\
-\textit{Note:} Vital para resolver distancias reales en árboles usando la fórmula: $dist(u,v) = \text{prof}(u) + \text{prof}(v) - 2 \cdot \text{prof}(LCA(u,v))$.
-\vspace{0.15cm}
-
-\textbf{Heavy-light decomposition} --- \textbf{Complexity:} $O(N \text{ inicialización}, \log^2 N \text{ por consulta})$ \\
-\textit{Usage:} 1. \texttt{hld\_init()} $\rightarrow$ Acomoda el árbol en un arreglo recto. 2. \texttt{query(int x, int y, STree\& rmq)} $\rightarrow$ Consulta el segmento continuo de las ramas del árbol apoyándote en un Segment Tree. \\
-\textit{Note:} Herramienta definitiva para aplicar modificaciones o cálculos sobre trayectorias dentro de un árbol como si fueran segmentos de un arreglo 1D.
-\vspace{0.15cm}
-
-\textbf{Centroid decomposition} --- \textbf{Complexity:} $O(N \log N)$ \\
-\textit{Usage:} 1. \texttt{centroid()} $\rightarrow$ Encuentra el "centro de gravedad" del árbol y lo extrae recursivamente. 2. Dentro de \texttt{cdfs}, programas lo que deseas calcular con las mitades particionadas. \\
-\textit{Note:} Divide el problema de conteo de caminos en mitades. Usado para problemas tipo "¿cuántos caminos en el árbol suman $K$ de longitud?".
-\vspace{0.15cm}
-
-\textbf{Parallel DFS} --- \textbf{Complexity:} $O(V+E)$ \\
-\textit{Usage:} 1. \texttt{Tree::go(int x)} $\rightarrow$ Ejecuta una exploración simultánea. \\
-\textit{Note:} Permite recorrer y comparar varios árboles/grafos a la vez manejando su estado conjunto.
-\vspace{0.15cm}
-
-\textbf{Eulerian path} --- \textbf{Complexity:} $O(V+E)$ \\
-\textit{Usage:} 1. \texttt{add\_edge(int a, int b)} $\rightarrow$ Agrega los trazos. 2. \texttt{get\_path(int x)} $\rightarrow$ Devuelve un arreglo con el orden de vértices a pisar para recorrer TODAS las aristas exactamente una vez. \\
-\textit{Note:} El problema de los "Puentes de Königsberg" o "dibujar sin levantar el lápiz". Revisa la factibilidad de los grados (par/impar) de los nodos antes de llamarla.
-\vspace{0.15cm}
-
-\textbf{Offline dynamic connectivity} --- \textbf{Complexity:} $O((N+Q) \log Q)$ \\
-\textit{Usage:} 1. \texttt{add(int l, int r, Query e)} $\rightarrow$ Especifica entre qué turnos $[l, r)$ existe cierta arista. 2. \texttt{go(int k, int s, int e)} $\rightarrow$ Ejecuta el historial temporal usando rollback sobre un DSU. \\
-\textit{Note:} Caja negra para procesar queries de grafos que sufren alteraciones y borrados. Requiere guardar todas las consultas de antemano ("offline").
-\vspace{0.15cm}
-
-\textbf{Dominator tree} --- \textbf{Complexity:} $O((V+E) \alpha(V))$ \\
-\textit{Usage:} 1. \texttt{dominators(int rt)} $\rightarrow$ Rellena un arreglo \texttt{idom[v]} que indica qué vértice actúa como aduana obligatoria y directa para llegar a $v$ desde $rt$. \\
-\textit{Note:} Halla nodos críticos inescapables en grafos dirigidos.
-\vspace{0.15cm}
-
-\textbf{Edmonds blossom} --- \textbf{Complexity:} $O(V^2 E)$ \\
-\textit{Usage:} 1. \texttt{edmonds()} $\rightarrow$ Devuelve el tamaño máximo de emparejamientos sin superposición que se pueden formar en el grafo. \\
-\textit{Note:} Emparejamiento máximo para "Grafos Generales". Úsalo cuando las reglas te impiden dividir los nodos en dos grupos (bipartito) separados.
-\vspace{0.15cm}
-
-\subsection{Math}
-
-\textbf{Integer floor division} --- \textbf{Complexity:} $O(1)$ \\
-\textit{Usage:} 1. \texttt{floordiv(ll x, ll y, ll\& q, ll\& r)} $\rightarrow$ Calcula la división hacia $-\infty$ y deposita el cociente en $q$ y el residuo positivo/concordante en $r$. \\
-\textit{Note:} C++ estándar trunca hacia $0$, lo que genera errores garrafales con coordenadas negativas. Usa esto para que las matemáticas modulares cuadren perfecto sin importar el signo.
-\vspace{0.15cm}
-
-\textbf{Extended Euclid} --- \textbf{Complexity:} $O(\log \min(a,b))$ \\
-\textit{Usage:} 1. \texttt{euclid(ll a, ll b, ll\& x, ll\& y)} $\rightarrow$ Calcula el Máximo Común Divisor (GCD) entre $a$ y $b$, y averigua los factores $x, y$ para resolver $ax + by = \text{GCD}$. \\
-\textit{Note:} Imprescindible en la búsqueda del Inverso Modular y Teorema Chino del Resto.
-\vspace{0.15cm}
-
-\textbf{Sieve of Eratosthenes} --- \textbf{Complexity:} $O(N \log \log N)$ \\
-\textit{Usage:} 1. \texttt{init\_sieve()} $\rightarrow$ Elimina múltiplos velozmente dejando registrados únicamente los números primos hasta un límite máximo (\texttt{MAXN}). \\
-\textit{Note:} Llama esta función una sola vez al inicio. Ideal cuando tienes múltiples casos de prueba que requieren factorizar o preguntar la primalidad de números pequeños-medianos ($<10^7$).
-\vspace{0.15cm}
-
-\textbf{Generate divisors} --- \textbf{Complexity:} $O(d(n))$ \\
-\textit{Usage:} 1. \texttt{divisors(vector<pair<ll,int>> f)} $\rightarrow$ A partir de la huella prima (ej. $2^2 \times 3^1$), genera la lista completa de todos los divisores enteros posibles. \\
-\textit{Note:} Útil y rápida cuando necesitas saber entre cuántas partes exactas se puede dividir un número ya factorizado.
-\vspace{0.15cm}
-
-\textbf{Pollard Rho factorization} --- \textbf{Complexity:} $O(N^{1/4})$ \\
-\textit{Usage:} 1. \texttt{rabin(ll n)} $\rightarrow$ Test de primalidad para números ridículamente grandes ($10^{18}$). 2. \texttt{fact(ll n, map<ll,int>\& f)} $\rightarrow$ Desmenuza un número gigante guardando su factorizacion en el mapa $f$. \\
-\textit{Note:} La salvación absoluta cuando la criba de Eratóstenes explota por falta de RAM. Usa aleatoriedad para hallar los divisores más escurridizos al instante.
-\vspace{0.15cm}
-
-\textbf{Simpson integration} --- \textbf{Complexity:} $O(N)$ \\
-\textit{Usage:} 1. \texttt{integrate(double f(double), double a, double b, int n)} $\rightarrow$ Aproxima el área bajo la curva de la función matemática $f$ usando $n$ subintervalos. \\
-\textit{Note:} Usa $n$ par y grande ($100000$) para excelente precisión en problemas de áreas continuas y curvas de cálculo.
-\vspace{0.15cm}
-
-\textbf{Polynomial utilities} --- \textbf{Complexity:} $O(\text{Depende})$ \\
-\textit{Usage:} 1. \texttt{poly<T>} $\rightarrow$ Úsalo como tipo de dato de tus ecuaciones. 2. \texttt{roots(poly<> p)} $\rightarrow$ Halla raíces enteras. 3. \texttt{interpolate(x, y)} $\rightarrow$ Halla la ecuación que cruza dichos puntos. \\
-\textit{Note:} Permite manipular polinomios sin complicarte con índices manuales.
-\vspace{0.15cm}
-
-\textbf{Bairstow roots} --- \textbf{Complexity:} $O(\text{ITER} \cdot \text{Grado})$ \\
-\textit{Usage:} 1. \texttt{bairstow(poly<> p)} $\rightarrow$ Retira y calcula aproximaciones cuadráticas del polinomio mayor. \\
-\textit{Note:} Método numérico iterativo potente para descifrar raíces complejas o reales reduciendo el polinomio.
-\vspace{0.15cm}
-
-\textbf{Fast Hadamard Transform} --- \textbf{Complexity:} $O(N \log N)$ \\
-\textit{Usage:} 1. \texttt{fht(ll* p, int n, bool inv)} $\rightarrow$ Transforma el arreglo al dominio de Walsh. 2. \texttt{multiply(vector<ll>\& p1, vector<ll>\& p2)} $\rightarrow$ Convoluciona los elementos operando bajo reglas bit a bit (XOR, AND, OR). \\
-\textit{Note:} Sirve para responder rápidamente combinaciones de bits (ej. "de cuántas formas saco el número C sumando un ítem A y un ítem B usando la operación XOR"). Modifica el símbolo interno según la operación deseada.
-\vspace{0.15cm}
-
-\textbf{Karatsuba multiplication} --- \textbf{Complexity:} $O(N^{1.585})$ \\
-\textit{Usage:} 1. \texttt{multiply(vector<tp> p0, vector<tp> p1)} $\rightarrow$ Multiplica (convoluciona) dos polinomios/números masivos rompiéndolos recursivamente. \\
-\textit{Note:} La alternativa al FFT. Úsalo si tu entorno tiene problemas con módulos y números flotantes que arruinan la precisión del FFT tradicional.
-\vspace{0.15cm}
-
-\textbf{Linear Diophantine equations} --- \textbf{Complexity:} $O(\log \min(a,b))$ \\
-\textit{Usage:} 1. \texttt{diophantine(ll a, ll b, ll r)} $\rightarrow$ Encuentra los valores $X$ e $Y$ enteros que satisfacen $A \cdot X + B \cdot Y = R$. \\
-\textit{Note:} La condición de oro es que $R$ sea obligatoriamente un múltiplo divisible por el $\text{GCD}(A,B)$, en caso contrario no existirá solución entera.
-\vspace{0.15cm}
-
-\textbf{Modular inverse} --- \textbf{Complexity:} $O(\log \text{mod})$ \\
-\textit{Usage:} 1. \texttt{inv(ll a, ll mod)} $\rightarrow$ Encuentra el número por el que debes multiplicar para simular una división entre $a$ bajo la aritmética de un módulo de reloj. \\
-\textit{Note:} $a$ y el \texttt{mod} deben ser coprimos ($\text{GCD}=1$) para que el inverso exista.
-\vspace{0.15cm}
-
-\textbf{Simplex Algorithm} --- \textbf{Complexity:} $\text{Exponencial en teoría, muy rápido en práctica}$ \\
-\textit{Usage:} 1. Traduce tu problema a ecuaciones matemáticas, cárgalas en la matriz de la función y recibe el máximo (o mínimo) valor posible de tu función objetivo. \\
-\textit{Note:} La bala de plata para "Tengo X recursos y condiciones variadas; quiero maximizar mi ganancia monetaria sin violar los límites". (Programación Lineal).
-\vspace{0.15cm}
-
-\textbf{Discrete logarithm} --- \textbf{Complexity:} $O(\sqrt{M})$ \\
-\textit{Usage:} 1. \texttt{discrete\_log(ll a, ll b, ll m)} $\rightarrow$ Resuelve el logaritmo en un reloj: encuentra cuántas veces se debe potenciar $a$ para que resulte ser $b$ bajo módulo $m$. \\
-\textit{Note:} Utiliza el ingenioso algoritmo Baby-Step Giant-Step para acortar el tiempo de $M$ a su raíz cuadrada.
-\vspace{0.15cm}
-
-\textbf{Berlekamp-Massey} --- \textbf{Complexity:} $O(N^2)$ \\
-\textit{Usage:} 1. \texttt{BM(vi x)} $\rightarrow$ Dale un puñado de números de una secuencia repetitiva desconocida, y este algoritmo deducirá la relación/fórmula lineal que la produce y sus coeficientes exactos. \\
-\textit{Note:} Adulteración de DP puro. Si no logras pensar la lógica del problema, usa backtracking bruto, escupe los primeros términos de respuesta, mételos en BM y te dará el DP de regalo.
-\vspace{0.15cm}
-
-\textbf{Linear recurrence} --- \textbf{Complexity:} $O(K^2 \log N)$ \\
-\textit{Usage:} 1. \texttt{LinearRec} y \texttt{calc(ll k)} $\rightarrow$ Dado tu estado inicial y los coeficientes de recurrencia (obtenidos a mano o por BM), halla instantáneamente el término súper-lejos (ej. $10^{18}$) de la sucesión. \\
-\textit{Note:} Trabaja bajo la misma teoría mágica que Exponenciación de Matrices pero de forma polinómica.
-\vspace{0.15cm}
-
-\textbf{Tonelli-Shanks} --- \textbf{Complexity:} $O(\log^2 P)$ \\
-\textit{Usage:} 1. \texttt{tonelli\_shanks(ll n, ll p)} $\rightarrow$ Dado un número $n$ y un módulo primo $p$, extrae el valor $X$ que cumple $X^2 \equiv n \pmod p$. \\
-\textit{Note:} Tu calculadora para Raíz Cuadrada en aritmética modular. Si la función \texttt{legendre} devuelve -1, significa que no existe ninguna raíz bajo las reglas de ese módulo.
-\vspace{0.15cm}
-
-\textbf{Prime counting} --- \textbf{Complexity:} $O(N^{2/3} / \log^{1/3} N)$ \\
-\textit{Usage:} 1. \texttt{count\_primes(ll n)} $\rightarrow$ Devuelve exactamente el número de primos menores o iguales a $n$. \\
-\textit{Note:} Espectacular algoritmo para cuando $n$ es exagerado ($10^{11}$) y Eratóstenes falla, pero el problema es simple: "dime la cantidad de primos".
-\vspace{0.15cm}
-
-\subsection{Geometry}
-
-\textbf{Point / Vector operations} --- \textbf{Complexity:} $O(1)$ \\
-\textit{Usage:} 1. \texttt{cross(p1, p2)} $\rightarrow$ Producto Cruz; calcula áreas y dictamina si el polígono gira a izquierda o derecha. 2. \texttt{dot(p1, p2)} $\rightarrow$ Producto Punto; calcula proyecciones. \\
-\textit{Note:} La base de la vida geométrica. El producto cruz salva la vida al esquivar funciones de ángulos con coma flotante, evitando errores catastróficos de aproximación.
-\vspace{0.15cm}
-
-\textbf{Line / Segment operations} --- \textbf{Complexity:} $O(1)$ \\
-\textit{Usage:} 1. \texttt{operator\string^(ln l, ln m)} $\rightarrow$ Ejecuta y extrae exactamente el punto de intersección entre las dos rectas. \\
-\textit{Note:} Mantén un margen \texttt{EPS} sano para no comparar \texttt{0.0} exacto por temas de decimales flotantes.
-\vspace{0.15cm}
-
-\textbf{Circle} --- \textbf{Complexity:} $O(1 \text{ o } N \text{ para interacciones})$ \\
-\textit{Usage:} 1. \texttt{circle(pt o, double r)} $\rightarrow$ Crea y clasifica círculos. 2. \texttt{intercircles(vector<circle> c)} $\rightarrow$ Estima el área consolidada de múltiples círculos superpuestos como en un diagrama de Venn masivo. \\
-\textit{Note:} Altamente sensible al parámetro \texttt{EPS}.
-\vspace{0.15cm}
-
-\textbf{Polygon} --- \textbf{Complexity:} $O(N)$ \\
-\textit{Usage:} 1. \texttt{pol::area()} $\rightarrow$ Calcula el área orientada internamente dividiendo todo en triángulos desde el origen mediante el producto cruz. 2. \texttt{pol::has(pt q)} $\rightarrow$ Confirma si el punto $q$ se encuentra dentro de los dominios del polígono. \\
-\textit{Note:} Revisa que la lista de vértices esté ordenada y respete la convexidad y dirección que espera tu código.
-\vspace{0.15cm}
-
-\textbf{Plane} --- \textbf{Complexity:} $O(1)$ \\
-\textit{Usage:} 1. \texttt{plane::side(pt q)} $\rightarrow$ Verifica en qué cara o hemisferio respecto al plano infinito se halla el punto $q$. \\
-\textit{Note:} Para aquellos infames problemas que obligan a saltar al espacio 3D.
-\vspace{0.15cm}
-
-\textbf{Radial order} --- \textbf{Complexity:} $O(N \log N)$ \\
-\textit{Usage:} 1. Aplícalo como un comparador estricto para C++ \texttt{std::sort} y ordenará los puntos geométricos alrededor del centro barriendo angularmente. \\
-\textit{Note:} Útil y necesario para construir Envolventes Convexos (Convex Hulls) y técnicas de "Sweep Line Angular" sin usar el impreciso \texttt{atan2}.
-\vspace{0.15cm}
-
-\textbf{Minkowski sum} --- \textbf{Complexity:} $O(N+M)$ \\
-\textit{Usage:} 1. \texttt{minkowski\_sum(vector<pt> p, vector<pt> q)} $\rightarrow$ Agrupa dos figuras sólidas en una sola silueta que representa todos los trazos vectores posibles. \\
-\textit{Note:} La varita mágica para detectar colisiones o choques exactos entre dos polígonos convexos trasladándose uno hacia el otro.
-\vspace{0.15cm}
-
-\textbf{Delaunay triangulation} --- \textbf{Complexity:} $O(N \log N \text{ esperado})$ \\
-\textit{Usage:} 1. \texttt{delaunay(vector<pt> v)} $\rightarrow$ Ensambla triángulos sanos, evitando ángulos puntiagudos inútiles, para construir una red entre puntos dispersos. \\
-\textit{Note:} Es la estructura dual al Diagrama de Voronoi. Evita mandarle puntos encimados o idénticos.
-\vspace{0.15cm}
-
-\subsection{Strings}
-
-\textbf{KMP} --- \textbf{Complexity:} $O(N+M)$ \\
-\textit{Usage:} 1. \texttt{kmppre(string\& t)} $\rightarrow$ Estudia la meta. 2. \texttt{kmp(string\& s, string\& t)} $\rightarrow$ Busca rápidamente sin repetir pasajes inútiles la existencia del patrón $t$ a lo largo de todo $s$. \\
-\textit{Note:} La caja original del String Matching ("Ctrl+F"). Excelente velocidad y bajo consumo de memoria.
-\vspace{0.15cm}
-
-\textbf{Z function} --- \textbf{Complexity:} $O(N)$ \\
-\textit{Usage:} 1. \texttt{z\_function(string\& s)} $\rightarrow$ Genera el arreglo $Z$. Cada celda \texttt{z[i]} indica cuántos caracteres del texto a partir de allí son réplicas exactas del prefijo mismo de toda la cadena. \\
-\textit{Note:} Sumamente poderoso para buscar patrones si unes el patrón al inicio del texto usando un carácter especial ciego (como `$\#$`) en el medio.
-\vspace{0.15cm}
-
-\textbf{Manacher} --- \textbf{Complexity:} $O(N)$ \\
-\textit{Usage:} 1. \texttt{manacher(string\& s)} $\rightarrow$ Analiza la cadena insertando delimitadores invisibles para escupir instantáneamente todos los palíndromos alojados sin importar su paridad. \\
-\textit{Note:} Extrae el palíndromo más largo o cuenta los subpalíndromos centrados en cualquier carácter velozmente.
-\vspace{0.15cm}
-
-\textbf{Suffix array} --- \textbf{Complexity:} $O(N \log N)$ \\
-\textit{Usage:} 1. \texttt{constructSA(string\& s)} $\rightarrow$ Retorna el índice catalogado, ordenado de la A a la Z, de todas las formas posibles de terminar o diseccionar el texto. \\
-\textit{Note:} Sirve como tu guía telefónica definitiva. Al estar ordenado, puedes usar Búsqueda Binaria sobre el arreglo resultante para buscar palabras parciales velozmente.
-\vspace{0.15cm}
-
-\textbf{LCP array} --- \textbf{Complexity:} $O(N)$ \\
-\textit{Usage:} 1. \texttt{computeLCP(string\& s, vector<int>\& sa)} $\rightarrow$ Genera un arreglo de similitudes entre vecinos en tu Suffix Array. \\
-\textit{Note:} Siempre se usa de la mano con Suffix Array. Convierte los misteriosos problemas de texto en operaciones matemáticas sobre arreglos numéricos (ej. hallar el substring común más largo).
-\vspace{0.15cm}
-
-\textbf{Suffix tree} --- \textbf{Complexity:} $O(N)$ \\
-\textit{Usage:} 1. \texttt{SuffixTree(string s)} $\rightarrow$ Condensa el abrumador universo de combinaciones del texto en un bello árbol estructurado. \\
-\textit{Note:} Extremadamente pesado. No olvides rematar el texto con un sello de fin (ej. `\$`) para materializar todas las hojas posibles sin problemas invisibles.
-\vspace{0.15cm}
-
-\textbf{String hashing} --- \textbf{Complexity:} $O(N \text{ preálculo}, O(1) \text{ consulta})$ \\
-\textit{Usage:} 1. \texttt{Hash(string s)} $\rightarrow$ Fija números de base. 2. \texttt{get(int l, int r)} $\rightarrow$ Otorga el código de identidad inalterable de un pedazo del texto. \\
-\textit{Note:} Transforma comparaciones molestas de caracteres letra por letra, en triviales comprobaciones "$\text{hash}_A == \text{hash}_B$" a velocidad de luz.
-\vspace{0.15cm}
-
-\subsection{Other}
-
-\textbf{Min-cost max-flow (MCMF)} --- \textbf{Complexity:} $O(\text{Flujo Max} \cdot E \log V)$ \\
-\textit{Usage:} 1. \texttt{add\_edge(int u, int v, int cap, int cost)} $\rightarrow$ Conecta un tubo entre \texttt{u} y \texttt{v} donde pueden pasar hasta \texttt{cap} elementos en total, cobrando un peaje o castigo de \texttt{cost} por CADA unidad enviada. 2. \texttt{get\_flow(int s, int t)} $\rightarrow$ Inicia la simulación en \texttt{s} apuntando a \texttt{t}. Devuelve el par consolidado de \texttt{\{Máximo\_Flujo, Mínimo\_Costo\}}. \\
-\textit{Note:} Envía toda el agua posible pero busca ávidamente las rutas más económicas primero para ahorrar el total. Si tienes aristas iniciales negativas, deberás incluir la limpieza mágica de los "Potenciales" antes del Dijkstra subyacente.
-\vspace{0.15cm}
-
-\textbf{Mo algorithm} --- \textbf{Complexity:} $O((N+Q) \sqrt{N})$ \\
-\textit{Usage:} 1. \texttt{mos()} $\rightarrow$ Revuelve y ordena las preguntas (consultas) inteligentemente basadas en bloques de raíz cuadrada para anular los saltos extremos largos en el arreglo. 2. \texttt{add(pos)} y \texttt{remove(pos)} $\rightarrow$ Al mover la cortina (tu lupa de visualización) un pasito, informas qué pasa con la estadística o el contador total. \\
-\textit{Note:} Estrictamente "Offline". Útil cuando no puedes usar un Segment Tree porque combinar las respuestas de dos mitades separadas es infernal, pero añadir/quitar un ítem de tu cuenta actual te toma solo $O(1)$.
-\vspace{0.15cm}
-
-\textbf{Divide and conquer DP optimization} --- \textbf{Complexity:} $O(K \cdot N \log N)$ \\
-\textit{Usage:} 1. \texttt{doit(int s, int e, int s0, int e0, int i)} $\rightarrow$ Corta a la mitad la zona incierta sabiendo el punto de corte óptimo validado. 2. \texttt{doall()} $\rightarrow$ Orquesta los bucles sobre las iteraciones. \\
-\textit{Note:} Resuelve misterios de Programación Dinámica tipo "Partición de arreglo en $K$ componentes", acuchillando un inaceptable $O(K \cdot N^2)$ para convertirlo en algo muy veloz. Condición obligatoria: tu punto de corte debe ser estrictamente monótono.
-\vspace{0.15cm}
-
-\textbf{Date conversion} --- \textbf{Complexity:} $O(1)$ \\
-\textit{Usage:} 1. \texttt{dateToInt(int y, int m, int d)} $\rightarrow$ Exprime una fastidiosa fecha del calendario gregoriano en un simple número absoluto (Día Juliano). \\
-\textit{Note:} ¡Huye de programar meses bisiestos y validaciones a mano! Convierte fechas a enteros, réstalos libremente, y aplícales módulo $7$ para develar el día semanal.
-\vspace{0.15cm}
+% Contratos ligados al archivo: \cppfile exige una descripción por fragmento.
+% Las fichas aparecen junto al código, no en un capítulo separado.
+\algodesc{other/template.cpp}{
+\field{Qué prepara.}{Cabeceras GNU, enteros de 64 bits, lectura rápida y las abreviaturas de El Vasito. Cada fragmento presupone esta cabecera, pero se copia \emph{sin} duplicar \id{main}. Son alternativas: varias implementaciones usan los mismos nombres globales, como \id{STree}, \id{g}, \id{poly} o \id{Line}.}
+\field{Convenciones.}{\id{fore(i,a,b)} recorre enteros $a\le i<b$ y evalúa $b$ una vez; \id{pb}/\id{mp} son \id{push_back}/\id{make_pair}; \id{fst}/\id{snd} son los miembros de un par. \id{SZ(x)} da un \id{int}; \id{ALL(x)} son sus iteradores. \id{ll} es \id{long long}; \id{pl} es un par de \id{ll}.}
+\field{Uso.}{Define los límites \id{MAXN}, \id{K}, \id{EPS}, \id{INF} que pida el fragmento \emph{antes} de pegarlo. Compila con GNU C++17. \id{-DLOCAL} activa \id{debug(a,b)} hacia \id{cerr}; \id{deb}/\id{deb1} usan \id{-DBRAULIO}. Nunca envíes esas banderas si las trazas son costosas.}
+\field{Cuidado.}{\id{bits/stdc++.h}, PBDS y rope dependen de GNU libstdc++; Apple Clang no los incluye. No mezcles \id{scanf}/\id{printf} con \id{cin}/\id{cout} si desactivaste la sincronización. Las estructuras recursivas pueden desbordar la pila en una cadena larga.}}
+
+\algodesc{data_structures/segment_tree.cpp}{
+\field{Qué resuelve.}{Mantiene un arreglo que cambia y responde el mínimo en cualquier intervalo. Cada nodo resume un segmento; una consulta combina sólo los nodos que lo cubren. Sirve también para suma, máximo, gcd o una estructura propia si la combinación es asociativa.}
+\field{Entrada/salida.}{Arreglo de $n>0$ enteros; posiciones base 0. \id{upd(p,v)} \emph{asigna} $a_p=v$; \id{query(l,r)} devuelve el mínimo de $[l,r)$, o \id{NEUT} si está vacío. Define \id{INF} mayor que todo valor válido.}
+\field{Orden.}{\id{STree st(n);} luego \id{st.init(a.data());}, después actualizaciones y consultas en cualquier orden. El constructor sólo llena con el neutro; no lee tu arreglo.}
+\field{Ejemplo.}{Para $a=[5,2,7]$, \id{query(0,2)} da 2; después de \id{upd(1,9)} da 5.}
+\field{Costo/cuidado.}{$O(n)$ construcción y memoria; $O(\log n)$ por operación. Para suma cambia \id{oper}, \id{NEUT=0} y todos los valores/resultados a \id{ll}. Para concatenación respeta el orden de combinación.}}
+
+\algodesc{data_structures/segment_tree_lazy.cpp}{
+\field{Qué resuelve.}{Suma un valor a un intervalo completo y consulta sumas. En vez de bajar a todas las hojas, guarda una modificación pendiente en cada segmento; \id{push} la incorpora al resumen y la pasa a sus hijos cuando hace falta.}
+\field{Entrada/salida.}{\id{STree st(n)} con $n>0$, \id{st.init(a.data())}; \id{st.upd(l,r,v)} suma $v$ a cada $a_i$ de $[l,r)$; \id{st.query(l,r)} devuelve su suma. El constructor también representa un arreglo de ceros sin llamar a \id{init}.}
+\field{Ejemplo.}{$[1,2,3]$ y \id{upd(0,2,5)} producen $[6,7,3]$; \id{query(1,3)} da 10.}
+\field{Costo/cuidado.}{$O(n)$ espacio/construcción, $O(\log n)$ por operación. El fragmento usa \id{int}: cambia \id{st}, \id{lazy}, resultados y productos a \id{ll} si la suma no cabe. No es una plantilla de asignación: para $a_i=v$ necesitas una marca de presencia y composición distinta; cero también es una asignación válida.}}
+
+\algodesc{data_structures/segment_tree_persistent.cpp}{
+\field{Qué resuelve.}{Consulta versiones anteriores de un arreglo. Cada actualización copia sólo el camino hasta una hoja y comparte el resto del árbol: las raíces antiguas siguen siendo utilizables y se puede ramificar desde cualquiera.}
+\field{Contrato.}{Esta versión guarda mínimos y hace \emph{asignaciones} puntuales. \id{upd(root,p,v)} devuelve una \emph{nueva raíz}; \id{query(root,l,r)} da el mínimo en $[l,r)$ de esa versión. La raíz 0 representa todo \id{NEUT}.}
+\field{Orden.}{\id{STree st(n);} \id{int r0=st.init(a.data());} \id{int r1=st.upd(r0,p,v);} guarda ambas raíces. \id{init} devuelve la raíz pero no modifica \id{st.rt}; usa siempre la sobrecarga con raíz, o asigna \id{st.rt=r0} antes de \id{upd(p,v)}.}
+\field{Ejemplo.}{$[4,1]$: actualiza el índice 1 a 8. La consulta completa de \id{r0} da 1 y la de \id{r1} da 4.}
+\field{Costo/cuidado.}{$O(n)$ al inicializar; $O(\log n)$ tiempo y nodos nuevos por actualización; consultas $O(\log n)$. Para un k-ésimo en subarreglo cambia a conteos y crea raíces de prefijos; restar \emph{mínimos} de dos raíces no funciona.}}
+
+\algodesc{data_structures/segment_tree_2d.cpp}{
+\field{Qué resuelve.}{Consultas sobre rectángulos de una matriz con cambios en una celda; por ejemplo, el máximo de una submatriz. Mantiene un árbol sobre filas y, en cada resumen, otro sobre columnas.}
+\field{Contrato y orden.}{Define \id{MAXN}, \id{NEUT} y \id{op(a,b)}; llena \id{n}, \id{m} y \id{a[0..n)[0..m)}; llama \id{build()}. Después \id{upd(x,y,v)} asigna una celda y \id{query(x0,x1,y0,y1)} consulta $[x_0,x_1)\times[y_0,y_1)$.}
+\field{Costo/cuidado.}{$O(nm)$ construcción y memoria; $O(\log n\log m)$ por operación. La operación debe ser asociativa y conmutativa; usa \id{ll} para sumas grandes. No conviene para coordenadas dispersas de hasta $10^9$: comprime o procesa offline. Si la matriz no cambia, usa prefijos 2D.}}
+
+\algodesc{data_structures/sparse_table.cpp}{
+\field{Qué resuelve.}{Mínimos de rangos en un arreglo \emph{inmutable}. Precalcula cada bloque de longitud potencia de dos. Una consulta usa dos bloques que pueden superponerse: esto exige idempotencia, $f(x,x)=x$.}
+\field{Contrato y orden.}{Define \id{K} con $2^K>n>0$, asigna el global \id{n}, llama \id{st_init(a.data())}; consulta con \id{st_query(l,r)} para $0\le l<r\le n$. \id{oper} es \id{min}; puede ser max, gcd, AND u OR.}
+\field{Ejemplo.}{$[8,3,5,1]$: \id{st_query(1,4)} da 1.}
+\field{Costo/cuidado.}{$O(n\log n)$ construcción y $O(1)$ consulta. La reserva real es \id{K*(1<<K)} enteros. Una consulta vacía invoca \id{clz(0)} y es inválida. No sirve esta fórmula para suma ni producto; usa prefijos para sumas estáticas.}}
+
+\algodesc{data_structures/fenwick_tree.cpp}{
+\field{Qué resuelve.}{Suma de prefijos con cambios puntuales. Cada celda guarda un bloque cuyo tamaño viene del bit menos significativo; permite contar frecuencias, inversiones o elementos activos. Es más simple que un segment tree si sólo necesitas sumas.}
+\field{Orden y salida.}{Define \id{MAXN}, limpia \id{ft} a cero al comenzar cada caso. Agrega el arreglo con \id{upd(i,a[i])}. \id{upd(i,v)} \emph{suma} $v$; \id{get(r)} suma $[0,r)$; \id{get_sum(l,r)} suma $[l,r)$. Para asignar un valor, suma la diferencia con el anterior.}
+\field{Ejemplo.}{$[3,1,4]$: \id{get(2)} da 4 y \id{get_sum(1,3)} da 5.}
+\field{Costo/cuidado.}{$O(\log N)$ por operación y $O(\texttt{MAXN})$ espacio. Para inversiones, comprime valores y cuenta cuántos anteriores son mayores. Cambia \id{ft}, parámetros y resultados a \id{ll} si hay sumas grandes. Actualizar un índice $-1$ puede crear un bucle infinito.}}
+
+\algodesc{data_structures/fenwick_order.cpp}{
+\field{Qué resuelve.}{Mantiene frecuencias y localiza el k-ésimo elemento de un multiconjunto sin hacer búsqueda binaria externa. Baja por bloques Fenwick acumulando la mayor cantidad de elementos que no supera el rango buscado.}
+\field{Contrato y orden.}{\id{FenwickOrder f(m);} representa frecuencias inicialmente cero sobre $[0,m)$. \id{add(p,delta)} cambia una frecuencia; \id{prefix(r)} y \id{sum(l,r)} son sumas semiabiertas. \id{kth(k)} usa rango \emph{base 0}: devuelve el menor índice $p$ con \id{prefix(p+1)>k}, o $-1$ si $k$ es inválido.}
+\field{Ejemplo.}{Frecuencias $[0,2,1]$ representan $[1,1,2]$: \id{kth(0)=1}, \id{kth(2)=2}. Con valores comprimidos, recupera el original con \id{Compression::value}.}
+\field{Costo/cuidado.}{$O(\log m)$ por operación y $O(m)$ memoria. Para \id{kth}, todas las frecuencias deben permanecer no negativas; una eliminación válida suma $-1$.}}
+
+\algodesc{data_structures/wavelet_tree.cpp}{
+\field{Qué resuelve.}{Devuelve el k-ésimo menor dentro de un subarreglo sin ordenarlo en cada consulta. Divide por el \emph{valor}, y guarda prefijos que indican cuántos elementos fueron a la mitad derecha. También permite intercambiar dos posiciones adyacentes.}
+\field{Orden.}{Crea \id{WT} en memoria global o dinámica: contiene un millón de vectores. \id{init(sigma)} define valores enteros en $[0,\sigma)$; luego \id{add(a[i])} en el orden del arreglo. \id{query0(l,r,k)} devuelve el valor de rango $k$ \emph{base 0} en $[l,r)$; requiere $0\le k<r-l$. \id{upd(i)} intercambia posiciones $i,i+1$.}
+\field{Ejemplo.}{$[7,2,5,2]$, comprimido si hace falta: el rango 1 de todo el arreglo es 2.}
+\field{Costo/cuidado.}{$O(n\log\sigma+\sigma)$ construcción, $O(\log\sigma)$ por consulta/intercambio; memoria de prefijos $O(n\log\sigma)$ más la reserva fija. Ajusta \id{wt} a más de $4\sigma$ nodos. No admite asignaciones arbitrarias; comprimir conserva el orden de valores.}}
+
+\algodesc{data_structures/stl_extended_set.cpp}{
+\field{Qué resuelve.}{Conjunto ordenado con estadísticas de orden: contar menores y acceder por rango además de insertar/borrar.}
+\field{Uso.}{\id{ordered_set s;} \id{s.insert(x)}; \id{s.erase(x)}; \id{s.order_of_key(x)} devuelve cuántas claves son estrictamente menores que $x$. \id{s.find_by_order(k)} devuelve un iterador al k-ésimo, base 0; si no existe devuelve \id{end()}, que no se debe desreferenciar.}
+\field{Ejemplo.}{$\{2,5,9\}$: \id{order_of_key(5)} da 1, \id{*find_by_order(1)} da 5.}
+\field{Costo/cuidado.}{$O(\log n)$ por operación. Requiere GNU PBDS. Para duplicados usa claves \id{pair<valor,id>} con identificador único y \id{less<pair<...>>}; usar \id{less_equal} viola el contrato del árbol.}}
+
+\algodesc{data_structures/stl_rope.cpp}{
+\field{Qué resuelve.}{Secuencia modificable con inserción, borrado y extracción en posiciones intermedias. Evita desplazar todo el arreglo como haría un vector.}
+\field{Uso.}{\id{rope<int> s;} agrega con \id{pb(x)}; \id{insert(i,r)} inserta otra rope \emph{antes} de $i$; \id{erase(i,k)} borra $k$ elementos; \id{substr(i,k)} extrae $k$. \id{s[i]} lee y \id{mutable_reference_at(i)} permite asignar. Índices base 0.}
+\field{Costo/cuidado.}{Operaciones estructurales y acceso con costo típico logarítmico; leer o construir $k$ elementos también cuesta al menos $O(k)$. Es una extensión GNU, con constantes y memoria mayores que vector. No es un árbol de sumas ni soporta inversión lazy: para eso usa treap implícito.}}
+
+\algodesc{data_structures/treap.cpp}{
+\field{Qué resuelve.}{Árbol de búsqueda balanceado aleatoriamente por prioridades. Permite claves ordenadas, selección por rango, separar y unir conjuntos. Es útil si necesitas operaciones que \id{set} no ofrece.}
+\field{Orden.}{Empieza con \id{pitem t=nullptr}; \id{insert(t,new item(x))} agrega una clave; \id{erase(t,x)} elimina una ocurrencia; \id{kth(t,k)} devuelve un nodo o nulo, con $k$ base 0; \id{lb(t,x)} devuelve posición y valor del primer elemento $\ge x$. Si no hay valor, usa el centinela \id{1<<30}; comprueba también la posición.}
+\field{Separar/unir.}{\id{split(t,x,l,r)} deja claves $\le x$ a la izquierda y $>x$ a la derecha. \id{merge(t,l,r)} exige todas las claves de $l$ anteriores a las de $r$; \id{unite} mezcla árboles con claves intercaladas. Estas operaciones consumen/reorganizan los árboles originales.}
+\field{Costo/cuidado.}{Búsqueda, split y merge $O(\log n)$ esperado, no garantizado. \id{unite} tiene otro costo: $O(m\log(n/m+1))$ esperado, $m\le n$. Gestiona liberación si hay muchas eliminaciones/casos; \id{erase} no libera el nodo.}}
+
+\algodesc{data_structures/treap_implicit.cpp}{
+\field{Qué resuelve.}{Representa una secuencia por su \emph{posición}, sin guardar índices como claves. Al insertar/borrar, los tamaños de subárbol reajustan los índices automáticamente. Permite cortar/pegar segmentos y, al adaptar lazy, invertirlos o sumarles.}
+\field{Orden.}{Empieza con \id{pitem t=nullptr}. Agrega al final mediante \id{merge(t,t,new item(v))}. \id{split(t,a,b,k)} separa los primeros $k$ elementos del resto. \id{merge(t,a,b)} concatena, sin exigir orden por \id{val}.}
+\field{Receta para $[l,r)$.}{\id{split(t,a,c,r)}; \id{split(a,a,b,l)}: ahora $b$ es el segmento. Consulta o modifica $b$, y reconstruye con \id{merge(a,a,b)}; \id{merge(t,a,c)}.}
+\field{Costo/cuidado.}{$O(\log n)$ esperado por split/merge; $O(n)$ nodos. La versión impresa tiene \id{sum}, \id{rev}, \id{add} \emph{comentados}: activa a la vez campos, constructor, \id{push}, \id{sum} y \id{upd_cnt}. Para sumas usa \id{ll}. No basta descomentar sólo la actualización.}}
+
+\algodesc{data_structures/treap_implicit_father.cpp}{
+\field{Qué añade.}{Al treap implícito le agrega punteros al padre para recuperar la posición actual de un \emph{nodo conocido}, aunque otros segmentos hayan cambiado de sitio. Por ejemplo, conservar un puntero a cada ficha y preguntar en qué secuencia/posición está.}
+\field{Integración.}{Copia primero \algoref{data_structures/treap_implicit.cpp}{treap implícito}; añade \id{pitem f} al nodo e inicialízalo en cero. \emph{Reemplaza} sus \id{split}/\id{merge} por estas versiones. Después de una operación completa, fija \id{t->f=0} para toda raíz no nula.}
+\field{Uso/salida.}{\id{int p; pitem r=root(node,p);} devuelve raíz y posición base 0. \id{push_all} aplica las marcas pendientes de ancestros antes de interpretar los hijos.}
+\field{Costo/cuidado.}{$O(\log n)$ esperado por operación. No conserves punteros a nodos borrados. Un enlace de padre obsoleto puede crear un ciclo; actualiza siempre ambos sentidos al modificar hijos.}}
+
+\algodesc{data_structures/link_cut_tree.cpp}{
+\field{Qué resuelve.}{Mantiene un \emph{bosque} cuyos enlaces cambian: unir árboles, cortar una arista y decidir conectividad sin reconstruir todo. Internamente expone caminos del bosque mediante treaps. HLD sirve para árboles fijos; esta estructura permite cambiar las aristas.}
+\field{Orden y contrato.}{Crea un \id{new item()} por vértice y guarda sus punteros. \id{root(v)} devuelve un nodo representante: dos vértices están conectados si sus raíces coinciden. \id{link(v,w)} conecta árboles distintos; \id{cut(v,w)} exige que la arista exista; \id{evert(v)} cambia la raíz representada. \id{cut(v)} corta a $v$ de su padre actual.}
+\field{Camino/salida.}{\id{evert(u)} seguido de \id{expose(v)} deja expuesto el camino $u$--$v$ en el treap retornado. El código sólo mantiene conectividad: para suma/máximo agrega valores, resumen, actualización y propagación; no hay una función \id{query(u,v)} lista.}
+\field{Costo/cuidado.}{Esta variante usa treaps: presupuesta $O(\log^2 n)$ esperado amortizado por operación y $O(n)$ memoria; no le atribuyas la cota de un LCT con splay sin adaptar la implementación. Nunca enlaces nodos ya conectados ni cortes una arista inexistente.}}
+
+\algodesc{data_structures/convexhull_trick.cpp}{
+\field{Qué resuelve.}{Mínimo de muchas rectas $m_jx+h_j$ en un punto $x$. Aparece al separar una transición de DP en una parte de $i$ y una recta aportada por $j$: $dp_i=b_i+\min_j(m_jx_i+h_j)$. Descarta rectas que nunca serán óptimas.}
+\field{Orden.}{\id{CHT ch;} luego \id{ch.add(m,h)} con pendientes \emph{no crecientes}. Debe existir al menos una recta antes de \id{ch.eval(x)}. Las consultas pueden llegar en cualquier orden en la versión activa, que hace búsqueda binaria.}
+\field{Ejemplo.}{Rectas $2x+1$ y $-x+4$: \id{eval(3)} devuelve $\min(7,1)=1$.}
+\field{Costo/cuidado.}{Agregar $O(1)$ amortizado, consulta $O(\log n)$, espacio $O(n)$. La alternativa al final de \id{eval} está después de un \id{return}: para consultas monótonas reemplaza el bloque activo, no sólo descomentes. Para máximo niega $m,h$ y el resultado. Intersecciones, diferencias y evaluaciones deben caber en \id{tc}; si no, usa \id{__int128}.}}
+
+\algodesc{data_structures/convexhull_trick_dynamic.cpp}{
+\field{Qué resuelve.}{Máximo de rectas que llegan con pendientes arbitrarias. Mantiene en un multiset las rectas que pueden ganar alguna consulta; no exige conocer de antemano los puntos de consulta.}
+\field{Uso.}{\id{HullDynamic ch;} \id{ch.add(m,b)} agrega $mx+b$; \id{ch.eval(x)} devuelve el máximo actual. Agrega alguna recta antes de consultar. Para minimizar niega ambas constantes de cada recta y la respuesta.}
+\field{Costo/cuidado.}{$O(\log n)$ amortizado por inserción y consulta, $O(n)$ memoria. El código usa productos cruzados y $mx+b$ en \id{ll}: revisa el rango o promueve las operaciones a \id{__int128}. \id{is_query} es un centinela reservado, no puede ser un intercepto real. No copies la estructura: las rectas guardan iteradores a su propio multiset.}}
+
+\algodesc{data_structures/li_chao_tree.cpp}{
+\field{Qué resuelve.}{Máximo de rectas con inserciones sin orden, incluso si una recta sólo existe en parte del dominio. Cada nodo conserva la mejor recta en un punto del segmento; como dos rectas se cruzan a lo sumo una vez, la competidora sólo necesita bajar por una mitad.}
+\field{Contrato/orden.}{\id{LiChaoTree ch(U)} permite coordenadas enteras $0\le x<U$. \id{ch.add(Line(m,b))} agrega $mx+b$ en todo el dominio; \id{ch.add(Line(m,b),l,r)} sólo en $[l,r)$. \id{ch.query(x)} devuelve el máximo, o \id{-INF} si no hay rectas aplicables.}
+\field{Ejemplo.}{Una oferta de costo/ganancia válida sólo entre dos fechas se modela con la inserción restringida. Para minimizar niega rectas y respuesta.}
+\field{Costo/cuidado.}{Agregar recta completa y consultar: $O(\log U)$; agregar segmento: $O(\log^2 U)$. Reserva nodos dinámicos conforme se usan. Si comprimes $x$, evalúa la recta en la \emph{coordenada original}, no en el rango comprimido: eso requiere adaptar \id{get} y los puntos de comparación. Revisa overflow y el centinela.}}
+
+\algodesc{data_structures/gain_cost_set.cpp}{
+\field{Qué resuelve.}{Frontera de estados no dominados $(ganancia,costo)$. Un estado se descarta si otro ofrece al menos la misma ganancia por un costo menor o igual. Útil para podar estados de DP/shortest path con dos criterios.}
+\field{Uso y salida.}{\id{GCS s;} \id{s.add(g,c)} conserva sólo candidatos útiles. \id{s.get(G)} devuelve el mínimo costo para lograr ganancia \emph{al menos} $G$, o \id{INF} si no existe. Define \id{INF} fuera del rango de costos válidos.}
+\field{Costo/cuidado.}{Consulta $O(\log n)$; inserción $O(\log n)$ más borrados, amortizados sobre la secuencia porque cada par se elimina una vez. No permite recuperar estados descartados ni responder costo para ganancia \emph{exactamente} $G$. La regla de dominancia sólo es válida si un futuro estado con más ganancia y menos costo nunca empeora la solución.}}
+
+\algodesc{data_structures/disjoint_intervals.cpp}{
+\field{Qué resuelve.}{Mantiene la unión de intervalos de una recta como segmentos disjuntos, sin guardar cada punto. Por ejemplo, tramos pintados, tiempos ocupados o coordenadas cubiertas.}
+\field{Uso y salida.}{\id{disjoint_intervals d;} \id{d.insert({l,r})} incorpora $[l,r)$ y fusiona los que se toquen o superpongan. El conjunto público \id{d.s} contiene los intervalos de la unión ordenados. Un intervalo vacío se ignora.}
+\field{Ejemplo.}{$[1,3)$ y luego $[3,6)$ quedan como $[1,6)$; añadir $[8,9)$ mantiene dos tramos.}
+\field{Costo/cuidado.}{$O(\log n+k)$ por inserción si fusiona $k$ intervalos; borrados amortizados a lo largo de las inserciones. No incluye eliminación de cobertura, multiplicidades ni suma de longitudes: calcúlala con $r-l$ o mantenla al fusionar. Usa \id{ll} si las coordenadas o longitudes lo requieren.}}
+
+\algodesc{graphs/bfs.cpp}{
+\field{Qué resuelve.}{Distancia mínima medida en número de aristas: laberintos, movimientos de piezas o el vértice más cercano a un conjunto de fuentes. La cola procesa primero los estados a distancia 0, después los de distancia 1, etc.}
+\field{Contrato/orden.}{Construye \id{vector<vector<int>> g(n)}. Para una arista no dirigida agrega ambos sentidos. \id{auto [d,p]=bfs(g,{s});} o varias fuentes \id{{s1,s2}}. \id{d[v]} es distancia o $-1$ si es inalcanzable; \id{p[v]} es el predecesor. \id{restore_path(v,d,p)} devuelve vértices desde una fuente hasta $v$, o vacío.}
+\field{Modelo útil.}{Si hay llaves, paridad o combustible, el estado es $(\text{celda},\,\text{máscara},\,\ldots)$: visitar una celda con distinto estado no es la misma visita.}
+\field{Costo/cuidado.}{$O(V+E)$ tiempo y $O(V)$ memoria auxiliar. Sólo pesos iguales; para pesos 0/1 usa 0-1 BFS y para pesos no negativos Dijkstra. Una fuente sin camino a $v$ no implica que otra tampoco tenga.}}
+
+\algodesc{graphs/zero_one_bfs.cpp}{
+\field{Qué resuelve.}{Camino de costo mínimo cuando cada movimiento cuesta 0 o 1. Un movimiento gratis entra al frente de una deque y uno de costo 1 al fondo, conservando el orden de distancias sin heap. Útil para minimizar cambios de dirección, inversiones de aristas o el número de puertas que hay que abrir.}
+\field{Contrato/orden.}{Llena \id{g[u]} con pares \id{{destino,peso}}; llama \id{auto d=bfs01(g,s)}. La salida es un vector de distancias; \id{INT_MAX} significa inalcanzable. Agrega el sentido contrario sólo si también está permitido.}
+\field{Ejemplo.}{Aristas $0\to1$ de costo 1, $0\to2$ de costo 0 y $2\to1$ de costo 0: la distancia a 1 es 0, aunque el camino tiene dos aristas.}
+\field{Costo/cuidado.}{$O(V+E)$ tiempo y $O(V+E)$ espacio incluyendo la cola. No uses una marca definitiva al \emph{insertar}: un vértice puede mejorar; el fragmento descarta entradas obsoletas. Un peso 2 rompe la justificación.}}
+
+\algodesc{graphs/tree_tour.cpp}{
+\field{Qué resuelve.}{Convierte cada subárbol de un árbol en un intervalo de arreglo, permitiendo usar Fenwick o segment tree. Registra a cada vértice una vez al entrar; todos sus descendientes se visitan antes de salir. No es el recorrido de longitud $2n-1$ usado en otra variante de LCA.}
+\field{Contrato/orden.}{Árbol no dirigido, conectado, $n>0$. \id{TreeTour t(g,root)} hace todo el preprocesamiento sin recursión. \id{order[i]} es el vértice de la posición $i$; \id{tin[u]} es su posición, \id{tout[u]} el final exclusivo del subárbol; \id{parent[root]=-1} y \id{depth[root]=0}.}
+\field{Uso.}{Coloca \id{b[t.tin[u]]=value[u]}. El subárbol de $u$ es \id{[tin[u],tout[u])}; \id{ancestor(u,v)} incluye $u=v$. Para contar sólo descendientes, excluye la primera posición.}
+\field{Costo/cuidado.}{$O(n)$ tiempo y memoria. No usar en grafos con ciclos ni bosques sin procesar cada componente por separado. Cambiar la raíz cambia qué significa subárbol.}}
+
+\algodesc{graphs/rerooting_distances.cpp}{
+\field{Qué resuelve.}{Suma de distancias desde \emph{cada} vértice de un árbol en tiempo lineal. Primero calcula la respuesta para una raíz y tamaños de subárbol. Al mover la raíz de $p$ a su hijo $u$, los $sz_u$ vértices del lado de $u$ se acercan uno y los otros $n-sz_u$ se alejan uno.}
+\field{Orden/salida.}{Copia primero \id{TreeTour}; llena el árbol no dirigido y llama \id{auto ans=distance_sums(g)}. \id{ans[u]} es $\sum_v dist(u,v)$ en \id{ll}; \id{root} es sólo una raíz de trabajo, no restringe la salida.}
+\field{Ejemplo.}{Cadena $0$--$1$--$2$: salida $[3,2,3]$, por la transición $ans_u=ans_p+n-2sz_u$.}
+\field{Costo/cuidado.}{$O(n)$ tiempo/memoria. Para una arista de longitud $w$, multiplica el cambio por $w$ y calcula la distancia inicial ponderada. Otras DP de rerooting necesitan estados que puedan combinarse y excluir la contribución de un hijo, por ejemplo con prefijos/sufijos.}}
+
+\algodesc{graphs/functional_graph.cpp}{
+\field{Qué resuelve.}{Simula hasta $10^{18}$ pasos de un proceso determinista: cada vértice tiene exactamente un siguiente. Cada componente contiene un ciclo con árboles que desembocan en él. Combina eliminación de hojas, detección de ciclos y saltos de potencias de dos.}
+\field{Contrato/orden.}{\id{vector<int> nxt(n)} con $0\le nxt[u]<n$; construye \id{FunctionalGraph f(nxt)}. \id{jump(u,k)} retorna el estado tras $k\ge0$ pasos; \id{steps(u,v)} retorna el mínimo de pasos de $u$ a $v$, o $-1$.}
+\field{Datos de salida.}{\id{dist[u]}: pasos hasta el ciclo; \id{entry[u]}: primer vértice del ciclo; \id{comp[u]}: componente; \id{len[comp[u]]}: longitud del ciclo. \id{pos[u]} sólo está definida para vértices de ciclo.}
+\field{Ejemplo.}{$nxt=[1,2,1]$: desde 0 se entra al ciclo $(1,2)$ en un paso; \id{jump(0,4)=2} y \id{steps(2,0)=-1}.}
+\field{Costo/cuidado.}{$O(63n)$ construcción/memoria; salto y consulta $O(63)$. No modifica sucesores después de construir; $k$ debe caber en \id{ll} no negativo.}}
+
+\algodesc{graphs/toposort.cpp}{
+\field{Qué resuelve.}{Ordena dependencias: si $u$ debe ocurrir antes de $v$, agrega $u\to v$. Repetidamente extrae un vértice sin dependencias pendientes. Permite hacer DP sobre un DAG siguiendo el orden calculado.}
+\field{Orden/salida.}{Fija \id{n}, limpia y llena \id{g[0..n)}; llama \id{auto order=tsort()}. Devuelve el orden topológico lexicográficamente menor por usar heap. Si \id{SZ(order)<n}, hay un ciclo y el orden parcial no es una solución.}
+\field{Ejemplo.}{$0\to2$ y $1\to2$ producen $[0,1,2]$. Para contar caminos, inicia $dp_s=1$ y propaga $dp_v\mathrel{+}=dp_u$ por cada arista en este orden.}
+\field{Costo/cuidado.}{$O(E+V\log V)$ con esta cola de prioridad y $O(V)$ auxiliar. Una cola normal da $O(V+E)$ si no importa el orden lexicográfico. El grafo debe ser dirigido; no agregues la arista inversa.}}
+
+\algodesc{graphs/kruskal.cpp}{
+\field{Qué resuelve.}{Conecta todos los vértices de un grafo \emph{no dirigido} con costo total mínimo: un árbol de expansión mínima (MST). Ordena aristas por costo y acepta una si une dos componentes distintas. Union-Find detecta si crearía un ciclo.}
+\field{Contrato/orden.}{Define \id{MAXN}. Llena \id{es} con \id{{costo,{u,v}}}, una entrada por arista; llama \id{kruskal()}. Devuelve el costo y deja la partición en \id{uf}. Para guardar aristas seleccionadas, agrégalas dentro del \id{if(uf_join(...))}.}
+\field{DSU independiente.}{\id{uf_init()} primero; \id{uf_find(u)} da representante y \id{uf_join(u,v)} devuelve si se fusionaron. No uses el representante como un identificador permanente.}
+\field{Costo/cuidado.}{$O(E\log E)$ más $O(E\alpha(V))$; $O(E+V)$ memoria. En un grafo desconectado retorna el costo de un \emph{bosque}, sin señalar error: cuenta $V-1$ uniones exitosas para verificar conectividad. Admite pesos negativos. MST no minimiza la distancia desde una fuente.}}
+
+\algodesc{graphs/dijkstra.cpp}{
+\field{Qué resuelve.}{Distancias mínimas desde un origen con pesos \emph{no negativos}. Explora primero la distancia tentativa más pequeña; al sacar del heap descarta entradas que ya fueron mejoradas. No necesita que el grafo sea un árbol ni que sea conexo.}
+\field{Contrato/orden.}{\id{g[u]} contiene \id{{v,costo}}; costos \id{int}, distancias \id{ll}. Limpia el grafo de cada caso, agrega sentidos según el problema y llama \id{dijkstra(s)}. \id{dist[v]=-1} significa inalcanzable. Para recuperar camino, guarda \id{parent[y]=x} cuando mejora una distancia.}
+\field{Ejemplo.}{Con $0\to1:8$, $0\to2:2$, $2\to1:3$, devuelve distancia 5 hasta 1. Para muchas fuentes inicializa todas con distancia 0 en el heap.}
+\field{Costo/cuidado.}{$O((V+E)\log(V+E))$ con entradas duplicadas; espacio $O(V+E)$. No funciona la garantía con un solo peso negativo. No sumes sobre \id{dist=-1}; usa \id{ll} también en los pesos si superan $2^{31}-1$.}}
+
+\algodesc{graphs/bellman_ford.cpp}{
+\field{Qué resuelve.}{Distancias con pesos negativos y detección de ciclos negativos alcanzables desde el origen. Relaja repetidamente todas las aristas: un camino simple tiene a lo sumo $V-1$ aristas; una mejora posterior revela un ciclo que puede abaratar sin límite.}
+\field{Contrato/orden.}{Define \id{INF} de tipo \id{ll}, fija \id{n}, llena \id{g[u]} con \id{{v,costo}}, llama \id{bford(s)}. \id{dist[v]=INF} significa inalcanzable.}
+\field{Salida que debes completar.}{El bloque final de detección contiene \emph{comentarios}, no marca automáticamente distancias $-\infty$. Si necesitas identificar afectados, toma las aristas aún relajables y recorre desde sus destinos; todos los alcanzables tienen mínimo no acotado. Para detectar un ciclo en cualquier componente inicializa todas las distancias a cero (superfuente).}
+\field{Costo/cuidado.}{$O(VE)$ tiempo y $O(V)$ extra. Si guardas padres para reconstruir un ciclo, desde un vértice mejorado sube $V$ veces para entrar al ciclo antes de recorrerlo. El overflow puede fabricar ciclos falsos: acota o satura las sumas.}}
+
+\algodesc{graphs/floyd_warshall.cpp}{
+\field{Qué resuelve.}{Distancias mínimas entre todos los pares de un grafo pequeño. En la fase $k$ permite usar el vértice $k$ como intermediario, comparando el camino directo con $i\to k\to j$.}
+\field{Orden.}{Fija \id{n}; llena toda \id{g[i][j]=INF}, luego la diagonal en 0. Cada arista se incorpora con mínimo para conservar aristas paralelas y bucles negativos. Llama \id{floyd()} una vez; \emph{sobrescribe} la matriz con distancias.}
+\field{Salida.}{\id{g[u][v]=INF}: no hay camino. \id{hasNegCycle(u,v)} indica si se puede pasar por un ciclo negativo entre ambos; en ese caso no existe una distancia mínima finita. \id{inNegCycle(v)} comprueba diagonal negativa, que significa que desde $v$ se puede ir y volver con costo negativo.}
+\field{Costo/cuidado.}{$O(V^3)$ tiempo y $O(V^2)$ espacio; \id{hasNegCycle} cuesta $O(V)$. Úsalo típicamente con unos cientos de vértices según el límite. Mantén $k$ como bucle exterior. No hagas sumas con centinelas.}}
+
+\algodesc{graphs/tarjan_2sat.cpp}{
+\field{Qué resuelve.}{SCC agrupa vértices dirigidos que se pueden alcanzar mutuamente. Contraerlas produce un DAG. 2-SAT transforma restricciones booleanas de dos literales en implicaciones: $(a\lor b)$ equivale a $\neg a\to b$ y $\neg b\to a$. Es imposible si una variable y su negación caen en la misma SCC.}
+\field{SCC sola.}{Limpia \id{g}, fija \id{n}, usa \id{nvar=0}; llama \id{scc()}. \id{cmp[v]} es su componente en $[0,qcmp)$; los números no representan orden de vértices.}
+\field{2-SAT: orden exacto.}{Reserva \id{MAXN>=2*N}; limpia \emph{todo} \id{g[0..MAXN)}. La variable $i$ es el literal \id{i} y su negación es \id{neg(i)=MAXN-1-i}, \emph{no} \id{i^1}. Agrega cláusulas con \id{addor(a,b)}, llama \id{satisf(N)}. Si es true, el valor de $i$ es \id{truth[cmp[i]]}. Esta llamada usa \id{n=MAXN}.}
+\field{Recetas.}{Forzar $a$: \id{addor(a,a)}. Implicación $a\Rightarrow b$: \id{addor(neg(a),b)}. Exactamente uno: $(a\lor b)$ y $(\neg a\lor\neg b)$. ``No ambos'': $(\neg a\lor\neg b)$.}
+\field{Costo/cuidado.}{$O(V+E)$; para 2-SAT esta implementación recorre además la reserva \id{MAXN}. Recursión profunda. 2-SAT no resuelve cláusulas generales de tres literales. No uses una asignación si \id{satisf} devolvió false.}}
+
+\algodesc{graphs/articulation_bridges_biconnected.cpp}{
+\field{Qué resuelve.}{En un grafo no dirigido encuentra aristas cuya eliminación desconecta (puentes), vértices cuya eliminación aumenta componentes (articulaciones) y componentes biconexas por vértices. Un DFS guarda la menor profundidad alcanzable por una arista de retorno.}
+\field{Orden.}{Fija \id{n}, limpia \id{g} y \id{e}; agrega cada arista \emph{una vez} con \id{add_edge(u,v)}; llama \id{doit()}. Las adyacencias almacenan \emph{IDs de arista}, no vecinos.}
+\field{Salida.}{\id{e[id].bridge} marca puentes; \id{art[u]>0} marca articulaciones; \id{e[id].comp} asigna cada arista a una de \id{nbc} componentes. Una articulación puede pertenecer a varias; para un block-cut tree conecta cada bloque con las articulaciones que contiene. Un vértice aislado no produce un bloque de aristas.}
+\field{Costo/cuidado.}{$O(V+E)$ tiempo/espacio. Admite aristas paralelas al distinguir el ID del padre; evita bucles a sí mismo. No confundas estas componentes con SCC dirigidas o con componentes obtenidas al quitar sólo puentes.}}
+
+\algodesc{graphs/chu_liu.cpp}{
+\field{Qué resuelve.}{Versión dirigida del árbol de expansión mínima: desde una raíz todos los vértices deben ser alcanzables, cada otro vértice tiene exactamente una arista entrante, y se minimiza la suma. Selecciona entrantes baratas y contrae los ciclos que se formen.}
+\field{Orden/salida.}{\id{ChuLiu c(n)}; \id{c.add_edge(u,v,w)} para aristas dirigidas sin autoaristas; \id{c.doit(root)} devuelve costo, o $-1$ si no existe arborescencia. \id{c.take[i]!=0} identifica las aristas seleccionadas en orden de inserción.}
+\field{Costo/cuidado.}{$O(VE)$ tiempo; puede guardar $O(VE)$ información de contracciones. El objeto \emph{se modifica}: crea uno nuevo para otro intento. \id{tw} es \id{int}; cámbialo a \id{ll} y ajusta \id{INF} para costos grandes. Si permites pesos negativos, un costo válido puede ser $-1$: cambia la señal de imposibilidad o verifica alcanzabilidad por separado. No es un algoritmo de caminos mínimos.}}
+
+\algodesc{graphs/lca.cpp}{
+\field{Qué resuelve.}{Ancestro común más profundo de dos nodos de un árbol enraizado. Precalcula el ancestro a $2^k$ pasos; primero iguala profundidades y después sube ambos sin hacerlos coincidir demasiado pronto. Sirve para distancias, rutas y saltos a ancestros.}
+\field{Orden.}{Define \id{K} con $2^K\ge n$, fija \id{n}, llena \id{g} como árbol no dirigido conectado. \id{lca_init()} usa raíz 0; después \id{lca(u,v)} devuelve un vértice. \id{D[u]} es profundidad y \id{F[k][u]} ancestro a $2^k$ o $-1$.}
+\field{Receta.}{$dist(u,v)=D_u+D_v-2D_{lca(u,v)}$ en aristas. Para pesos, guarda además distancia acumulada desde la raíz. Para subir $k$ pasos, recorre sus bits y comprueba que $k\le D_u$.}
+\field{Costo/cuidado.}{$O(nK)$ construcción, $O(K)$ consulta; la reserva es $O(K2^K)$. No funciona directamente sobre un bosque o un grafo con ciclos; la DFS recursiva necesita suficiente pila.}}
+
+\algodesc{graphs/hld.cpp}{
+\field{Qué resuelve.}{Consultas/actualizaciones sobre rutas de un árbol fijo. Elige el hijo de mayor subárbol como pesado; una ruta atraviesa sólo $O(\log n)$ cadenas, que se convierten en rangos de un segment tree.}
+\field{Orden completo.}{Copia antes un \id{STree} con \id{oper}/\id{NEUT} coherentes. Llena \id{g} en ambos sentidos; \id{hld_init()} usa raíz 0. Construye \id{b[pos[u]]=valor[u]}, después \id{STree st(n)} y \id{st.init(b.data())}. \id{query(u,v,st)} combina \emph{ambos extremos}; \id{st.upd(pos[u],valor)} asigna un vértice.}
+\field{Aristas/subárboles.}{Para valores de arista, guarda el peso de $(dad[u],u)$ en \id{pos[u]}; deja neutra la raíz y cambia \emph{sólo el último} rango a \id{[pos[lca]+1,pos[otro]+1)}. Un subárbol también queda en \id{[pos[u],pos[u]+wg[u])}.}
+\field{Costo/cuidado.}{$O(n)$ descomposición, ruta $O(\log^2 n)$ con ST, cambio puntual $O(\log n)$. Esta consulta mezcla sentidos y requiere operación conmutativa; para cadenas o matrices guarda resúmenes en ambas direcciones. No cambies aristas después de inicializar.}}
+
+\algodesc{graphs/centroid.cpp}{
+\field{Qué resuelve.}{Divide un árbol alrededor de un centroide: al quitarlo, cada parte tiene a lo sumo la mitad de los vértices. La jerarquía resultante tiene profundidad $O(\log n)$ y permite problemas de distancias a nodos activos o conteo de pares por distancia.}
+\field{Orden/salida.}{Fija \id{n}, llena \id{g} no dirigido, llama \id{centroid()}. \id{fat[u]} es padre en el \emph{árbol de centroides}, con $-1$ en su raíz. No es padre en el árbol original. El código sólo construye la jerarquía, no responde consultas.}
+\field{Cómo usarlo.}{Para activar un nodo $u$, recorre $u, fat[u],\ldots$ y actualiza \id{best[c]=min(best[c],dist_original(u,c))}. Para el más cercano a $v$, minimiza $best[c]+dist_{original}(v,c)$ en sus ancestros centroides. Inicializa \id{best} a infinito.}
+\field{Costo/cuidado.}{Construcción $O(n\log n)$. Con distancias precalculadas: activación/consulta $O(\log n)$; usando LCA en cada paso, $O(\log^2 n)$. La receta de mínimos no permite desactivar sin multiconjuntos adicionales. Para contar pares, evita duplicar contribuciones del mismo lado.}}
+
+\algodesc{graphs/parallel_dfs.cpp}{
+\field{Qué resuelve.}{Al borrar una arista de un \emph{bosque}, enumera la componente menor de las dos resultantes. Explora alternadamente desde ambos extremos y se detiene cuando una exploración termina; útil para actualizar etiquetas con el truco small-to-large.}
+\field{Orden/salida.}{\id{Tree t(n)}; agrega las aristas iniciales con \id{t.add_edge(u,v)}, conservando su índice base 0. \id{t.erase_edge(id)} elimina esa arista y devuelve los vértices de una componente de tamaño mínimo. En empate puede devolver cualquiera.}
+\field{Costo/cuidado.}{$O(\min(|A|,|B|))$ por borrado; sumar el trabajo de actualizar siempre la parte menor da $O(n\log n)$ sobre una secuencia de cortes. La arista debe existir y no haberse borrado antes; no usar en grafos con ciclos. No responde conectividad sola: debes mantener las etiquetas de componente si las necesitas.}}
+
+\algodesc{graphs/eulerian_path.cpp}{
+\field{Qué resuelve.}{Recorre cada \emph{arista} exactamente una vez (Hierholzer). La ruta puede repetir vértices. Es la herramienta detrás de ordenar piezas por extremos, ensamblar pares consecutivos o recorridos con todas las conexiones. No busca un camino que visite cada vértice una vez.}
+\field{Orden.}{El código activo es \emph{dirigido}. Limpia \id{g}; agrega cada arco con \id{add_edge(u,v)}; calcula grados y un origen válido; llama \id{get_path(s)}. Devuelve la lista de vértices y \emph{consume} todas las listas de aristas visitadas.}
+\field{Existencia dirigida.}{Circuito: todos tienen entrada=salida. Camino abierto: exactamente un vértice con salida$-$entrada=1 (inicio), uno con entrada$-$salida=1 (fin), y el resto balanceado. Además, todos los vértices con aristas deben quedar conectados al ignorar sentidos. Comprueba longitud $E+1$ después.}
+\field{No dirigido.}{Activa \emph{todas} las líneas comentadas de arista inversa. Requiere 0 o 2 grados impares y conectividad de los no aislados; empieza en un impar si lo hay.}
+\field{Costo/cuidado.}{$O(V+E)$ tiempo/espacio. La recursión puede alcanzar $E$ niveles: para millones de aristas conviene una pila explícita. Si $E=0$, el camino trivial contiene sólo el origen elegido.}}
+
+\algodesc{graphs/dynamic_connectivity.cpp}{
+\field{Qué resuelve.}{Conectividad \emph{offline} en un grafo con altas y bajas de aristas. Une sólo las aristas activas durante un intervalo de tiempo y deshace esas uniones al regresar de la recursión. No borra aristas de un DSU ordinario.}
+\field{Orden/salida.}{\id{DynCon dc(n)}; registra en orden \id{add(u,v)}, \id{remove(u,v)} y \id{query()}; al terminar llama \id{process()} una vez. La versión impresa \emph{imprime número de componentes} por consulta. Para preguntar por dos vértices, guarda los extremos en la consulta y usa \id{dsu.find(u)==dsu.find(v)} en la hoja.}
+\field{DSU rollback.}{\id{snap()} guarda una posición de historial y \id{rollback(snap)} restaura ese estado. \id{find} no comprime caminos para poder revertir.}
+\field{Costo/cuidado.}{Con $Q$ operaciones, $O(Q\log Q\log V)$ tiempo y $O(Q+V)$ memoria. La misma arista no puede tener dos altas simultáneas: usa contador y registra sólo transiciones 0 a 1 y 1 a 0 para multiaristas. Una baja exige un alta vigente.}}
+
+\algodesc{graphs/dominator_tree.cpp}{
+\field{Qué resuelve.}{Detecta vértices inevitables en rutas dirigidas desde una raíz. $u$ domina a $v$ si \emph{todo} camino de la raíz a $v$ pasa por $u$. El padre inmediato de cada vértice forma un árbol; sus ancestros son exactamente sus dominadores.}
+\field{Orden/salida.}{Fija \id{n}, llena \id{g} dirigido; llama \id{dominators(root)}. \id{idom[v]} es el dominador inmediato; $-1$ para la raíz y los inalcanzables. Para distinguirlos revisa \id{rnk[v]<n}. Construye las aristas del árbol desde \id{idom}: el vector interno \id{dom} es auxiliar, no la salida final.}
+\field{Costo/cuidado.}{Esta variante de Lengauer--Tarjan con enlaces simples tiene cota $O((V+E)\log V)$ y memoria $O(V+E)$. La DFS es recursiva. Sirve para puntos obligatorios y vulnerabilidad dirigida; los puentes no dirigidos no reemplazan dominadores. Si quieres dominadores hacia un destino, invierte aristas y úsalo como raíz.}}
+
+\algodesc{graphs/edmonds_blossom.cpp}{
+\field{Qué resuelve.}{Máximo número de pares disjuntos en un grafo \emph{general}, incluso con ciclos impares. Contrae temporalmente esos ciclos (blossoms) para encontrar caminos que aumenten el emparejamiento. Si el grafo es bipartito, usa Hopcroft--Karp por simplicidad y velocidad.}
+\field{Orden/salida.}{Fija \id{n}, limpia \id{g}, agrega cada arista en ambos sentidos y llama \id{edmonds()}. Devuelve el número de pares; \id{mt[u]} es su pareja o $-1$. Para listar parejas procesa sólo \id{u<mt[u]}.}
+\field{Costo/cuidado.}{La cota conservadora de esta implementación es $O(V^2E)$ y usa $O(V+E)$ espacio. Es para cardinalidad, \emph{sin pesos}. No sirve para matching general de costo mínimo. Evita autoaristas; no confundas tamaño del matching con número de vértices cubiertos, que es el doble.}}
+
+\algodesc{math/combinatorics_mod.cpp}{
+\field{Qué resuelve.}{Potencias rápidas y conteo de elecciones $\binom nk$ módulo un primo. Precalcula factoriales e inversos factoriales; después cada combinación son tres productos. Útil para caminos en rejillas, elegir posiciones o distribuir objetos.}
+\field{Orden/contrato.}{\id{modpow(a,e,p)} calcula $a^e\bmod p$, con $p>1$ y $e\ge0$, sin exigir primo. \id{Comb c(N,p)} \emph{sí} exige $p$ primo y $N<p$. \id{c.C(n,k)} funciona para $n\le N$ y da 0 si $k$ está fuera de $[0,n]$. \id{c.fac[n]} y \id{c.ifac[n]} son públicos.}
+\field{Ejemplo.}{\id{Comb c(1000000,1000000007);} \id{c.C(5,2)} da 10. Caminos con $r$ pasos verticales y $s$ horizontales: $\binom{r+s}{r}$ si no hay obstáculos.}
+\field{Costo/cuidado.}{$O(N+\log p)$ construcción, $O(N)$ memoria, $O(1)$ consulta; potencia $O(\log e)$. Si $n\ge p$, $n!$ es cero módulo $p$: necesita Lucas u otra técnica. Dividir por $b$ módulo primo usa $b^{p-2}$ sólo si $b\not\equiv0$.}}
+
+\algodesc{math/xor_basis.cpp}{
+\field{Qué resuelve.}{Todas las combinaciones XOR de un conjunto sin enumerar $2^n$ subconjuntos. Trata cada número como un vector de 64 bits y elimina su bit principal como en Gauss sobre $\mathbb F_2$.}
+\field{Orden/salida.}{\id{XorBasis b;} agrega con \id{b.add(x)}: true si aumenta el rango, false si ya se podía formar. \id{b.has(x)} indica si existe un subconjunto cuyo XOR es $x$; el vacío forma 0. \id{b.maximum(seed)} maximiza \id{seed ^ xor(subconjunto)}; sin argumento devuelve el máximo XOR de subconjunto.}
+\field{Ejemplo.}{Con $3=011_2$ y $5=101_2$ se forman $0,3,5,6$; el máximo es 6. Si añadiste $n$ números y el rango es $r$, hay $2^r$ XOR distintos y cada valor representable corresponde a $2^{n-r}$ subconjuntos de índices.}
+\field{Costo/cuidado.}{$O(64)$ por operación, $O(64)$ memoria. Usa enteros \emph{sin signo}, incluso para imprimir el bit 63. No devuelve directamente el k-ésimo XOR ordenado ni una representación por índices; eso necesita información extra.}}
+
+\algodesc{math/theorems.txt}{
+\field{Para reconocer reducciones.}{Tutte caracteriza matching perfecto en grafos generales, pero comprobar todos los subconjuntos no es un algoritmo eficiente: usa Blossom. Petersen garantiza matching perfecto en un grafo cúbico sin puentes. Dilworth convierte la partición mínima de un orden parcial en cadenas en el tamaño máximo de una antichain; mediante un grafo bipartito se obtiene $n-$matching.}
+\field{Pick.}{Para un polígono simple con vértices enteros, $A=I+B/2-1$: área, puntos interiores y de frontera. Una arista $(dx,dy)$ aporta $\gcd(|dx|,|dy|)$ a $B$ al sumar cíclicamente. Calcula el área doble con productos cruzados enteros.}
+\field{Cuidado.}{Es un recordatorio de hipótesis, no funciones ejecutables. Dilworth exige un orden parcial; en un DAG, cubrir por caminos con aristas originales y cubrir por cadenas de alcanzabilidad son reducciones relacionadas pero distintas. Pick no se aplica tal cual a polígonos con agujeros ni a coordenadas no enteras.}}
+
+\algodesc{math/floor_division.cpp}{
+\field{Qué resuelve.}{División entera hacia $-\infty$, distinta del truncamiento hacia cero de C++ cuando hay signos negativos. Es necesaria en conteos de múltiplos y límites de desigualdades.}
+\field{Uso/salida.}{\id{ll q,r; floordiv(x,y,q,r);} exige $y\ne0$ y devuelve $q=\lfloor x/y\rfloor$, $x=qy+r$. Si $y>0$, $0\le r<y$; si $y<0$, el resto tiene signo de $y$ o es cero.}
+\field{Ejemplo.}{Para $x=-7,y=3$, devuelve $q=-3,r=2$, mientras C++ da $-2,-1$.}
+\field{Costo/cuidado.}{$O(1)$. \id{LLONG_MIN/-1} no cabe y es inválido. Para techo puedes usar $\lceil x/y\rceil=-\lfloor -x/y\rfloor$ si negar $x$ es seguro, o trabajar en \id{__int128}.}}
+
+\algodesc{math/sieve.cpp}{
+\field{Qué resuelve.}{Prepara la primalidad y un divisor de cada entero pequeño para factorizar muchas consultas. Cada primo marca sus múltiplos desde su cuadrado. \id{cr[x]} no tiene por qué ser el menor factor primo; cualquier factor basta.}
+\field{Orden/contrato.}{Define \id{MAXN} mayor que todas las consultas; llama \id{init_sieve()} una vez. Para $2\le x<MAXN$, \id{cr[x]<0} significa primo. \id{fact(x)} devuelve \id{map<int,int>} con primo$\to$exponente y requiere $1\le x<MAXN$; \id{fact(1)} es vacío.}
+\field{Ejemplo.}{\id{fact(72)} devuelve $\{2:3,3:2\}$. Para una sola consulta grande, no reserves un arreglo de tamaño $x$: usa división por primos hasta $\sqrt x$ o Pollard.}
+\field{Costo/cuidado.}{$O(M\log\log M)$ para $M=MAXN$, $O(M)$ memoria; factorización $O(\log x)$ divisiones. 0 y 1 también quedan en $-1$, \emph{no} son primos. El nombre correcto es \id{init_sieve}, no el \id{init_cribe} que menciona el comentario heredado.}}
+
+\algodesc{math/divisors.cpp}{
+\field{Qué resuelve.}{Enumera todos los divisores positivos a partir de la factorización: elige independientemente un exponente $0\ldots e_i$ para cada primo $p_i$.}
+\field{Orden/salida.}{Obtén pares \id{{primo,exponente}} con criba o Pollard; convierte el mapa en \id{vector<pair<ll,int>> f}; llama \id{divisors(f)}. Devuelve los productos, incluyendo 1 y el número original, \emph{sin ordenar}. Para $n=1$, el vector de factores vacío produce $[1]$.}
+\field{Ejemplo.}{$12=2^2\cdot3$ genera $1,3,2,6,4,12$ con este orden de factores; ordénalos si buscas vecinos o haces búsqueda binaria.}
+\field{Costo/cuidado.}{Proporcional al árbol de enumeración, $O(k\tau(n))$ como cota conservadora, salida $O(\tau(n))$ y pila $O(k)$. Factores distintos, exponentes no negativos. El producto debe caber en \id{ll}; el código evita multiplicar una potencia adicional al terminar cada bucle.}}
+
+\algodesc{math/pollard_rho.cpp}{
+\field{Qué resuelve.}{Primalidad y factorización de enteros que no caben en una criba, por ejemplo de orden $10^{18}$. Miller--Rabin descarta compuestos mediante potencias modulares; Pollard busca una colisión módulo un factor y lo extrae con gcd, reintentando con otra función si falla.}
+\field{Contrato/orden.}{\id{rabin(n)} devuelve si $n$ es primo, con bases deterministas para el rango positivo de \id{ll}. \id{map<ll,int> f; fact(n,f);} exige $n\ge1$ y acumula primo$\to$exponente; limpia el mapa para otra factorización. No requiere criba ni \id{init_sv}. \id{rho(n)} es interna y sólo se llama con compuestos mayores que 1.}
+\field{Ejemplo.}{$1000000007\cdot1000000009$ produce ambos primos con exponente 1. Para negativos factoriza el valor absoluto aparte, cuidando \id{LLONG_MIN}.}
+\field{Costo/cuidado.}{Primalidad: siete pruebas de $O(\log n)$ productos modulares. Factorización aleatoria: costo esperado heurístico de orden $n^{1/4}$ para factores equilibrados, con reintentos; no es $O(\log^3 n)$ garantizado. Se usa \id{__int128} para productos exactos. No intenta factorizar enteros de miles de dígitos.}}
+
+\algodesc{math/simpson.cpp}{
+\field{Qué resuelve.}{Aproxima una integral definida $\int_a^b f(x)dx$ mediante parábolas ajustadas en los extremos y el punto medio de cada subintervalo. Útil para áreas/volúmenes o probabilidades sin una primitiva fácil.}
+\field{Uso/salida.}{Define \id{double f(double x)} y llama \id{integrate(f,a,b,n)}; $n>0$ es el número de paneles y por defecto vale 10000. Devuelve \id{double}; esta variante usa puntos medios, por lo que \emph{no exige} $n$ par.}
+\field{Ejemplo.}{Con $f(x)=x^2$ sobre $[0,1]$ devuelve aproximadamente $1/3$.}
+\field{Costo/cuidado.}{$O(n)$ evaluaciones, $O(1)$ memoria. Para una cuarta derivada acotada, el error disminuye como $O(n^{-4})$, con constante dependiente del intervalo y la función. No atravieses singularidades; separa intervalos donde cambie la fórmula y compara resultados al duplicar $n$. No es aritmética exacta.}}
+
+\algodesc{math/polynomial.cpp}{
+\field{Qué resuelve.}{Operaciones básicas con polinomios representados por coeficientes en orden creciente: \id{poly<> p={4,-1,2}} significa $4-x+2x^2$. Usa suma por coeficientes, producto cuadrático y evaluación de Horner.}
+\field{API/orden.}{Elige \id{tp=int} o \id{double} antes de copiar y define \id{EPS}: el archivo también compila rutinas reales aunque no las uses. \id{p(x)} evalúa; \id{p+q}, \id{p-q}, \id{p*q} operan. \id{ruffini(p,r)} devuelve cociente y resto al dividir por $x-r$. \id{roots(p)} enumera \emph{sólo raíces enteras} para coeficientes enteros; no devuelve todas las raíces reales.}
+\field{Variantes reales.}{Con \id{tp=double} y \id{EPS} definido, \id{polydiv(p,q)} da cociente/resto y exige divisor no nulo. \id{interpolate(x,y)} construye el polinomio por puntos distintos mediante Lagrange; valida la precisión. Para dos variables, \id{poly<poly<>>} y evaluación encadenada \id{p(x)(y)}.}
+\field{Costo/cuidado.}{Suma/evaluación $O(n)$, producto/división $O(nm)$, interpolación básica $O(n^2)$. Las raíces enteras se buscan entre candidatos de divisores y pueden ser lentas. \id{tp=int} se desborda pronto; cambia a \id{ll} o modular si corresponde. El polinomio idénticamente cero tiene infinitas raíces, no una lista finita.}}
+
+\algodesc{math/bairstow.cpp}{
+\field{Qué resuelve.}{Aproxima raíces reales de un polinomio real de grado alto extrayendo factores cuadráticos con iteraciones de Bairstow. Los factores cuadráticos con discriminante negativo no aportan raíces reales.}
+\field{Orden/salida.}{Copia el módulo de polinomios con \id{tp=double}, \id{polydiv} y \id{EPS}; define \id{ITER}, un máximo de iteraciones. \id{roots(p)} retorna un \id{vector<double>} de raíces reales aproximadas, incluidas multiplicidades cuando converja. \emph{No copies también} la función \id{roots} entera del otro módulo: tienen la misma firma.}
+\field{Costo/cuidado.}{Trabajo aproximado $O(\texttt{ITER}\,n^2)$ y memoria $O(n)$ por paso. No garantiza convergencia ni buena precisión para raíces múltiples/cercanas; el propio fragmento usa una tolerancia amplia en el discriminante. Comprueba $|p(r)|$ con escala de coeficientes y ordena si lo necesitas. Para una raíz en un intervalo con cambio de signo, bisección suele ser más fiable.}}
+
+\algodesc{math/fft.cpp}{
+\field{Qué resuelve.}{Convolución: $c_k=\sum_{i+j=k}a_i b_j$, equivalente a multiplicar polinomios. Transforma coeficientes a valores, multiplica punto a punto e invierte. Sirve para contar pares por suma, correlación y combinar distribuciones grandes.}
+\field{Orden/salida.}{Define \id{MAXN} potencia de dos al menos igual al tamaño interno redondeado de $|a|+|b|-1$. Usa \id{poly} (aquí \id{vector<ll>}), llama \id{multiply(a,b)} con vectores nombrados. Retorna $|a|+|b|-1$ coeficientes, o vacío si alguna entrada es vacía.}
+\field{Ejemplo.}{$[1,2]*[3,4]=[3,10,8]$. Para contar diferencias, invierte uno de los vectores y traduce los índices. Si hay valores negativos en el dominio, desplaza los índices.}
+\field{Costo/cuidado.}{$O(L\log L)$ tiempo y $O(\texttt{MAXN})$ reserva, con $L$ potencia de dos. Esta versión activa usa \id{double} y redondea a enteros; no garantiza exactitud para coeficientes grandes. Las líneas NTT comentadas requieren reemplazar operaciones y raíces de forma coherente. Para módulo conocido prefiere la NTT exacta siguiente.}}
+
+\algodesc{math/ntt.cpp}{
+\field{Qué resuelve.}{La misma convolución que FFT, pero exacta módulo un primo compatible, sin errores de redondeo. Incluye versiones para módulo $998244353$, un primo de 62 bits y un módulo arbitrario de 32 bits mediante dos convoluciones y CRT.}
+\field{Uso/salida.}{Con \id{poly=vector<ll>}, \id{conv_small(a,b)} retorna convolución módulo $998244353$; normaliza cada entrada a $[0,998244353)$. \id{conv_big} usa el primo declarado en su plantilla. \id{conv_sunzi(a,b,m)} exige $1\le m<2^{32}$ y entradas en $[0,m)$. Retorna vacío si alguna entrada es vacía.}
+\field{Límites.}{\id{LG=20} permite \emph{longitud de resultado} hasta $2^{20}$, no $2^{20}$ por entrada. Aumentarlo exige que cada primo usado admita la nueva potencia de dos. Los arreglos internos son estáticos: no los pongas en la pila ni ejecutes dos llamadas simultáneas sobre el mismo buffer.}
+\field{Costo/cuidado.}{$O(L\log L)$ por convolución, espacio reservado $O(2^{LG})$ por variante; Sunzi hace dos. Los residuos no recuperan un entero exacto sin una cota y suficiente producto de módulos. Cambiar sólo la constante del primo por $10^9+7$ no funciona.}}
+
+\algodesc{math/fft_operations.cpp}{
+\field{Qué resuelve.}{Álgebra rápida de polinomios y series formales: inverso, logaritmo, exponencial, división, evaluación en muchos puntos e interpolación. Usa duplicación de precisión: primero un término correcto, luego 2, 4, etc.}
+\field{Dependencias/orden.}{Usa \id{poly=vector<tf>}, un primo \id{MOD}, \id{addmod/submod/mulmod} de dos argumentos, \id{inv}, \id{fpow} y una convolución \id{multiply}. El adaptador anterior ya provee esas funciones con \id{MOD=998244353}. No pegues encima de \id{poly<T>} ni mezcles módulos.}
+\field{Entradas/salidas.}{Coeficientes normalizados, vectores no vacíos, sin ceros finales salvo $[0]$. \id{divide(a,b)} devuelve \id{{cociente,resto}} y exige $b\ne0$. \id{invert(p,d)} calcula los primeros $d$ términos de $1/p$, exige $p_0\ne0$. \id{log(p,d)} exige $p_0=1$; \id{exp(p,d)} exige $p_0=0$. En todas, $d\ge1$ y grados menores que \id{MOD} para que los denominadores sean invertibles.}
+\field{Más funciones.}{\id{evaluate(p,x)} da $p(x_i)$ en el orden de $x$. \id{interpolate(x,y)} exige igual tamaño y puntos distintos módulo \id{MOD}. \id{chirpTransform(p,g,k)} evalúa en $1,g,\ldots,g^{k-1}$, con $g\ne0$. \id{evaluate_all_points} produce \id{MOD} respuestas: sólo viable con módulo pequeño.}
+\field{Costo/cuidado.}{Con NTT: operaciones de serie $O(d\log d)$; evaluación/interpolación de tamaños comparables $O(n\log^2n)$; árbol de productos $O(n\log n)$ memoria. La división corta usa algoritmo cuadrático. No confundir $\exp(p)$ formal con elevar numéricamente sus coeficientes.}}
+
+\algodesc{math/fht.cpp}{
+\field{Qué resuelve.}{Convolución sobre \emph{bits}: $c_k=\sum_{i\mathbin{\mathrm{xor}}j=k}a_i b_j$ en lugar de sumar índices. Para distribuciones de máscaras, pares por XOR y DP bit a bit. El archivo también muestra mariposas alternativas para AND y OR.}
+\field{Uso/salida.}{Define \id{MAXN} potencia de dos que cubra todas las máscaras. \id{multiply(a,b)} rellena con ceros al siguiente tamaño potencia de dos y devuelve ese tamaño. Las entradas son frecuencias/coeficientes, no una lista de los números observados: incrementa primero \id{a[x]}.}
+\field{Ejemplo.}{Una frecuencia en máscara 1 y otra en 3 contribuyen al índice $1\mathbin{\mathrm{xor}}3=2$.}
+\field{Costo/cuidado.}{$O(U\log U)$ tiempo y $O(\texttt{MAXN})$ espacio. La versión activa usa \id{ll} sin módulo y la inversa divide exactamente por 2. Si trabajas módulo impar, reemplaza esa división por el inverso de 2 y normaliza restas. Para AND/OR reemplaza \emph{ambas} mariposas, directa e inversa. No mezcles las variantes con SOS DP.}}
+
+\algodesc{math/karatsuba.cpp}{
+\field{Qué resuelve.}{Multiplicación de polinomios enteros sin coma flotante: divide en mitades y hace tres productos recursivos en vez de cuatro, recuperando el cruzado con sumas/restas.}
+\field{Contrato/uso.}{\id{multiply(a,b)} recibe vectores por valor y devuelve $|a|+|b|-1$ coeficientes, o vacío si alguna entrada es vacía. \id{tp=ll}; no hay transporte de dígitos automático. Para multiplicar enteros grandes representados en una base, debes hacer los acarreos después.}
+\field{Costo/cuidado.}{$O(n^{\log_2 3})\approx O(n^{1.585})$ tiempo, espacio recursivo lineal salvo constantes de asignación. No confundir el nombre interno \id{karatsura} con la función pública. Aunque no haya error de redondeo, los productos \emph{intermedios} pueden desbordar \id{ll}; revisa cotas o cambia \id{tp}. El macro \id{add} puede colisionar con otras funciones.}}
+
+\algodesc{math/diophantine.cpp}{
+\field{Qué resuelve.}{Ecuaciones lineales enteras $ax+by=r$. Euclides extendido encuentra $ax+by=\gcd(a,b)$; si el gcd divide $r$, escalar da una solución y las demás están separadas por un vector fijo.}
+\field{Contrato/orden.}{Con $a,b$ no ambos cero, calcula $d=\gcd(a,b)$ y comprueba $r\bmod d=0$. Entonces \id{diophantine(a,b,r)} devuelve \id{{x0,y0}} y \id{{dx,dy}}: toda solución es $(x_0,y_0)+t(dx,dy)$ para $t\in\mathbb Z$. \id{extendedEuclid(a,b)} por separado devuelve coeficientes de Bézout. Usa \id{std::gcd} de C++17.}
+\field{Ejemplo.}{$6x+9y=3$ admite $(-1,1)$ y desplazamiento $(-3,2)$ según el signo elegido por el código. Para imponer $x,y\ge0$, traduce cada desigualdad a un intervalo de $t$ usando división piso/techo.}
+\field{Costo/cuidado.}{$O(\log\max(|a|,|b|))$. Si ambos coeficientes son cero, resuelve aparte: cualquier par si $r=0$, ninguno en otro caso. Los productos de coeficientes por $r/d$ pueden exceder \id{ll}.}}
+
+\algodesc{math/inversemod.cpp}{
+\field{Qué resuelve.}{La división modular para módulo posiblemente compuesto: encuentra $x$ con $ax\equiv1\pmod m$. Existe exactamente cuando $\gcd(a,m)=1$.}
+\field{Orden/salida.}{Copia \id{extendedEuclid} y usa \id{std::gcd}; llama \id{inv(a,m)} con $m>0$ y gcd 1. Devuelve el representante en $[0,m)$.}
+\field{Ejemplo.}{\id{inv(3,10)=7}, porque $3\cdot7\equiv1\pmod{10}$. $2$ no tiene inverso módulo 10 y la aserción lo rechaza.}
+\field{Costo/cuidado.}{$O(\log m)$. No apliques Fermat $a^{m-2}$ a un módulo compuesto. Para resolver $ax\equiv b\pmod m$ sin gcd 1, usa \id{sol} de CRT: puede haber varias soluciones separadas por $m/\gcd(a,m)$.}}
+
+\algodesc{math/crt.cpp}{
+\field{Qué resuelve.}{Combina congruencias, incluso con módulos que no son coprimos y coeficientes: $a_i x\equiv b_i\pmod {m_i}$. Primero reduce cada ecuación por su gcd y luego combina dos progresiones aritméticas comprobando compatibilidad.}
+\field{Orden/salida.}{Copia Euclides extendido e \id{inv}. Crea \id{vector<tuple<ll,ll,ll>> cond} con \id{{a,b,m}} y $m>0$; llama \id{crt(cond)}. Retorna \id{{x,M}}: todas las soluciones son $x+tM$, con $0\le x<M$, o \id{{-1,-1}} si no hay solución. Lista vacía devuelve $0\bmod1$.}
+\field{Ejemplo.}{$x\equiv2\pmod3$ y $x\equiv3\pmod5$ dan $8\bmod15$. $x\equiv0\pmod2$ y $x\equiv1\pmod4$ son incompatibles.}
+\field{Costo/cuidado.}{$O(k\log M)$ operaciones aritméticas para $k$ condiciones. El período combinado debe caber en \id{ll}; los productos modulares y la normalización usan \id{__int128}. El macro \id{mod(a,m)} puede colisionar con una variable llamada \id{mod}.}}
+
+\algodesc{math/mobius.cpp}{
+\field{Qué resuelve.}{Precalcula $\mu(n)$ para invertir sumas sobre divisores o contar números coprimos por inclusión-exclusión. $\mu(1)=1$; es 0 si hay un cuadrado primo que divide a $n$, y $(-1)^k$ si $n$ tiene $k$ primos distintos sin repetición.}
+\field{Orden/salida.}{Define \id{MAXN}, conserva la inicialización \id{mu={0,1}} y llama \id{mobius()} \emph{una vez}. La identidad $\sum_{d\mid n}\mu(d)=[n=1]$ permite calcular los valores restando las contribuciones conocidas a sus múltiplos.}
+\field{Ejemplo.}{Pares positivos $a\le A,b\le B$ con gcd 1: $\sum_{d=1}^{\min(A,B)}\mu(d)\lfloor A/d\rfloor\lfloor B/d\rfloor$. Usa \id{ll} en el producto.}
+\field{Costo/cuidado.}{$O(M\log M)$ como cota superior y $O(M)$ espacio. Repetir la función sobre el mismo arreglo sin reiniciarlo corrompe los valores. La fórmula necesita incluir $d=1$.}}
+
+\algodesc{math/matrix_fast_pow.cpp}{
+\field{Qué resuelve.}{Aplica una transición lineal $k$ veces mediante elevar su matriz a $k$ con cuadrados sucesivos. Útil para recurrencias de orden pequeño, DP con pocos estados y contar caminatas de longitud exacta.}
+\field{Orden.}{Define el global \id{mod} positivo y \id{Matrix T} cuadrada. \id{be(T,k)} con $k\ge0$ devuelve $T^k\bmod mod$; \id{ones(n)} devuelve la \emph{identidad}, no una matriz llena de unos. Con vector columna, usa $T[destino][origen]$ para la transición.}
+\field{Ejemplo.}{$T=\left(\begin{smallmatrix}1&1\\1&0\end{smallmatrix}\right)$ y estado $(F_1,F_0)^T$ permiten obtener $(F_{k+1},F_k)^T$. Para $k=0$ la transición deja el estado igual.}
+\field{Costo/cuidado.}{$O(d^3\log k)$ tiempo y $O(d^2)$ memoria. El producto acumula en \id{ll}; si $mod$ es grande promueve cada producto a \id{__int128}. Normaliza coeficientes negativos. Esta multiplicación es suma/producto modular, no la variante min-plus de caminos mínimos.}}
+
+\algodesc{math/matrix_reduce.cpp}{
+\field{Qué resuelve.}{Eliminación Gauss--Jordan con pivote de mayor valor absoluto. Lleva una matriz real a forma reducida; para una matriz cuadrada, devuelve además su determinante teniendo en cuenta intercambios y escalado de filas.}
+\field{Orden/salida.}{Define \id{EPS}, construye una matriz no vacía y llama \id{reduce(a)}. \emph{Modifica} \id{a}; guarda una copia si la necesitas. En una matriz rectangular el retorno no es un determinante ni el rango.}
+\field{Sistemas.}{Para $Ax=b$ agrega $b$ como última columna. Una fila con coeficientes cero y término independiente no cero significa inconsistencia. Sin inconsistencia, el número de pivotes en columnas de variables da el rango: rango menor al número de variables implica infinitas soluciones. Reconstruye libres/pivotes explícitamente; la función no retorna una solución etiquetada.}
+\field{Costo/cuidado.}{$O(nm\min(n,m))$ tiempo, almacenamiento de la matriz $O(nm)$. La tolerancia depende de la escala; no prueba igualdad entera exacta. Para aritmética modular se necesitan inversos de pivotes, no división real; para XOR usa Gauss en bits.}}
+
+\algodesc{math/simplex.cpp}{
+\field{Qué resuelve.}{Programación lineal continua: maximiza $c^Tx$ sujeto a $Ax\le b$ y $x\ge0$. Se mueve entre soluciones básicas mediante pivotes que mejoran el objetivo. Sirve cuando las cantidades pueden ser fraccionarias.}
+\field{Contrato/orden.}{Define \id{EPS}; entrega \id{A} de $n\times m$, \id{b} de tamaño $n$ y \id{c} de tamaño $m$. \id{simplex(A,b,c)} retorna \id{{óptimo,vector_x}}. Para minimizar, niega el objetivo y el valor devuelto. Igualdad: agrega ambas desigualdades; variable libre: diferencia de dos no negativas.}
+\field{Costo/cuidado.}{Peor caso exponencial; cada pivote cuesta $O(nm)$. Esta implementación usa \id{assert} para inviabilidad/no acotación y no un estado de retorno; úsala con problemas garantizados factibles y acotados y prueba degeneración. El redondeo no convierte una solución continua en óptimo entero: si las decisiones son indivisibles, necesitas otra estructura del problema.}}
+
+\algodesc{math/discrete_log.cpp}{
+\field{Qué resuelve.}{Busca el menor exponente $x\ge0$ tal que $a^x\equiv b\pmod m$. Generaliza baby-step giant-step eliminando primero factores gcd cuando $a$ y $m$ no son coprimos.}
+\field{Orden/salida.}{Copia \id{modpow} de combinatoria modular y llama \id{discrete_log(a,b,m)} con $m>0$. Retorna exponente o $-1$ si no existe; módulo 1 retorna 0. No exige módulo primo.}
+\field{Ejemplo.}{\id{discrete_log(2,3,5)=3}, porque $2^3\equiv3\pmod5$. Para $b=1$ la respuesta siempre es 0.}
+\field{Costo/cuidado.}{$O(\sqrt m\log m)$ tiempo por usar \id{map}, $O(\sqrt m)$ memoria. No es viable con $m\approx10^{18}$ aunque quepa en \id{ll}; el límite práctico depende de la tabla. Los productos modulares están promovidos a \id{__int128}. La reducción de factores es imprescindible si gcd no es 1.}}
+
+\algodesc{math/berlekamp_massey.cpp}{
+\field{Qué resuelve.}{Deduce una recurrencia lineal mínima \emph{compatible con una secuencia observada} módulo un primo. Útil para acelerar una DP que genera muchos términos pero tiene una representación lineal de orden pequeño.}
+\field{Orden/salida.}{Define primo \id{MOD} y \id{fast_pow(a,e)} modular. \id{BM(x)} retorna coeficientes $c$ tales que $x_i=c_0x_{i-1}+c_1x_{i-2}+\cdots$ para los términos dados. Para una recurrencia conocida de orden $L$, proporciona al menos $2L$ términos correctos; reserva términos adicionales para validar.}
+\field{Ejemplo.}{Los términos de Fibonacci $[0,1,1,2,3,5,8,13]$ permiten obtener $[1,1]$. Luego usa \id{LinearRec} con los primeros $L$ términos para consultar posiciones enormes. Una secuencia totalmente cero puede dar coeficientes vacíos: responde 0 sin construir una recurrencia de orden 0.}
+\field{Costo/cuidado.}{$O(T^2)$ tiempo y $O(T)$ memoria para $T$ muestras. Adivinar una recurrencia a partir de pocos ejemplos no prueba que continúe indefinidamente: justifica el límite de orden o deriva el modelo lineal. No usar módulo compuesto con las inversas de Fermat.}}
+
+\algodesc{math/linear_rec.cpp}{
+\field{Qué resuelve.}{Consulta un término lejano de una recurrencia lineal conocida sin construir una matriz cúbica. Reduce potencias de $x$ módulo el polinomio característico y combina los términos iniciales.}
+\field{Orden/contrato.}{Define \id{MOD} y \id{LOG=63} para posiciones \id{ll} positivas. Prepara vectores \id{terms} y \id{trans} de igual tamaño $L>0$; \id{trans[0]} multiplica el término anterior. Construye \id{LinearRec r(terms,trans)} y consulta \id{r.calc(k)}. \textbf{Aquí $k$ empieza en 1}: \id{calc(1)=terms[0]}; para una secuencia indexada desde 0 usa \id{calc(indice+1)}.}
+\field{Ejemplo.}{\id{terms={1,1}}, \id{trans={2,1}} representan $1,1,3,7,17,\ldots$; \id{calc(3)=3}.}
+\field{Costo/cuidado.}{$O(L^2\,LOG)$ preprocesamiento, $O(L^2\log k)$ consulta y $O(L\,LOG)$ memoria. Aumentar sólo \id{LOG} no bastaba con la firma antigua \id{calc(int)}; esta versión recibe \id{ll}. Mantén coeficientes normalizados y productos dentro del tipo.}}
+
+\algodesc{math/tonelli_shanks.cpp}{
+\field{Qué resuelve.}{Raíz cuadrada modular: hallar $r$ con $r^2\equiv n\pmod p$ para $p$ primo. El criterio de Euler detecta si existe; Tonelli--Shanks reduce la parte potencia de dos de $p-1$.}
+\field{Orden/salida.}{Copia \id{modpow} de combinatoria; llama \id{tonelli_shanks(n,p)}. Devuelve alguna raíz en $[0,p)$ o $-1$ si no existe. Maneja $n\equiv0$ y $p=2$. La otra raíz es $(p-r)\bmod p$. \id{legendre(n,p)} retorna 0, 1 o $p-1$.}
+\field{Ejemplo.}{Para $n=10,p=13$, una raíz es 6 y la otra 7.}
+\field{Costo/cuidado.}{Trabajo típico $O(\log^2p)$ productos modulares más la búsqueda aleatoria de un no residuo; memoria $O(1)$. \emph{No} funciona con módulos compuestos sin factorizar y combinar por CRT. Comprobar $r^2$ requiere \id{__int128} si $p$ es grande.}}
+
+\algodesc{math/prime_count.cpp}{
+\field{Qué resuelve.}{Calcula $\pi(n)$, cantidad de primos $\le n$, sin una criba de longitud $n$. Agrupa cocientes iguales y elimina compuestos por primos pequeños. Es una herramienta de conteo; no enumera los primos.}
+\field{Uso/salida.}{\id{prime_count(n)} recibe \id{ll} y retorna \id{ll}; para $n\le1$ retorna 0. No necesita inicialización ni arreglos globales. Ejemplo: \id{prime_count(10)=4}, por $2,3,5,7$.}
+\field{Costo/cuidado.}{Cota indicada por la implementación: $O(n^{2/3})$ tiempo y $O(\sqrt n)$ memoria. Que $n$ quepa en 64 bits no significa que sea viable; $\sqrt{10^{18}}$ ya exige vectores enormes. Para muchas consultas pequeñas, una criba más prefijos suele ser mejor.}}
+
+\algodesc{math/points_under_line.cpp}{
+\field{Qué resuelve.}{Cuenta puntos enteros bajo $ax+by\le c$ sin recorrer todas las filas, usando una reducción semejante a Euclides. Útil en conteos de parejas, sumas de pisos y desigualdades con presupuestos muy grandes.}
+\field{Contrato/salida.}{Con enteros $a,b>0$, \id{f(a,b,c)} cuenta pares $x,y>0$. \id{g(a,b,c,X,Y)} restringe además $1\le x\le X$, $1\le y\le Y$, con $X,Y>0$. La inclusión-exclusión traslada los puntos que exceden cada límite.}
+\field{Ejemplo.}{\id{f(1,1,4)=6}: $(1,1),(1,2),(1,3),(2,1),(2,2),(3,1)$. Si el problema permite $x,y\ge0$, sustituye $x=x'+1,y=y'+1$: usa $c'=c+a+b$.}
+\field{Costo/cuidado.}{Profundidad logarítmica en los coeficientes positivos; $g$ hace cuatro llamadas. Productos como $aX$, $XY$ y el número de puntos deben caber en \id{ll}; promueve a \id{__int128} si hace falta. No admite coeficientes cero/negativos sin tratar esos casos aparte.}}
+
+\algodesc{geometry/point.cpp}{
+\field{Qué ofrece.}{Puntos/vectores en 2D: suma, diferencia, escalado, norma, producto escalar y cruzado. El producto escalar $a*b$ mide proyección; el cruzado $a\%b=a_xb_y-a_yb_x$ mide área orientada y giro. Son la base de todas las rutinas geométricas siguientes.}
+\field{Uso/contrato.}{Define \id{EPS} según escala (por ejemplo $10^{-9}$ para coordenadas moderadas). \id{pt(x,y)}; \id{norm2()} evita raíz; \id{norm()} es longitud; \id{unit()} exige vector no nulo. \id{q.left(a,b)} es true si $q$ está estrictamente a la izquierda de la recta \emph{dirigida} $a\to b$. \id{rot(angulo)} usa radianes.}
+\field{Ejemplo.}{Con $a=(1,0),b=(0,1)$, $a*b=0$, $a\%b=1$; \id{a.rot(ccw90)} produce $(0,1)$. La orientación de $(p,q,r)$ se calcula con $(q-p)\%(r-p)$.}
+\field{Costo/cuidado.}{$O(1)$ por operación. Para predicados con coordenadas enteras conviene cruzado exacto en \id{__int128}; no conviertas tarde un producto ya desbordado. El orden para \id{sort} debe ser estricto/transitivo; una comparación con EPS puede violarlo. Igualdad aproximada y orientación exacta son decisiones distintas.}}
+
+\algodesc{geometry/line.cpp}{
+\field{Qué ofrece.}{Rectas infinitas dadas por un punto \id{p} y dirección \id{pq=q-p}; también comprueba pertenencia al segmento cerrado entre $p$ y $q$. Proyectar es bajar la perpendicular; reflejar es continuar esa perpendicular la misma distancia al otro lado.}
+\field{Orden/API.}{Copia \id{pt}, define \id{EPS} y \id{DINF=numeric_limits<double>::infinity()}. \id{ln l(a,b)} exige $a\ne b$. \id{l.has(q)} prueba recta; \id{l.seghas(q)} segmento; \id{l/m} prueba paralelismo; \id{l^m} retorna intersección o \id{(DINF,DINF)} si son paralelas. \id{proj}, \id{ref}, \id{dist} operan sobre puntos.}
+\field{Más salidas.}{\id{side(q)} devuelve $-1,0,1$ según lado. \id{bisector(a,b)} es la mediatriz del segmento; \id{bisector(l,m)} devuelve una bisectriz angular si las rectas se cruzan y las direcciones no se cancelan.}
+\field{Costo/cuidado.}{$O(1)$. \id{l^m} cruza \emph{rectas}, no restringe a segmentos: valida con \id{seghas} en ambos y trata segmentos colineales aparte. Rectas coincidentes tienen infinitas intersecciones; el centinela no distingue ese caso del paralelismo distinto.}}
+
+\algodesc{geometry/circle.cpp}{
+\field{Qué ofrece.}{Círculos por centro/radio o por tres puntos; pertenencia, intersecciones, tangencias y áreas. Permite traducir restricciones de distancia en figuras.}
+\field{Dependencias/uso.}{Copia \id{pt}, \id{ln} y \id{Cmp} para \id{intercircles}; define \id{EPS}. \id{circle(o,r)} con $r\ge0$; el constructor de tres puntos exige que no sean colineales. \id{c.has(p)} incluye frontera. \id{c1^c2} y \id{c^l} retornan 0, 1 o 2 puntos; una recta es infinita, filtra con \id{seghas} si era un segmento.}
+\field{Salidas especiales.}{\id{c.in(other)} pregunta si $c$ está completamente dentro de \id{other}. \id{c.tang(p)} da puntos de tangencia desde un punto exterior o de frontera. \id{intertriangle(a,b)} da área de intersección con el triángulo $oab$. \id{intercircles(cs)} exige radios positivos; su entrada \id{[k]} es el área cubierta por \emph{al menos} $k$ círculos, $k\ge1$; área de exactamente $k$: resta la de $k+1$.}
+\field{Costo/cuidado.}{Operaciones por par $O(1)$; cobertura $O(n^2\log n)$ y $O(n)$ auxiliar. Círculos concéntricos/coincidentes necesitan clasificación previa si importa distinguir cero de infinitas intersecciones. Evita radios negativos y vectores nulos en ángulos; ajusta tolerancias al cuadrado cuando compares distancias cuadradas.}}
+
+\algodesc{geometry/polygon.cpp}{
+\field{Qué ofrece.}{Un polígono por sus vértices cíclicos \emph{sin repetir el primero}: área, centroide, pertenencia, cortes y operaciones convexas. Un polígono simple no cruza sus propias aristas. Convexo significa que todo segmento entre dos puntos suyos queda dentro.}
+\field{Dependencias/orden.}{Copia \id{pt}, \id{ln}, \id{circle} y \id{chull} antes del bloque completo, pues la parte final usa hulls. \id{pol p(vertices)}. \id{area()} devuelve área \emph{absoluta}; \id{centroid()} exige área no cero; \id{has(q)} vale para simples e incluye frontera.}
+\field{Sólo convexos.}{Para \id{haslog(q)}, usa al menos tres vértices, elimina colineales y llama antes \id{normalize()} (ordena el ciclo en el sentido requerido). \id{cut(l)} conserva el lado izquierdo cerrado de $l$ y devuelve otro polígono. \id{farthest(v)} maximiza $p_i\cdot v$, no la distancia a $v$. \id{callipers()} devuelve \emph{distancia cuadrada} del par más lejano; requiere CCW sin puntos colineales. \id{intercircle(c)} devuelve área común con un círculo.}
+\field{Costo/cuidado.}{Área/centroide/pertenencia/corte/intersección circular $O(n)$; pertenencia y extremo convexos $O(\log n)$; diámetro $O(n)$. El bloque global \id{add(q)}/\id{query(v)} es otro hull dinámico, no método de \id{pol}: inicializa \id{w.clear()}, agrega puntos y consulta máximo escalar; devuelve \id{double}. No lo confundas con el CHT de rectas.}}
+
+\algodesc{geometry/plane.cpp}{
+\field{Qué ofrece.}{Planos en 3D con normal unitaria: distancia, proyección, intersección con recta y con otro plano. El constructor usa tres puntos no colineales y normaliza $(b-a)\times(c-a)$.}
+\field{Integración.}{\textbf{La plantilla \id{pt} impresa es 2D}: agrega coordenada \id{z}, constructor 3D, operaciones aritméticas y escalar con tres componentes, activa el producto cruzado \id{operator^} y las versiones 3D de \id{ln}. El \texttt{operator\%} 2D no lo sustituye.}
+\field{Uso/salida.}{\id{plane p(a,b,c)}; \id{p.has(q)}, \id{dist(q)}, \id{proj(q)}. \id{p.inter(line,outPoint)} y \id{p.inter(otherPlane,outLine)} retornan bool y escriben la salida sólo si hay una intersección única del tipo pedido. false incluye paralelismo o coincidencia.}
+\field{Costo/cuidado.}{$O(1)$. No uses la salida cuando el bool es false. Un ángulo de normales no siempre es el menor ángulo entre planos no orientados; para éste usa el valor absoluto del producto escalar. No construyas planos con tres puntos alineados.}}
+
+\algodesc{geometry/radial_order.cpp}{
+\field{Qué resuelve.}{Ordena puntos por dirección alrededor de un centro, sin calcular \id{atan2} en cada comparación. Primero compara cuadrantes y después el signo del producto cruzado. Útil en barridos angulares, geometría de visibilidad y caras de un grafo plano.}
+\field{Orden.}{Copia \id{pt} con \id{operator-(pt) const}; \id{sort(ALL(v),Cmp(center))}. El orden empieza por el eje $x$ positivo y avanza CCW. Si un punto coincide con el centro, aparece en la clase especial $-1$.}
+\field{Costo/cuidado.}{$O(n\log n)$ ordenación, comparación $O(1)$. Puntos sobre el mismo rayo quedan equivalentes, no ordenados por distancia: si el problema lo exige agrega un desempate por norma cuadrada. Para enteros, usa un tipo ancho en el cruzado. No añadas EPS al comparador sin preservar un orden estricto.}}
+
+\algodesc{geometry/convex_hull.cpp}{
+\field{Qué resuelve.}{La frontera convexa mínima que contiene todos los puntos, como una liga alrededor de clavos. Ordena por coordenadas y construye una cadena inferior y otra superior quitando giros incompatibles. Reduce problemas de diámetro, soporte y separación a los puntos extremos.}
+\field{Uso/salida.}{Copia \id{pt}, define \id{EPS}, llama \id{chull(points)}. Devuelve vértices en sentido CCW sin repetir el primero; soporta entrada vacía/un punto y elimina duplicados mediante la igualdad de \id{pt}. La versión conserva puntos colineales de la frontera.}
+\field{Preparación para otras rutinas.}{Para diámetro, suma de Minkowski o pertenencia logarítmica normalmente necesitas quitar colineales: cambia la condición de giro a eliminar también cruzados nulos, de forma coherente con \id{left}. No elimines todos los extremos de una entrada totalmente colineal.}
+\field{Costo/cuidado.}{$O(n\log n)$ tiempo y $O(n)$ memoria. Con \id{double} y EPS, duplicados cercanos pueden fusionarse; si las coordenadas son enteras, prefiere predicados exactos. El hull no conserva el orden ni los índices originales salvo que los lleves como parte del punto.}}
+
+\algodesc{geometry/planar_graph_dual.cpp}{
+\field{Qué resuelve.}{Convierte caras de una \emph{incrustación plana} en vértices: dos caras son vecinas si comparten una arista. Ordena vecinos alrededor de cada vértice y sigue cada semiarista para recorrer el borde de una cara.}
+\field{Orden/contrato.}{Copia \id{pt} y \id{Cmp}; fija \id{n}, llena \id{g} no dirigido y coordenadas \id{p[u]}. Exige un grafo conectado con aristas, sin cruces interiores ni segmentos degenerados; no basta que el grafo abstracto sea planar. Llama \id{get_dual(p)}; reordena las adyacencias originales.}
+\field{Salida.}{\id{nd} caras incluyendo la exterior; \id{gd[f]} vecinos sin duplicados; \id{nodes[f]} recorrido del borde y \id{es[{u,v}]} la cara asignada a esa semiarista. Un puente bordea la misma cara por ambos lados y no agrega una arista entre caras distintas. La cara exterior se identifica por orientación/área firmada del recorrido, no por un ID fijo.}
+\field{Costo/cuidado.}{$O((V+E)\log(V+E))$ por ordenaciones y mapas; memoria $O(V+E)$. Reserva \id{MAXN} también para el número de caras. No admite aristas paralelas entre el mismo par con este mapa de claves.}}
+
+\algodesc{geometry/halfplanes.cpp}{
+\field{Qué resuelve.}{Interseca restricciones lineales 2D, cada una representada por el lado \emph{izquierdo} de una recta dirigida. Ordena por ángulo y elimina restricciones incompatibles de una deque; retorna el polígono factible.}
+\field{Orden/uso.}{Copia \id{pt} y \id{ln}; construye \id{vector<halfplane> h} con pares de puntos distintos \id{halfplane(a,b)}. \id{intersect(h)} retorna vértices de la región recortada, o vacío si no hay un polígono con área. Para $Ax+By\le C$ elige una dirección $(-B,A)$ sobre la recta: su lado izquierdo satisface la desigualdad.}
+\field{Ejemplo.}{Para $x\ge0$, orienta de $(0,1)$ a $(0,0)$; el lado izquierdo queda al este. Comprueba siempre un punto que sabes que debe ser aceptado.}
+\field{Costo/cuidado.}{$O(n\log n)$ tiempo y $O(n)$ memoria. El archivo añade una caja \emph{finita} \id{BOUND=1e12}: el resultado está recortado a ella, no distingue una región no acotada. Ajusta la caja a la escala real; no uses infinito de coma flotante en coordenadas. Un segmento o punto factible puede devolverse vacío.}}
+
+\algodesc{geometry/kdtree.cpp}{
+\field{Qué resuelve.}{Vecino más cercano a un punto entre muchos puntos fijos en 2D. Divide el conjunto espacialmente y guarda cajas envolventes; evita explorar una caja si su distancia mínima posible ya supera la mejor respuesta.}
+\field{Orden/salida.}{Copia \id{pt}; construye \id{KDTree t(points)} con lista no vacía. \id{t.nearest(q)} devuelve \id{{distancia_cuadrada,punto}}. Esta versión usa \id{double} para cajas/distancias y es compatible con \id{pt} 2D. Si $q$ está en el conjunto, puede retornar el propio $q$.}
+\field{Costo/cuidado.}{La construcción de este código ordena en cada nivel: $O(n\log^2 n)$; memoria $O(n)$. Consulta rápida en datos favorables, pero peor caso $O(n)$: no hay garantía $O(\log n)$ en cualquier distribución. Para excluir el punto consultado necesitas un ID o una condición de hoja con distancia infinita; dos puntos con las mismas coordenadas pueden ser objetos distintos. Los nodos se asignan dinámicamente: libera o reutiliza entre muchos casos.}}
+
+\algodesc{geometry/minkowski_sum.cpp}{
+\field{Qué resuelve.}{La suma $P+Q=\{p+q:p\in P,q\in Q\}$ de dos polígonos convexos. Mezcla sus aristas en orden angular. Modela la región ocupada al trasladar una figura; para colisiones con traslaciones suele aparecer $P+(-Q)$.}
+\field{Orden/salida.}{Copia \id{pt} y \id{chull}; entrega vértices cíclicos sin repetir el primero, convexos y sin colineales redundantes. \id{minkowski_sum(p,q)} recibe copias, normaliza el orden y retorna el contorno CCW. Si alguno tiene menos de tres vértices usa todos los pares de sumas y su hull.}
+\field{Costo/cuidado.}{$O(n+m)$ para ambos polígonos no degenerados; el caso de un punto/segmento usa hull y cuesta $O((n+m)\log(n+m))$. Entradas vacías dan vacío gracias al hull vacío. No es la unión de los polígonos ni la suma de sus áreas. Para consultar distancia entre figuras, estudia el origen respecto de $P+(-Q)$ y sus aristas.}}
+
+\algodesc{geometry/delaunay.cpp}{
+\field{Qué resuelve.}{Triangulación de Delaunay de puntos del plano: cada triángulo tiene un círculo circunscrito sin puntos estrictamente interiores. Genera un grafo disperso con aristas útiles para vecindad geométrica; un MST euclidiano puede encontrarse entre sus aristas.}
+\field{Orden/salida.}{Copia \id{pt}, define \id{EPS}, \id{INF}; llama \id{delaunay(points)} con puntos distintos. Retorna adyacencias con \emph{índices de entrada}, en orden CCW alrededor de cada vértice. Si todos son colineales, devuelve la cadena de vecinos ordenados. Con 0 o 1 punto devuelve listas vacías.}
+\field{Costo/cuidado.}{$O(n\log n)$ esperado por la estructura de división y mezcla, almacenamiento $O(n)$. El predicado de círculo usa magnitudes de orden coordenada$^4$: \id{long double} o \id{__int128} pueden ser necesarios, según si los datos son reales o enteros. Duplicados provocan aserción. Puntos cocirculares admiten varias triangulaciones; no supongas que una diagonal concreta aparecerá. La implementación usa asignaciones de quad-edges y necesita gestión de memoria para muchas llamadas.}}
+
+\algodesc{strings/minimal_rotation.cpp}{
+\field{Qué resuelve.}{Elige la menor rotación lexicográfica de una cadena en tiempo lineal, descartando candidatos que pierden tras un primer carácter distinto. Útil para dar una representación canónica a ciclos o collares cuando sólo se permiten rotaciones.}
+\field{Uso/salida.}{\id{int p=minimal_rotation(s)}; la cadena elegida es \id{s.substr(p)+s.substr(0,p)}. Retorna 0 si está vacía. Si hay varios comienzos equivalentes, cualquiera de los mínimos representa la misma cadena.}
+\field{Ejemplo.}{$s=\texttt{baca}$ devuelve 3 y produce \texttt{abac}.}
+\field{Costo/cuidado.}{$O(n)$ tiempo y $O(1)$ memoria auxiliar. Rotar no incluye reflejar: si también se permite recorrer al revés, aplica la rutina a \id{s} y a su reversa y compara las dos cadenas resultantes.}}
+
+\algodesc{strings/kmp.cpp}{
+\field{Qué resuelve.}{Encuentra todas las apariciones de un patrón sin retroceder en el texto. Cuando una comparación falla, aprovecha un prefijo del patrón que ya coincide con el sufijo leído (un borde), en vez de empezar de cero.}
+\field{API/orden.}{\id{kmppre(t)} devuelve un vector de tamaño $|t|+1$: \id{b[0]=-1} y \id{b[i]} es longitud del mayor borde \emph{propio} de \id{t[0..i)}. \id{kmp(s,t)} calcula ese vector y \emph{imprime} cada posición inicial base 0 de $t$ en $s$. Para guardar posiciones reemplaza el \id{printf} por insertar en un vector.}
+\field{Ejemplo.}{Texto \texttt{aaaa}, patrón \texttt{aa}: apariciones 0, 1 y 2; conserva solapamientos. El período candidato de una cadena no vacía es $p=n-b[n]$; es repetición completa si $n\bmod p=0$.}
+\field{Costo/cuidado.}{$O(|s|+|t|)$ tiempo, $O(|t|)$ memoria. La búsqueda exige patrón no vacío. \id{b} no es el arreglo de prefijos base 0 usual de otros libros: aquí el índice representa \emph{longitud de prefijo}.}}
+
+\algodesc{strings/z_function.cpp}{
+\field{Qué resuelve.}{Para cada posición mide cuánto coincide el sufijo que empieza ahí con el comienzo de la cadena. Mantiene el intervalo ya comparado más a la derecha para no volver a revisar todos sus caracteres.}
+\field{Uso/salida.}{\id{auto z=z_function(s)} devuelve tamaño $n$, con \id{z[i]=LCP(s,s.substr(i))} y \id{z[0]=0} por convención de este código. No modifica \id{s}. Para buscar un patrón $p$, calcula Z de \id{p+separador+texto} y acepta posiciones con $z_i\ge|p|$.}
+\field{Ejemplo.}{Para \texttt{aaaa}, Z es $[0,3,2,1]$. Un prefijo de longitud $k$ también es sufijo si $z_{n-k}\ge k$.}
+\field{Costo/cuidado.}{$O(n)$ tiempo/memoria. El separador debe estar ausente de patrón y texto. Traduce el índice restando $|p|+1$ al volver al texto. Z compara contra \emph{un prefijo fijo}; para comparar dos subcadenas arbitrarias usa hashing o suffix array + LCP/RMQ.}}
+
+\algodesc{strings/manacher.cpp}{
+\field{Qué resuelve.}{Todos los radios de palíndromos de una cadena en tiempo lineal. Un palíndromo se lee igual en ambos sentidos; al avanzar reutiliza el radio reflejado respecto al palíndromo que llega más lejos.}
+\field{Orden/salida.}{Define \id{MAXN>=s.size()}, llama \id{manacher(s)}. \id{d1[i]} es el radio impar \emph{incluyendo el centro}: longitud $2d1_i-1$ y rango $[i-d1_i+1,i+d1_i)$. \id{d2[i]} es radio par con centro \emph{antes} de $i$: longitud $2d2_i$ y rango $[i-d2_i,i+d2_i)$.}
+\field{Recetas.}{Mayor palíndromo: máximo de esas longitudes. Cantidad de subcadenas palíndromas contando apariciones: $\sum_i(d1_i+d2_i)$, en \id{ll}. Para comprobar $[l,r)$ no vacío usa centro $(l+r-1)/2$ y \id{d1>=((r-l+1)/2)} si impar; centro $(l+r)/2$ y \id{d2>=(r-l)/2} si par.}
+\field{Costo/cuidado.}{$O(n)$ tiempo/memoria. Radios y longitudes son distintos; \id{d1[i]=1} ya cuenta el carácter aislado. No cuenta palíndromos \emph{distintos}: para eso usa eertree.}}
+
+\algodesc{strings/aho_corasick.cpp}{
+\field{Qué resuelve.}{Busca muchos patrones en el mismo texto mediante un trie con enlaces de fallo. El estado actual representa el prefijo de patrón más largo que coincide con el sufijo leído. Cuando falla un carácter salta a un sufijo útil, como KMP sobre todos los patrones a la vez.}
+\field{Orden obligatorio.}{\id{aho_init()}; agrega \emph{todos} los patrones no vacíos con \id{add_string(p,id)}; sólo después usa enlaces/transiciones. Empieza \id{v=0} y por cada carácter \id{v=go(v,c)}. \id{t[v].leaf} contiene IDs que terminan exactamente en ese nodo; los patrones sufijo terminan también en nodos alcanzados por \id{get_link(v)}. Los enlaces se calculan y guardan automáticamente; no existe un \id{build()} obligatorio.}
+\field{Reportar/contar.}{Para reportar, recorre enlaces hasta la raíz y procesa sus \id{leaf}; esto puede ser lento. Para conteos, suma visitas a cada estado al leer y propágalas hacia los enlaces en orden de profundidad decreciente del \emph{árbol de fallos}; no basta invertir IDs de inserción. Guarda el nodo terminal de cada patrón.}
+\field{Costo/cuidado.}{Con alfabeto fijo, transiciones memorizadas usan $O(M\sigma)$ espacio en el peor caso, con factores $\log\sigma$ por \id{map}; $M$ es suma de longitudes. Recorrer toda la cadena de enlaces por carácter puede costar $O(T\,L_{max})$: usa enlaces de salida o acumulación para evitarlo. No agregues patrones después de cachear \id{go/link}; reconstruye desde cero.}}
+
+\algodesc{strings/suffix_automaton.cpp}{
+\field{Qué resuelve.}{Representa todas las \emph{subcadenas contiguas} de un texto en $O(n)$ estados. Una ruta desde el estado 0 escribe una subcadena; los enlaces agrupan subcadenas que comparten posiciones finales. Útil para existencia, cantidad de subcadenas distintas y comparación entre cadenas.}
+\field{Orden.}{Reserva \id{st} para al menos $2n$ estados; llama \id{sa_init()} por texto (esta versión limpia mapas usados), luego \id{sa_extend(c)} por cada carácter en orden. Para comprobar un patrón comienza en 0 y sigue \id{next.find(c)}; si falta una transición no aparece. No uses \id{next[c]} al sólo consultar, pues insertaría claves.}
+\field{Interpretación/salidas.}{\id{st[v].len} es la mayor longitud del estado; \id{link} apunta al grupo de sufijos. Subcadenas distintas: $\sum_{v\ne0}(len_v-len_{link_v})$. Para contar apariciones agrega contador 1 al estado nuevo por carácter y 0 a clones, y propaga por \id{link} en orden de \id{len} decreciente; no está implementado en este fragmento.}
+\field{Costo/cuidado.}{$O(n\log\sigma)$ esperado/práctico con mapas y $O(n)$ estados/transiciones; consulta $O(|p|\log\sigma)$. La reserva actual es 100005 estados, no caracteres. Una subsecuencia con saltos no es una subcadena: este autómata sólo representa contiguas.}}
+
+\algodesc{strings/palindromic_tree.cpp}{
+\field{Qué resuelve.}{Representa cada palíndromo \emph{distinto} como un nodo, agregando caracteres online. Hay dos raíces ficticias de longitudes $-1$ y 0; una transición con letra $c$ transforma el palíndromo $p$ en $cpc$. \id{last} mantiene el mayor sufijo palíndromo actual.}
+\field{Orden/salida.}{\id{palindromic_tree t;} y, para $i=0\ldots n-1$, \id{t.add(i,s)} sobre la cadena sin centinela. Sólo acepta letras \id{'a'..'z'} con \id{SIGMA=26}. Después hay \id{SZ(t.ns)-2} palíndromos distintos; \id{t.ns[v].len} es su longitud y \id{link} el mayor sufijo palíndromo propio.}
+\field{Contar apariciones.}{Al agregar, \id{cnt} cuenta veces que fue \emph{el sufijo más largo}. Al terminar, para \id{v} desde último nodo hasta 2, suma \id{ns[v].cnt} a \id{ns[ns[v].link].cnt}; entonces cada nodo real tiene su número total de apariciones. Haz esta propagación una sola vez y después de todas las inserciones.}
+\field{Ejemplo/costo.}{\texttt{aaa} tiene tres nodos reales: \texttt{a}, \texttt{aa}, \texttt{aaa}, con conteos 3,2,1. Tiempo $O(n)$ con alfabeto fijo, espacio $O(n\sigma)$. Las raíces no son palíndromos que debas contar. Crea un objeto nuevo para otro texto.}}
+
+\algodesc{strings/suffix_array_slow.cpp}{
+\field{Qué resuelve.}{Ordena lexicográficamente todos los sufijos y devuelve sus posiciones iniciales. Duplica la longitud comparada usando parejas de rangos: dos bloques de longitud $k$ permiten ordenar bloques de $2k$ sin comparar cadenas completas.}
+\field{Uso/salida.}{Define \id{MAXN>=s.size()}, llama \id{constructSA(s)}. \id{sa[i]} es la posición donde empieza el i-ésimo sufijo, base 0. No añade centinela; acepta texto vacío o de un carácter.}
+\field{Ejemplo.}{Para \texttt{banana}, SA es $[5,3,1,0,4,2]$, correspondiente a \texttt{a}, \texttt{ana}, \texttt{anana}, \texttt{banana}, \texttt{na}, \texttt{nana}. Luego llama \id{computeLCP(s,sa)} para similitud entre sufijos vecinos.}
+\field{Costo/cuidado.}{$O(n\log^2 n)$ tiempo por ordenación comparativa en cada fase y $O(n)$ espacio. Es más corto que la variante de counting sort. Ambas se llaman \id{constructSA}: copia sólo una. Para encontrar patrones usa dos búsquedas binarias de sus límites entre sufijos, comparando caracteres sin construir cada \id{substr}.}}
+
+\algodesc{strings/suffix_array.cpp}{
+\field{Qué resuelve.}{El mismo orden lexicográfico de sufijos que la variante corta, pero ordenando las parejas de rangos con counting sort para quitar un factor logarítmico. Útil cuando hay muchas consultas sobre un texto fijo.}
+\field{Orden/salida.}{\id{auto sa=constructSA(s)}; el texto usa caracteres de byte no nulo para mantener el centinela de rango 0. \id{sa} contiene las posiciones iniciales ordenadas, incluyendo el último carácter como sufijo, sin agregar carácter al texto. Después puedes construir LCP y una tabla RMQ.}
+\field{Usos.}{Subcadenas distintas: $n(n+1)/2-\sum lcp_i$. Mayor repetición: máximo LCP de vecinos. Para varias cadenas concatena con separadores distintos ausentes del alfabeto y conserva el dueño de cada posición; los separadores delimitan comparaciones válidas.}
+\field{Costo/cuidado.}{$O(n\log n)$ tiempo y $O(n)$ memoria. No uses las dos versiones de \id{constructSA} simultáneamente. El orden de bytes sigue sus valores numéricos, no reglas de idioma. Un SA por sí solo no da LCP en $O(1)$ ni permite actualizaciones del texto.}}
+
+\algodesc{strings/lcp.cpp}{
+\field{Qué resuelve.}{Longitud del prefijo común de sufijos \emph{consecutivos} en un suffix array, en tiempo lineal (Kasai). Al mover el inicio un carácter, la coincidencia anterior puede reducirse a lo sumo en uno.}
+\field{Orden/salida.}{Construye \id{sa} con alguna de las dos versiones anteriores sobre el mismo \id{s}; llama \id{computeLCP(s,sa)}. Retorna tamaño $n$, \id{lcp[0]=0} y \id{lcp[i]=LCP(sa[i-1],sa[i])}. No usa centinela y comprueba ambos límites del texto.}
+\field{Consulta entre cualesquiera.}{Construye inversa \id{rank[sa[i]]=i}. Si $a=rank[u]<b=rank[v]$, $LCP(u,v)=\min(lcp[a+1..b])$: en rango semiabierto de RMQ es $[a+1,b+1)$. Si $u=v$, el resultado es $n-u$, no una consulta vacía.}
+\field{Costo/cuidado.}{$O(n)$ construcción y espacio. Con sparse table: $O(n\log n)$ preparación total y $O(1)$ consulta. Un SA de otro texto o con un centinela no presente en \id{s} invalida los índices.}}
+
+\algodesc{strings/suffix_tree.cpp}{
+\field{Qué resuelve.}{Árbol comprimido de sufijos construido online por Ukkonen. Cada arista representa un \emph{intervalo del texto}, evitando copiar sus caracteres; una ruta describe una subcadena. Es potente para consultas sobre posiciones y ocurrencias, pero más delicado que suffix array o automaton.}
+\field{Orden/contrato.}{Define \id{MAXN} para nodos (al menos $2(n+1)$) y \id{INF} mayor que el texto. Crea \id{SuffixTree t;} en memoria global/dinámica por su tamaño; llama \id{t.add(c)} por carácter. Para hacer explícitos todos los sufijos agrega al final un carácter único ausente del texto, como \id{'$'} si no aparece.}
+\field{Interpretar la salida.}{Raíz 0; \id{to[v][c]} es el hijo; para un hijo $u$, la etiqueta entrante empieza en \id{fpos[u]} y tiene longitud efectiva $\min(len[u],n-fpos[u])$. Para buscar un patrón recorre transiciones \emph{y compara el interior de cada arista}; no hay una función \id{find} incluida. Las hojas son sufijos sólo tras el terminador.}
+\field{Costo/cuidado.}{$O(n\log\sigma)$ con mapas, $O(n)$ nodos. Crea un objeto limpio para otro texto. Consultar con \id{operator[]} puede insertar transiciones falsas; usa \id{find}. No cuentes el terminador como parte de una respuesta original.}}
+
+\algodesc{strings/hashing.cpp}{
+\field{Qué resuelve.}{Compara subcadenas en tiempo constante mediante una huella polinómica con dos módulos. Los prefijos ponderados permiten restar un intervalo y normalizar su posición con potencias inversas. Útil para igualdad y LCP por búsqueda binaria cuando aceptas una probabilidad de colisión.}
+\field{Uso/salida.}{\id{Hash h(s)} construye prefijos; \id{h.get(l,r)} retorna un \id{ll} que empaqueta ambos residuos de $[l,r)$. Dos subcadenas de \emph{igual longitud}, incluso de textos distintos, son candidatas a iguales si las huellas coinciden y se usan los mismos parámetros.}
+\field{Ejemplo.}{En \texttt{abcabc}, \id{get(0,3)==get(3,6)}. Para palíndromos, compara contra la cadena invertida: $[l,r)$ se mapea a $[n-r,n-l)$.}
+\field{Costo/cuidado.}{$O(n)$ construcción/memoria, $O(1)$ consulta. No es una prueba determinista: posibles colisiones, sobre todo ante entradas adversarias con parámetros fijos. Para garantía usa SA+LCP o comparación explícita cuando corresponda. No actualiza el texto; para cambios usa un árbol de hashes. Usa alfabeto de bytes positivos o normaliza símbolos.}}
+
+\algodesc{strings/hashing_128.cpp}{
+\field{Qué resuelve.}{Huella polinómica de un solo módulo grande, usando productos en \id{__int128} para que no desborden. Es una alternativa al doble hash, con la misma interfaz.}
+\field{Uso.}{\id{Hash h(s)}; \id{h.get(l,r)} da el hash normalizado de $[l,r)$. La longitud se compara por separado. \id{P}, \id{MOD} y \id{PI} deben satisfacer $P\cdot PI\equiv1\pmod{MOD}$, comprobado por una aserción.}
+\field{Costo/cuidado.}{$O(n)$ tiempo/memoria de construcción, $O(1)$ consulta. Mayor módulo reduce colisiones accidentales pero no las elimina; no es un hash criptográfico ni una garantía de igualdad. Requiere GNU/Clang con soporte de \id{__int128}. Se llama también \id{Hash}: copia sólo una variante.}}
+
+\algodesc{flow/matching.cpp}{
+\field{Qué resuelve.}{Máximo número de parejas sin compartir extremos entre dos conjuntos (Kuhn). Para agregar una pareja intenta un camino alternante que reasigne parejas anteriores. Sirve para asignar personas a tareas compatibles o casillas blancas a negras de un tablero.}
+\field{Orden/salida.}{Define \id{MAXN}/\id{MAXM}, fija \id{n} vértices izquierdos y \id{m} derechos, ambos numerados desde 0 por separado. Llena \id{g[u]} \emph{sólo de izquierda a derecha}; \id{max_matching()} devuelve pares \id{{izquierdo,derecho}} y deja \id{mat[v]} como pareja izquierda de cada derecho, o $-1$.}
+\field{Costo/cuidado.}{$O(nE)$ tiempo y $O(n+m+E)$ espacio. No agregues aristas inversas a estas adyacencias. Es cardinalidad sin costos y exige bipartición; para grafos generales usa Blossom y para costo de asignación Hungarian. Poner el lado menor a la izquierda suele ahorrar trabajo.}}
+
+\algodesc{flow/hopcroft_karp.cpp}{
+\field{Qué resuelve.}{Matching máximo bipartito más rápido para entradas grandes. Una BFS construye capas de caminos aumentantes y la DFS busca varios caminos compatibles antes de reconstruirlas.}
+\field{Orden/salida.}{Fija \id{n}, \id{m}, limpia \id{g} y agrega aristas de índices izquierdos $[0,n)$ hacia derechos $[0,m)$. \id{mm()} devuelve número de parejas. \id{mt[v]} es la pareja izquierda de un derecho; \id{mt2[u]} la pareja derecha de un izquierdo; $-1$ indica libre. El algoritmo reinicia ambos arreglos.}
+\field{Reducción útil.}{En un DAG, una cobertura mínima de vértices por caminos dirigidos disjuntos tiene tamaño $n-$matching, creando una copia izquierda y derecha de cada vértice y usando sus aristas. La cobertura permite caminos de un vértice.}
+\field{Costo/cuidado.}{Cota usual $O(E\sqrt{n+m})$, memoria $O(n+m+E)$. La reconstrucción usa los arreglos de parejas, no el orden de DFS. El mínimo vertex cover bipartito se obtiene por caminos alternantes desde izquierdos libres: izquierdos \emph{no alcanzados} más derechos alcanzados. No aplica ese teorema a grafos generales.}}
+
+\algodesc{flow/hungarian.cpp}{
+\field{Qué resuelve.}{Asignación bipartita de \emph{costo mínimo}: cada fila recibe una columna distinta. Ajusta potenciales de filas/columnas y aumenta el matching por aristas de costo reducido cero. A diferencia de matching cardinal, aquí importan los costos.}
+\field{Orden/salida.}{\id{Hungarian h(N,M)} crea una matriz cuadrada de tamaño $d=\max(N,M)$, rellenando filas/columnas ficticias con 0. Para cada pareja permitida llama \id{h.set(i,j,costo)}; las parejas reales no definidas valen \id{INF}. \id{h.assign()} devuelve costo mínimo; \id{h.L[i]} es columna de fila $i$, \id{h.R[j]} es fila de columna $j$.}
+\field{Contrato.}{Si todas las $N$ filas necesitan pareja real, exige $N\le M$ y verifica que cada \id{L[i]<M} y su costo sea permitido. Las ficticias no son tareas reales. Para maximizar beneficios, \emph{niega costos} y el resultado; decide explícitamente qué significa un emparejamiento ausente, en vez de asignarle cero por accidente.}
+\field{Costo/cuidado.}{$O(d^3)$ tiempo, $O(d^2)$ memoria. El código usa \id{long double} y tolerancia; para costos enteros adapta \id{td}, \id{INF} y \id{zero}. No retorna un estado explícito de inviabilidad: inspecciona las aristas elegidas contra el centinela.}}
+
+\algodesc{flow/dinic.cpp}{
+\field{Qué resuelve.}{Máximo flujo enviado de una fuente a un destino sin exceder capacidades. Cada arista almacena también una inversa residual para poder deshacer decisiones previas; BFS crea niveles y DFS manda flujo bloqueante. Modela rutas simultáneas, cortes mínimos y asignaciones con cupos.}
+\field{Orden.}{Define \id{INF} \id{ll} mayor que el flujo que enviarás en una DFS. \id{Dinic d(V)}; \id{d.add_edge(u,v,cap)} por cada arco, $cap\ge0$; \id{d.max_flow(s,t)} con $s\ne t$ devuelve el flujo \emph{adicional} y deja \id{edge.f} con flujos. La inversa residual se crea automáticamente; una arista físicamente bidireccional requiere agregar ambos arcos.}
+\field{Corte y reconstrucción.}{Al terminar, \id{d.dist[u]>=0} identifica el lado alcanzable de la fuente en el residual; los otros están del lado del destino. Arcos originales que cruzan de alcanzable a no alcanzable forman un corte mínimo. En aristas originales, \id{f>0} permite reconstruir una solución, cuidando circulaciones si las hay.}
+\field{Costo/cuidado.}{Cota general $O(V^2E)$ tiempo y $O(V+E)$ espacio; suele ser menor con capacidades unitarias. Para capacidades en vértices separa \id{vin->vout}. Una segunda llamada conserva el flujo anterior; crea otro objeto si cambió la instancia o la fuente. No es flujo de costo mínimo.}}
+
+\algodesc{flow/min_cost_max_flow.cpp}{
+\field{Qué resuelve.}{Entre los flujos de máximo valor (o de un valor solicitado), minimiza el costo total $\sum f_ec_e$. Aumenta por caminos residuales más baratos; usa Bellman--Ford para potenciales iniciales con costos negativos y luego Dijkstra con costos reducidos no negativos.}
+\field{Orden/salida.}{\id{MCF f(V)}; \id{f.add_edge(u,v,cap,cost)} con capacidad no negativa; \id{f.get_flow(s,t,limit)} retorna \id{{flujo_adicional,costo_adicional}}. Sin \id{limit} intenta mandar todo hasta el centinela \id{INFFLOW}. Para exactamente $K$ unidades llama con $K$ y comprueba \id{flow==K}; si es menor no hay capacidad suficiente. \id{edge.f} reconstruye la asignación.}
+\field{Contrato.}{No debe haber un ciclo residual negativo alcanzable desde $s$; esta versión lanza \id{invalid_argument} si lo detecta. Los costos negativos de aristas sí están admitidos bajo esa condición. Las inversas de costo negado se agregan solas. Para maximizar ganancias usa costos negativos y niega el costo resultante.}
+\field{Costo/cuidado.}{$O(VE+A E\log V)$, con $A$ aumentos; para capacidades enteras $A\le F$ si cada aumento manda al menos una unidad. Memoria $O(V+E)$. No sumes potenciales de vértices inalcanzables. Capacidades, distancias, potenciales y $flow\cdot cost$ deben caber en \id{ll} y mantenerse lejos de \id{INFCOST}.}}
+
+\algodesc{other/binary_search.cpp}{
+\field{Qué resuelve.}{Localiza el primer valor que satisface una propiedad \emph{monótona}: una vez verdadera, sigue siendo verdadera al aumentar la respuesta. Convierte ``minimizar el máximo'' en probar si una cota es factible, por ejemplo capacidad mínima para repartir cargas.}
+\field{Uso/contrato.}{\id{first_true(lo,hi,ok)} busca en $[lo,hi)$ y retorna \id{hi} si no hay true. Nunca evalúa \id{ok(hi)}. \id{ok(x)} es una función/lambda booleana; tanto los límites como su diferencia deben caber en \id{ll}. Para incluir una cota $U$, usa \id{hi=U+1} sólo si no desborda.}
+\field{Ejemplo.}{Primer $x$ con $x^2\ge30$: busca $[0,31)$ con producto en \id{__int128}; retorna 6. Para último true, transforma a primer false y resta uno, verificando el caso donde todos fallan.}
+\field{Costo/cuidado.}{$O(\log(hi-lo))$ llamadas al predicado. Antes de usar, prueba que el predicado sea monótono y que su chequeo no haga supuestos ocultos (como pesos positivos en un greedy). Bisección real usa un número fijo de iteraciones/tolerancia; esta función es entera.}}
+
+\algodesc{other/coordinate_compression.cpp}{
+\field{Qué resuelve.}{Cambia coordenadas grandes/dispersas por rangos pequeños conservando el orden. Permite usar Fenwick, segment tree o frecuencias con valores como $-10^{12}$ o $10^9$ sin reservar todo ese dominio.}
+\field{Uso/salida.}{\id{Compression<ll> c(values)} ordena y elimina duplicados. \id{c.rank(x)} es el número de coordenadas distintas estrictamente menores que $x$; si $x$ está presente, es su índice. \id{c.value(i)} recupera el valor original y \id{SZ(c.values)} el tamaño del dominio.}
+\field{Ejemplo.}{$[-5,100,100,7]$ se mapea a $[0,2,2,1]$, con diccionario $[-5,7,100]$. Para contar $x<L$ usa \id{rank(L)}; para $x\le R$ usa \id{upper_bound} sobre el diccionario.}
+\field{Costo/cuidado.}{$O(n\log n)$ construir, $O(\log n)$ convertir, $O(n)$ memoria. Conserva orden e igualdad, \emph{no distancias}: la separación entre 7 y 100 no pasa a ser 1 en un cálculo geométrico de longitud. Incluye de antemano todas las coordenadas que necesites si la estructura será estática.}}
+
+\algodesc{other/prefix_sums_2d.cpp}{
+\field{Qué resuelve.}{Suma de cualquier rectángulo de una matriz fija en tiempo constante mediante inclusión-exclusión de cuatro prefijos. Un prefijo con borde superior/izquierdo extra evita casos especiales en coordenada 0.}
+\field{Orden/salida.}{\id{Prefix2D p(a)} para una matriz rectangular de \id{ll}; \id{p.query(x0,x1,y0,y1)} suma $[x_0,x_1)\times[y_0,y_1)$. Por tanto una consulta del enunciado inclusiva $[r_1,r_2]\times[c_1,c_2]$ pasa a final $r_2+1,c_2+1$ después de ajustar la base.}
+\field{Ejemplo.}{Matriz $\left(\begin{smallmatrix}1&2\\3&4\end{smallmatrix}\right)$: \id{query(0,2,1,2)} da 6. En 1D, $pref[0]=0$, $pref[i+1]=pref[i]+a_i$, suma de $[l,r)=pref[r]-pref[l]$.}
+\field{Costo/cuidado.}{$O(nm)$ construcción/memoria, $O(1)$ consulta. Modificar la matriz original no actualiza prefijos; para cambios usa Fenwick 2D o ST 2D. La suma total debe caber en \id{ll}.}}
+
+\algodesc{other/lis.cpp}{
+\field{Qué resuelve.}{Encuentra una subsecuencia estrictamente creciente de longitud máxima: puede saltarse posiciones, pero no reordenarlas. Conserva la menor cola posible para cada longitud y guarda predecesores para reconstruir índices reales.}
+\field{Uso/salida.}{\id{auto ids=lis(a)} devuelve índices base 0, crecientes en el arreglo y con valores estrictamente crecientes. \id{SZ(ids)} es la longitud; los valores son \id{a[ids[i]]}. Para entrada vacía devuelve vacío.}
+\field{Ejemplo.}{$[3,1,2,2,4]$ tiene longitud 3, por ejemplo índices $[1,3,4]$ y valores $[1,2,4]$. Para subsecuencia \emph{no decreciente}, reemplaza \id{lower_bound} por \id{upper_bound}.}
+\field{Costo/cuidado.}{$O(n\log n)$ tiempo, $O(n)$ memoria. El vector de colas por sí solo \emph{no} es necesariamente una subsecuencia; por eso se reconstruye por \id{prev}. No calcula cuántas LIS existen: para contarlas necesitas DP por valores con pares longitud/conteo.}}
+
+\algodesc{other/knapsack.cpp}{
+\field{Qué resuelve.}{Elige objetos con peso y valor para maximizar valor sin exceder una capacidad. La DP guarda la mejor solución para cada presupuesto; cada objeto agrega una opción a partir de un presupuesto menor.}
+\field{Uso/contrato.}{\id{knapsack(weight,value,W,false)} permite cada objeto a lo sumo una vez (0/1); con true permite cantidad ilimitada. Vectores de igual tamaño, pesos estrictamente positivos y $W\ge0$. Devuelve el valor máximo, pudiendo no elegir nada; capacidad \emph{a lo sumo}, no exactamente.}
+\field{Orden del bucle.}{0/1 recorre capacidades \emph{de mayor a menor} para no reutilizar el mismo objeto. Ilimitada recorre de menor a mayor. Ejemplo: peso 2, valor 3, $W=4$ da 3 en 0/1 y 6 ilimitada.}
+\field{Costo/cuidado.}{$O(nW)$ tiempo, $O(W)$ memoria; depende de $W$ numérico, no sólo del número de objetos. Para peso exacto inicializa todo a $-\infty$ salvo $dp[0]=0$ y no transiciones desde imposible. Si los pesos son enormes y la suma de valores pequeña, invierte la DP: mínimo peso por valor. Para factibilidad 0/1 y capacidad moderada, bitset con \id{bits |= bits << w} acelera.}}
+
+\algodesc{other/subset_dp.cpp}{
+\field{Qué resuelve SOS.}{Obtiene para cada máscara la suma de datos de \emph{todos sus submáscaras} sin enumerarlas individualmente. \id{sos(f,n)} modifica un vector de tamaño $2^n$; tras la llamada $f[S]=\sum_{T\subseteq S}f_{original}[T]$. \id{sos(f,n,true)} revierte la suma (inversión de Möbius sobre subconjuntos). Costo $O(n2^n)$ tiempo, $O(1)$ extra.}
+\field{Qué resuelve Held--Karp.}{Camino de costo mínimo que visita todos los vértices exactamente una vez y vuelve al 0 (TSP). El estado es $(S,u)$: visitados $S$, último $u$; agrega un vértice fuera de $S$. \id{held_karp(c)} devuelve el costo mínimo del ciclo, o \id{INF_TSP} si imposible. Con 0/1 vértices devuelve 0.}
+\field{Contrato.}{Matriz dirigida o simétrica; costos reales no negativos, ausentes \id{INF_TSP}, y toda suma válida menor que el centinela. Índices $[0,n)$ con $n$ pequeño, típicamente hasta 20 según memoria. Reconstrucción: guarda el último predecesor por estado.}
+\field{Costo/cuidado.}{TSP $O(n^2 2^n)$ tiempo y $O(n2^n)$ \emph{enteros de 64 bits}: $n=20$ ya ronda 160 MiB. SOS no es una convolución XOR; para pares que se combinan por XOR usa FHT. El bucle de todas las submáscaras de todas las máscaras cuesta $O(3^n)$, no $O(2^n)$.}}
+
+\algodesc{other/meet_in_middle.cpp}{
+\field{Qué resuelve.}{Reduce la enumeración de subconjuntos cuando $n\approx40$ hace inviable $2^n$. Divide objetos en mitades, enumera sus sumas por separado y busca qué sumas de la segunda mitad son compatibles con cada suma de la primera.}
+\field{Uso/salida.}{\id{count_subsets_leq(a,B)} cuenta subconjuntos de \emph{índices} con suma $\le B$, incluyendo el vacío si cumple. Permite números negativos. \id{subset_sums(a,l,r)} devuelve todas las sumas de $[l,r)$ con multiplicidades. Para igualdad a $B$, reemplaza \id{upper_bound} por la longitud de \id{equal_range(B-v)}.}
+\field{Ejemplo.}{$[1,2,3]$, $B=3$: cinco subconjuntos, $\varnothing$, $\{1\}$, $\{2\}$, $\{3\}$ y $\{1,2\}$. Dos objetos del mismo valor siguen siendo elecciones distintas.}
+\field{Costo/cuidado.}{$O(n2^{n/2})$ tiempo incluyendo ordenación y $O(2^{n/2})$ memoria. Sumas, $B-v$ y respuesta deben caber en \id{ll}. No es un DP polinómico: $n=60$ ya genera alrededor de mil millones de sumas por lado.}}
+
+\algodesc{other/digit_dp.cpp}{
+\field{Qué resuelve.}{Cuenta enteros de un rango enorme según reglas de sus dígitos, sin recorrerlos. La instancia cuenta representaciones decimales sin dos dígitos adyacentes iguales; el estado recuerda posición, dígito anterior, si empezó el número y si sigue ajustado al límite.}
+\field{Uso/salida.}{\id{count_no_adjacent(N)} cuenta $0\le x\le N$ y devuelve 0 para $N<0$. Para $[L,R]$, con $L\ge0$, resta \id{count_no_adjacent(R)-count_no_adjacent(L-1)}. El 0 está incluido y los ceros a la izquierda no forman parte de la representación.}
+\field{Ejemplo.}{En $[0,20]$ hay 20 números válidos: sólo falla 11. Para otra condición, cambia el estado/transición (resto módulo $m$, cantidad de apariciones, estado de autómata), preservando \id{started} y \id{tight}.}
+\field{Costo/cuidado.}{Con esta regla: $O(D\cdot11\cdot2\cdot10)$ tiempo y $O(D\cdot11\cdot2)$ memoria, $D\le19$. Sólo se memoizan estados no ajustados al límite. El valor de \id{last=10} significa ``sin dígito previo'', no un dígito decimal. Para contar otras propiedades revisa explícitamente si 0 es válido.}}
+
+\algodesc{other/monotonic_queue.cpp}{
+\field{Qué resuelve la deque.}{Mínimo de cada ventana fija en un arreglo: descarta candidatos que salen por la izquierda y los dominados por un valor nuevo menor. \id{sliding_min(a,k)} retorna $n-k+1$ mínimos con $1\le k\le n$; cada índice entra/sale una vez. Para máximo invierte la comparación.}
+\field{Qué resuelve la pila.}{Mayor rectángulo bajo un histograma de barras de ancho 1 y alturas no negativas. \id{histogram_area(h)} devuelve área en \id{ll}. Al encontrar una barra menor se cierran los rectángulos cuya altura mínima ya no puede extenderse.}
+\field{Ejemplos.}{$[4,2,3,1]$ con ventana 2 produce $[2,2,1]$. Histograma $[2,1,2]$ tiene área máxima 3. Para mayor rectángulo de unos en una matriz, acumula altura por columna fila a fila y llama al histograma por cada fila.}
+\field{Costo/cuidado.}{Ambas $O(n)$ tiempo y $O(n)$ espacio de salida/pila; la deque activa ocupa $O(k)$. No confundas máximo de cada ventana con máximo de \emph{todo} el arreglo; para ventanas variables conserva también cuándo expira cada índice. Área puede exceder \id{int}.}}
+
+\algodesc{other/mos_algorithm.cpp}{
+\field{Qué resuelve.}{Reordena consultas de subarreglos \emph{offline} para mover poco sus extremos. Útil cuando puedes añadir/quitar un elemento en $O(1)$ pero no combinar dos resúmenes fácilmente, como cantidad de valores distintos o ciertas funciones de frecuencias.}
+\field{Integración/orden.}{Define \id{MAXN}, fija \id{n>0}, \id{nq} y \id{qs[i].l/r} en $[0,n]$ con rangos $[l,r)$. Implementa antes \id{mos()} los callbacks \id{init()}, \id{add(index)}, \id{remove(index)}, \id{get_ans()}. Luego \id{mos()} reordena \id{qs} y deja \id{ans[id]} en el orden original.}
+\field{Ejemplo de callbacks.}{Para distintos: \id{add(i)} incrementa frecuencia de $a_i$ y aumenta distintos si era 0; \id{remove(i)} reduce frecuencia y decrementa distintos si llega a 0. \id{init} limpia frecuencia/contador. Comprime valores grandes.}
+\field{Costo/cuidado.}{Con bloques $\sqrt n$, $O((n+Q)\sqrt n)$ movimientos más $O(Q\log Q)$ de ordenación, multiplicado por costo de callbacks; memoria $O(n+Q)$. No maneja cambios del arreglo; para ello necesitas Mo con tiempo u otra técnica. Los callbacks reciben \emph{índice}, no valor.}}
+
+\algodesc{other/divide_and_conquer_dp.cpp}{
+\field{Qué resuelve.}{Divide un arreglo en exactamente $g$ segmentos no vacíos con costo mínimo: $dp[g][r]=\min_{l<r}(dp[g-1][l]+cost(l,r))$. Evita probar todos los cortes si el índice de un corte óptimo es no decreciente al aumentar $r$. Resuelve el punto medio y acota los candidatos de ambas mitades.}
+\field{Uso/salida.}{Define \id{cost(l,r)} sobre $[l,r)$, evaluable en $O(1)$ mediante prefijos; llama \id{partition_dp(n,groups,cost)}. Retorna costo o \id{INF_DP} si $groups>n$. El arreglo no se pasa porque la lambda captura los prefijos necesarios. Para $groups=0$ sólo la entrada vacía cuesta 0.}
+\field{Ejemplo con hipótesis válida.}{Para números no negativos, costo cuadrado de la suma del segmento tiene propiedad Monge y permite esta optimización. Prefijos $P$: \id{cost(l,r)=(P[r]-P[l])*(P[r]-P[l])}.}
+\field{Costo/cuidado.}{$O(g n\log n)$ tiempo y $O(n)$ DP más pila recursiva logarítmica. \textbf{Demuestra la monotonía del óptimo}; no es una optimización para cualquier DP de partición. Compara contra $O(gn^2)$ en instancias pequeñas antes de usar con una función de costo nueva. No es la misma hipótesis/recurrencia que Knuth.}}
+
+\algodesc{other/dates.cpp}{
+\field{Qué resuelve.}{Convierte fechas gregorianas a un número de día y viceversa para sumar días o calcular diferencias sin recorrer meses. También calcula día de la semana.}
+\field{Uso/salida.}{\id{dateToInt(y,m,d)} retorna número de día juliano entero; \id{intToDate(jd,y,m,d)} escribe año/mes/día. Meses 1 a 12 y días desde 1. \id{DayOfWeek(d,m,y)} \textbf{cambia el orden de argumentos}: 0=domingo, 1=lunes, hasta 6=sábado.}
+\field{Ejemplo.}{Para avanzar 30 días usa \id{intToDate(dateToInt(y,m,d)+30,...)}; para diferencia resta los números de día. Año bisiesto si divisible por 400 o divisible por 4 pero no por 100.}
+\field{Costo/cuidado.}{$O(1)$. Valida fechas antes: 31 de febrero no se rechaza automáticamente. Estas fórmulas se pensaron para fechas civiles positivas habituales, no astronomía con años arbitrariamente negativos ni el salto histórico local entre calendarios. Usa tipos mayores si amplías el rango de años.}}
+
+\algodesc{other/cpp_stuff.cpp}{
+\field{Qué reúne.}{Recordatorios de bits, iteración de submáscaras, infinito real y comparadores. Son expresiones para adaptar, \emph{no} un archivo que puedas compilar entero pegándolo: hay bucles fuera de una función y firmas ilustrativas de builtins.}
+\field{Uso.}{Para submáscaras no vacías: \id{for(int s=m;s;s=(s-1)&m)}. Para incluir la vacía, procesa 0 fuera del bucle o usa un \id{do/while} con salida tras procesarla. \id{__builtin_popcountll(x)} cuenta bits; \id{ctzll}/\id{clzll} dan ceros finales/iniciales y \textbf{no aceptan cero}. El bit menos significativo puede obtenerse con \id{x&-x} sobre tipo sin signo.}
+\field{Costo/cuidado.}{Enumerar submáscaras de $m$ cuesta $2^{popcount(m)}$. Para máscaras grandes usa \id{1ULL<<b}; desplazar un 1 de tipo \id{int} hasta el bit 31 es problemático. Un comparador para set/map/sort debe ser orden estricto: \id{a+EPS<b} no lo garantiza. El infinito real \id{DINF} no sirve para coordenadas de una caja geométrica.}}
+
+\algodesc{other/interactive_tester.py}{
+\field{Qué resuelve.}{Plantilla local para comunicar dos procesos, un juez simulado y tu solución, de un problema interactivo. Ayuda a descubrir fallos de protocolo o falta de vaciado del buffer; no reemplaza un juez correcto.}
+\field{Uso.}{Lee y adapta las rutas/argumentos de procesos y la lógica del protocolo antes de ejecutar \id{python3 other/interactive_tester.py}. Compila primero el programa que lance. En la solución imprime cada pregunta con \id{endl} o \id{cout.flush()}, lee la respuesta, respeta el máximo de consultas y detente ante la señal de error del enunciado.}
+\field{Cuidado.}{Se incluye como receta editable, no como comprobación automática del notebook. No ejecutes con el juez normal un programa que espera respuestas interactivas. Evita escribir trazas en stdout; usa stderr. Si ambos extremos esperan entrada al mismo tiempo hay interbloqueo.}}
+
+\algodesc{other/hcn.txt}{
+\field{Qué contiene.}{Pares $(k,D)$ con el máximo número de divisores positivos de un entero hasta $10^k$. Sirven para estimar cuántos divisores puede enumerar una solución, no para factorizar ni identificar el número que alcanza el máximo.}
+\field{Uso/cuidado.}{Para $n\le10^9$ la tabla da cota 1344; para $n\le10^{18}$, 103680. El número de divisores es $\tau(n)=\prod_i(e_i+1)$ si $n=\prod p_i^{e_i}$. Para estimar un bucle sobre divisores usa esta cantidad, no $\sqrt n$ ni $\log\log n$. La tabla no da una cota del número de \emph{divisores de todos los números} de un intervalo sumados.}}
+
+\algodesc{math/fft_modular_helpers.cpp}{
+\field{Qué conecta.}{Proporciona todas las operaciones modulares y la función de convolución que espera el módulo de series formales. Evita tener que adaptar las líneas comentadas de FFT o deducir firmas de helpers durante el concurso.}
+\field{Orden obligatorio.}{Copia plantilla, \id{ntt.cpp}, este adaptador y finalmente \id{fft_operations.cpp}. El tipo \id{poly} y \id{conv_small} vienen de NTT; aquí se define \id{tf=ll}, \id{MOD=998244353} y \id{multiply}. No copies además el \id{multiply} de FFT/FHT/Karatsuba, ni otro global \id{MOD}.}
+\field{Contrato/costo.}{Todos los coeficientes en $[0,MOD)$; \id{inv(a)} exige $a\ne0$ y cuesta $O(\log MOD)$. Suma/resta/producto son $O(1)$; potencia $O(\log e)$ y \id{multiply} $O(L\log L)$. Conserva el límite $2^{LG}$ de la convolución. Este adaptador es específico del primo indicado; para otro módulo se deben cambiar también la NTT y sus raíces.}}

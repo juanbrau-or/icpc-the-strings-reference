@@ -1,6 +1,11 @@
 // SPOJ PLD - AC
 // http://www.spoj.com/problems/PLD/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -10,11 +15,11 @@ struct Hash {
 	Hash(string& s){
 		MOD[0]=999727999;MOD[1]=1070777777;
 		PI[0]=325255434;PI[1]=10018302;
-		for (int k = 0; k < 2; ++k)h[k].resize(s.size()+1),pi[k].resize(s.size()+1);
-		for (int k = 0; k < 2; ++k){
+		fore(k,0,2)h[k].resize(s.size()+1),pi[k].resize(s.size()+1);
+		fore(k,0,2){
 			h[k][0]=0;pi[k][0]=1;
 			ll p=1;
-			for (int i = 1; i < s.size()+1; ++i){
+			fore(i,1,s.size()+1){
 				h[k][i]=(h[k][i-1]+p*s[i-1])%MOD[k];
 				pi[k][i]=(1LL*pi[k][i-1]*PI[k])%MOD[k];
 				p=(p*P)%MOD[k];
@@ -37,10 +42,10 @@ int main(){
 	scanf("%d%s",&k,_s);
 	string s(_s);
 	int n=s.size();
-	for(int i=n-1;i>=0;--i)s.push_back(s[i]);
+	for(int i=n-1;i>=0;--i)s.pb(s[i]);
 	Hash w(s);
 	int r=0;
-	for (int i = 0; i < n-k+1; ++i){
+	fore(i,0,n-k+1){
 		if(w.get(i,i+k)==w.get(n+n-i-k,n+n-i))r++;
 	}
 	printf("%d\n",r);

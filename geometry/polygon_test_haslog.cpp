@@ -1,6 +1,11 @@
 // Codeforces gym 101128J - AC
 // http://codeforces.com/gym/101128/problem/J
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -23,15 +28,15 @@ struct pt {  // for 3D add z coordinate
 vector<pt> chull(vector<pt> p){
 	vector<pt> r;
 	sort(p.begin(),p.end()); // first x, then y
-	for (int i = 0; i < p.size(); ++i){ // lower hull
+	fore(i,0,p.size()){ // lower hull
 		while(r.size()>=2&&r.back().leftc(r[r.size()-2],p[i]))r.pop_back();
-		r.push_back(p[i]);
+		r.pb(p[i]);
 	}
 	r.pop_back();
 	int k=r.size();
 	for(int i=p.size()-1;i>=0;--i){ // upper hull
 		while(r.size()>=k+2&&r.back().leftc(r[r.size()-2],p[i]))r.pop_back();
-		r.push_back(p[i]);
+		r.pb(p[i]);
 	}
 	r.pop_back();
 	return r;
@@ -44,7 +49,7 @@ struct pol {
 		if(p[2].left(p[0],p[1]))reverse(p.begin(),p.end());
 		int pi=min_element(p.begin(),p.end())-p.begin();
 		vector<pt> s(n);
-		for (int i = 0; i < n; ++i)s[i]=p[(pi+i)%n];
+		fore(i,0,n)s[i]=p[(pi+i)%n];
 		p.swap(s);
 	}
 	bool haslog(pt q){ // O(log(n)) only CONVEX. Call normalize first
@@ -67,7 +72,7 @@ int main(){
 	while(n--){
 		ll x,y;
 		scanf("%lld%lld",&x,&y);
-		v.push_back(pt(x,y));
+		v.pb(pt(x,y));
 	}
 	pol p(chull(v));
 	p.normalize();

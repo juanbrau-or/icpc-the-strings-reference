@@ -1,0 +1,89 @@
+\section{Cómo resolver con esta referencia}
+\label{sec:quickguide}
+\textbf{Ruta de consulta:} busca el síntoma en estas tablas; lee el contrato junto al código; comprueba las hipótesis; copia dependencias y plantilla; adapta el modelo; prueba un caso pequeño a mano. Cada ficha explica qué problema resuelve, entradas/salidas, orden de llamadas, costo y límites concretos de \emph{esta implementación}. Los números de página son enlaces en el PDF.
+
+\subsection{Reconocer el algoritmo por el problema}
+{\small\setlength{\parskip}{0pt}\renewcommand{\arraystretch}{1.13}
+\Needspace{3\baselineskip}
+\decisionrow{\textbf{Síntoma / observación}}{\textbf{Herramienta y condición decisiva}}
+\vspace{1pt}\hrule\vspace{1pt}
+\decisionrow{Menor número de movimientos}{\algoref{graphs/bfs.cpp}{BFS}; estados y aristas de igual costo.}
+\decisionrow{Hay movimientos gratis y de costo 1}{\algoref{graphs/zero_one_bfs.cpp}{0-1 BFS}.}
+\decisionrow{Distancia con pesos no negativos}{\algoref{graphs/dijkstra.cpp}{Dijkstra}; con negativos \algoref{graphs/bellman_ford.cpp}{Bellman--Ford}.}
+\decisionrow{Muchos pares, pocos vértices}{\algoref{graphs/floyd_warshall.cpp}{Floyd}; $O(n^3)$.}
+\decisionrow{Dependencias y DP sin ciclos}{\algoref{graphs/toposort.cpp}{Toposort}; si hay ciclos, considera \algoref{graphs/tarjan_2sat.cpp}{SCC}.}
+\decisionrow{Unir todos por costo mínimo}{\algoref{graphs/kruskal.cpp}{Kruskal/DSU}; grafo no dirigido.}
+\decisionrow{Dos opciones y conflictos por pares}{\algoref{graphs/tarjan_2sat.cpp}{2-SAT}; cláusulas de a lo sumo dos literales.}
+\decisionrow{Cada arista exactamente una vez}{\algoref{graphs/eulerian_path.cpp}{Euler}; valida grados y conectividad.}
+\decisionrow{Repetir un proceso $10^{18}$ veces}{\algoref{graphs/functional_graph.cpp}{Grafo funcional}; un sucesor por estado.}
+\decisionrow{Consultas de subárbol}{\algoref{graphs/tree_tour.cpp}{Euler + Fenwick/ST}; subárbol = intervalo.}
+\decisionrow{Consultas de ruta en árbol fijo}{\algoref{graphs/lca.cpp}{LCA} para distancia; \algoref{graphs/hld.cpp}{HLD} para agregados con cambios.}
+\decisionrow{Respuesta desde cada raíz}{\algoref{graphs/rerooting_distances.cpp}{Rerooting}; reutiliza lo que cambia al cruzar una arista.}
+\decisionrow{Distancia al activo más cercano}{\algoref{graphs/centroid.cpp}{Centroides}; árbol y resumen por ancestro centroide.}
+\decisionrow{Aristas que desaparecen/aparecen}{\algoref{graphs/dynamic_connectivity.cpp}{DSU rollback offline}; o \algoref{data_structures/link_cut_tree.cpp}{LCT} si siempre es bosque online.}}
+
+{\small\setlength{\parskip}{0pt}\renewcommand{\arraystretch}{1.13}
+\Needspace{3\baselineskip}
+\decisionrow{\textbf{Consulta sobre datos}}{\textbf{Herramienta y restricción}}
+\vspace{1pt}\hrule\vspace{1pt}
+\decisionrow{Suma estática de intervalos/rectángulos}{\algoref{other/prefix_sums_2d.cpp}{Prefijos}; ninguna modificación.}
+\decisionrow{Suma con cambios puntuales}{\algoref{data_structures/fenwick_tree.cpp}{Fenwick}; \id{upd} suma, no asigna.}
+\decisionrow{Mínimo estático, muchísimas consultas}{\algoref{data_structures/sparse_table.cpp}{Sparse table}; operación idempotente.}
+\decisionrow{Agregado con cambios puntuales}{\algoref{data_structures/segment_tree.cpp}{Segment tree}; operación asociativa.}
+\decisionrow{Cambiar intervalos enteros}{\algoref{data_structures/segment_tree_lazy.cpp}{ST lazy}; define bien cómo se componen actualizaciones.}
+\decisionrow{Consultar versiones viejas}{\algoref{data_structures/segment_tree_persistent.cpp}{ST persistente}; conserva raíces.}
+\decisionrow{k-ésimo en multiconjunto cambiante}{\algoref{data_structures/fenwick_order.cpp}{Fenwick de frecuencias} o \algoref{data_structures/stl_extended_set.cpp}{PBDS}.}
+\decisionrow{k-ésimo dentro de subarreglo}{\algoref{data_structures/wavelet_tree.cpp}{Wavelet}; distingue posición y valor.}
+\decisionrow{Invertir/cortar/pegar secuencias}{\algoref{data_structures/treap_implicit.cpp}{Treap implícito}; activar el lazy que necesites.}
+\decisionrow{Mínimo de ventana deslizante}{\algoref{other/monotonic_queue.cpp}{Deque monótona}; $O(n)$.}
+\decisionrow{Consultas de frecuencias offline}{\algoref{other/mos_algorithm.cpp}{Mo}; agregar/quitar extremos baratos.}
+\decisionrow{DP con término $m_jx_i+b_j$}{\algoref{data_structures/convexhull_trick.cpp}{CHT} si pendientes ordenadas; \algoref{data_structures/li_chao_tree.cpp}{Li Chao} si no.}}
+
+{\small\setlength{\parskip}{0pt}\renewcommand{\arraystretch}{1.13}
+\Needspace{3\baselineskip}
+\decisionrow{\textbf{Patrón combinatorio}}{\textbf{Herramienta / modelo}}
+\vspace{1pt}\hrule\vspace{1pt}
+\decisionrow{Elegir parejas compatibles}{\algoref{flow/hopcroft_karp.cpp}{Matching bipartito}; \algoref{graphs/edmonds_blossom.cpp}{Blossom} si hay ciclos impares.}
+\decisionrow{Asignación uno a uno con costos}{\algoref{flow/hungarian.cpp}{Hungarian}; con cupos o restricciones extra, \algoref{flow/min_cost_max_flow.cpp}{min-cost flow}.}
+\decisionrow{Capacidades, rutas disjuntas, corte}{\algoref{flow/dinic.cpp}{Dinic}; modela lo limitado como capacidad.}
+\decisionrow{Capacidad/respuesta mínima posible}{\algoref{other/binary_search.cpp}{Búsqueda binaria}; prueba monotonía.}
+\decisionrow{Subsecuencia creciente}{\algoref{other/lis.cpp}{LIS}; no tiene que ser contigua.}
+\decisionrow{Elegir objetos con presupuesto pequeño}{\algoref{other/knapsack.cpp}{Mochila}; identifica 0/1 o ilimitada.}
+\decisionrow{Visitar todos con $n\approx20$}{\algoref{other/subset_dp.cpp}{DP por máscaras}; memoria exponencial.}
+\decisionrow{Subconjuntos con $n\approx40$}{\algoref{other/meet_in_middle.cpp}{Meet in the middle}; combinar dos mitades.}
+\decisionrow{Contar números en $[L,R]$ enorme}{\algoref{other/digit_dp.cpp}{Digit DP}; estado pequeño por prefijo de dígitos.}
+\decisionrow{Convolución por suma de índices}{\algoref{math/ntt.cpp}{NTT} exacta modular; \algoref{math/fft.cpp}{FFT} aproximada.}
+\decisionrow{XOR de cualquier subconjunto}{\algoref{math/xor_basis.cpp}{Base XOR}; para contar pares por XOR, \algoref{math/fht.cpp}{FHT}.}
+\decisionrow{Patrón único / muchos patrones}{\algoref{strings/kmp.cpp}{KMP/Z} / \algoref{strings/aho_corasick.cpp}{Aho--Corasick}.}
+\decisionrow{Palíndromos por posición / distintos}{\algoref{strings/manacher.cpp}{Manacher} / \algoref{strings/palindromic_tree.cpp}{Eertree}.}
+\decisionrow{Orden o comparación de subcadenas}{\algoref{strings/suffix_array.cpp}{SA+LCP}; \algoref{strings/hashing.cpp}{hash} si aceptas colisiones.}
+\decisionrow{Factorizar un entero grande}{\algoref{math/pollard_rho.cpp}{Miller--Rabin + Pollard}; para muchos pequeños, criba.}}
+
+\subsection{Del enunciado al modelo}
+\begin{enumerate}
+\item \textbf{Define el estado.} ¿Qué información determina los próximos movimientos? Posición sola puede ser insuficiente: agrega paridad, llaves, último color o combustible. Calcula el número \emph{total} de estados y transiciones antes de escoger un algoritmo.
+\item \textbf{Identifica la operación.} ¿Buscas existencia, mínimo, número de formas, reconstrucción o actualización online? Un algoritmo que sólo cuenta no necesariamente permite producir una solución.
+\item \textbf{Explota estructura.} Árbol, DAG, bipartición, costos 0/1, consultas offline, orden monótono o dominio pequeño pueden quitar un factor entero. ``No conocemos un algoritmo'' suele resolverse al reconocer una de estas restricciones.
+\item \textbf{Escribe el contrato.} Por ejemplo, ``este predicado es true si existe una partición en a lo sumo $k$ bloques con máximo $X$''. Sólo entonces decide si es monótono y cómo chequearlo.
+\item \textbf{Prueba la reducción.} De una solución del problema a una del modelo, y de vuelta. Explica por qué no se admite una solución ilegal ni se pierde una válida. Después copia el código.
+\end{enumerate}
+
+\subsection{Índices, tipos y presupuesto}
+\textbf{Rangos:} salvo aviso explícito, índices base 0 y $[l,r)$: incluye $l$ y excluye $r$; tamaño $r-l$. Si el enunciado da $[L,R]$ base 1, usa $[L-1,R)$. No conviertas ambos extremos restando 1. LCA/HLD y matching incluyen extremos de rutas/vértices según su ficha; \id{LinearRec::calc} es base 1.
+
+\textbf{Neutral e infinito:} suma 0, producto 1, mínimo $+\infty$, máximo $-\infty$, OR/XOR 0. El neutro debe actuar bien al combinar con cualquier valor. Infinito entero es un \emph{centinela finito}: no lo sumes ni multipliques sin comprobar alcanzabilidad. Un valor útil para \id{ll} es \id{LLONG_MAX/4}, siempre que todas las respuestas válidas sean menores.
+
+\textbf{Overflow:} \id{1LL*a*b} promueve \emph{antes} del producto; \id{ll x=a*b} puede desbordar primero en \id{int}. $10^5$ elementos de $10^9$ suman $10^{14}$. Distancias, áreas, conteos, productos de módulos y costos de flujo suelen requerir \id{ll} o \id{__int128}. Modulo al final no arregla overflow ocurrido antes. Para imprimir \id{__int128}, convierte por dígitos, no lo pases a \id{cout} directamente.
+
+\textbf{Memoria:} un arreglo de $N$ \id{int} ocupa aproximadamente $4N$ bytes; \id{ll}, $8N$. $n=2\cdot10^5$ y tabla de 20 ancestros ocupa unos 16 MB en \id{int}; un DP $2^{20}\cdot20$ en \id{ll}, unos 168 MB decimales. Una matriz $n^2$ o los nodos de persistencia pueden dominar el espacio. Reserva grandes arreglos globales/dinámicos.
+
+\textbf{Escala de tiempo:} estima productos de dimensiones, no sólo notación: $n^2$ con $n=2\cdot10^5$ son $4\cdot10^{10}$ iteraciones. Heap, mapas, asignaciones y aritmética de 128 bits cuestan más que sumar enteros contiguos. No hay una conversión universal de operaciones a segundos; contrasta contra el límite, lenguaje y una medición local.
+
+\subsection{Lista corta antes de enviar}
+\begin{itemize}
+\item Caso mínimo, vacío si está permitido, todos iguales, extremos negativos/positivos, desconectado y empates. ¿La respuesta existe siempre?
+\item Reinicia grafos, mapas, contadores y estructuras por caso. Algunos constructores sólo reservan; algunas funciones imprimen y otras retornan; algunas consumen el grafo.
+\item Comprueba tipo de peso \emph{y} de suma, capacidad de arrays, profundidad recursiva y costo de reconstrucción. Revisa $r$ exclusivo y k-ésimos base 0.
+\item Para una reducción nueva, escribe fuerza bruta pequeña y compara instancias aleatorias. Para greedy/optimización, una prueba de intercambio, invariante o monotonía vale más que muchos ejemplos.
+\item Compila localmente con advertencias; usa \id{-DLOCAL} y sanitizadores al depurar si están disponibles. Elimina trazas de stdout, confirma formato, saltos de línea y nombre/estándar del compilador del juez.
+\end{itemize}

@@ -1,5 +1,10 @@
 // Test vs brute force
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -47,11 +52,11 @@ struct CHTBrute {
 	vector<Line> c;
 	void add(tc m, tc h) {
 		Line l=(Line){m,h};
-		c.push_back(l);
+		c.pb(l);
 	}
 	tc eval(tc x){
 		tc r=c[0].m*x+c[0].b;
-		for (int i = 1; i < c.size(); ++i)r=max(r,c[i].m*x+c[i].b);
+		fore(i,1,c.size())r=max(r,c[i].m*x+c[i].b);
 		return r;
 	}
 };
@@ -68,7 +73,7 @@ int main() {
 	while(1){
 		cout<<"CLEAR"<< endl;
 		HullDynamic ch;CHTBrute chb;
-		for (int _ = 0; _ < 2000; ++_){
+		fore(_,0,2000){
 			int t=1;
 			if(_)t=rand()%2;
 			if(t){

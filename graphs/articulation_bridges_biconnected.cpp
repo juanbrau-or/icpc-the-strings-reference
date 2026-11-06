@@ -2,8 +2,8 @@ vector<int> g[MAXN];int n;
 struct edge {int u,v,comp;bool bridge;};
 vector<edge> e;
 void add_edge(int u, int v){
-	g[u].push_back(e.size());g[v].push_back(e.size());
-	e.push_back((edge){u,v,-1,false});
+	g[u].pb(e.size());g[v].pb(e.size());
+	e.pb((edge){u,v,-1,false});
 }
 int D[MAXN],B[MAXN],T;
 int nbc;  // number of biconnected components
@@ -33,5 +33,5 @@ void dfs(int u,int pe){
 void doit(){
 	memset(D,-1,sizeof(D));memset(art,0,sizeof(art));
 	nbc=T=0;
-	for (int i = 0; i < n; ++i)if(D[i]<0)dfs(i,-1),art[i]--;
+	fore(i,0,n)if(D[i]<0){dfs(i,-1);art[i]=max(0,art[i]-1);}
 }

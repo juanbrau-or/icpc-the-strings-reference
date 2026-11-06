@@ -2,6 +2,10 @@
 // Codeforces 2138C2 - AC
 // https://codeforces.com/contest/2138/problem/C2
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -53,23 +57,23 @@ struct FFT {
 		assert(c <= (1<<LG));
 		u h=u(uu(-p)*-p%p), a=m(h, p/2+1), x, y;
 		while(n<c) n*=2, h=red(p, m(h, a));
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			v[i]=i<SZ(as)?u(as[i]):0,
 			v[i+n]=i<SZ(bs)?u(bs[i]):0;
 
 		}
-		for(auto s:{v,v+n}) for(int j=n;j>=2;j--) for(int k=j&-j; k/=2;) for (int i = j-k; i < j; ++i){
+		for(auto s:{v,v+n}) for(int j=n;j>=2;j--) for(int k=j&-j; k/=2;) fore(i,j-k,j){
 			x=s[i], y=s[i-k];
 			s[i-k] = red(2*p, x+y);
 			s[i] = m(2*p+y-x, r[3*k-j+i]);
 		}
-		for (int i = 0; i < n; ++i) v[i]=m(v[i], v[i+n]);
-		for (int j = 2; j < n+1; ++j) for(int k=1; !(k&j); k*=2) for (int i = j-k; i < j; ++i){
+		fore(i,0,n) v[i]=m(v[i], v[i+n]);
+		fore(j,2,n+1) for(int k=1; !(k&j); k*=2) fore(i,j-k,j){
 			x = m(v[i], r[3*k+j-i]);
 			y = red(2*p, v[i-k]);
 			v[i-k]=x+y, v[i]=2*p+y-x;
 		}
-		for (int i = 0; i < c; ++i) v[i]=red(p, m(v[i], h));
+		fore(i,0,c) v[i]=red(p, m(v[i], h));
 		return poly(v, v+c);
 	}
 };
@@ -94,7 +98,7 @@ poly multiply(const poly &as, const poly &bs) {
 poly add(poly &a, poly &b){
 	int n=SZ(a),m=SZ(b);
 	poly ans(max(n,m));
-	for (int i = 0; i < max(n,m); ++i) ans[i]=addmod(i<SZ(a)?a[i]:0, i<SZ(b)?b[i]:0);
+	fore(i,0,max(n,m)) ans[i]=addmod(i<SZ(a)?a[i]:0, i<SZ(b)?b[i]:0);
 	while(SZ(ans)>1&&!ans.back())ans.pop_back();
 	return ans;
 }
@@ -102,14 +106,14 @@ poly add(poly &a, poly &b){
 // derivative of p
 poly derivate(poly &p){
 	poly ans(max(1, SZ(p)-1));
-	for (int i = 1; i < SZ(p); ++i) ans[i-1]=mulmod(p[i],i);
+	fore(i,1,SZ(p)) ans[i-1]=mulmod(p[i],i);
 	return ans;
 }
 
 // integral of p
 poly integrate(poly &p){
 	poly ans(SZ(p)+1);
-	for (int i = 0; i < SZ(p); ++i) ans[i+1]=mulmod(p[i], inv(i+1));
+	fore(i,0,SZ(p)) ans[i+1]=mulmod(p[i], inv(i+1));
 	return ans;
 }
 
@@ -129,7 +133,7 @@ poly invert(poly &p, int d){
 		sz*=2;
 		poly pre(p.begin(), p.begin()+min(SZ(p),sz));
 		poly cur=multiply(res,pre);
-		for (int i = 0; i < SZ(cur); ++i) cur[i]=submod(0,cur[i]);
+		fore(i,0,SZ(cur)) cur[i]=submod(0,cur[i]);
 		cur[0]=addmod(cur[0],2);
 		res=multiply(res,cur);
 		res=takemod(res,sz);
@@ -155,7 +159,7 @@ poly exp(poly &p, int d){
 	while(sz<d){
 		sz*=2;
 		poly lg=log(res, sz), cur(sz);
-		for (int i = 0; i < sz; ++i) cur[i]=submod(i<SZ(p)?p[i]:0, i<SZ(lg)?lg[i]:0);
+		fore(i,0,sz) cur[i]=submod(i<SZ(p)?p[i]:0, i<SZ(lg)?lg[i]:0);
 		cur[0]=addmod(cur[0],1);
 		res=multiply(res,cur);
 		res=takemod(res, sz);
@@ -168,8 +172,8 @@ poly exp(poly &p, int d){
 pair<poly,poly> divslow(poly &a, poly &b){
 	poly q,r=a;
 	while(SZ(r)>=SZ(b)){
-		q.push_back(mulmod(r.back(),inv(b.back())));
-		if(q.back()) for (int i = 0; i < SZ(b); ++i){
+		q.pb(mulmod(r.back(),inv(b.back())));
+		if(q.back()) fore(i,0,SZ(b)){
 			r[SZ(r)-i-1]=submod(r[SZ(r)-i-1],mulmod(q.back(),b[SZ(b)-i-1]));
 		}
 		r.pop_back();
@@ -189,7 +193,7 @@ pair<poly,poly> divide(poly &a, poly &b){	//returns {quotient,remainder}
 	q.resize(SZ(q)+m-n-SZ(q)+1,0);
 	reverse(ALL(q));
 	poly bq=multiply(b,q);
-	for (int i = 0; i < SZ(bq); ++i) bq[i]=submod(0,bq[i]);
+	fore(i,0,SZ(bq)) bq[i]=submod(0,bq[i]);
 	poly r=add(a,bq);
 	return {q,r};
 }
@@ -199,7 +203,7 @@ vector<poly> tree;
 void filltree(vector<tf> &x){
 	int k=SZ(x);
 	tree.resize(2*k);
-	for (int i = k; i < 2*k; ++i) tree[i]={submod(0,x[i-k]),1};
+	fore(i,k,2*k) tree[i]={submod(0,x[i-k]),1};
 	for(int i=k-1;i;i--) tree[i]=multiply(tree[2*i],tree[2*i+1]);
 }
 
@@ -207,9 +211,9 @@ vector<tf> evaluate(poly &a, vector<tf> &x){
 	filltree(x);
 	int k=SZ(x);
 	vector<poly> ans(2*k);
-	ans[1]=divide(a,tree[1]).second;
-	for (int i = 2; i < 2*k; ++i) ans[i]=divide(ans[i>>1],tree[i]).second;
-	vector<tf> r; for (int i = 0; i < k; ++i) r.push_back(ans[i+k][0]);
+	ans[1]=divide(a,tree[1]).snd;
+	fore(i,2,2*k) ans[i]=divide(ans[i>>1],tree[i]).snd;
+	vector<tf> r; fore(i,0,k) r.pb(ans[i+k][0]);
 	return r;
 }
 
@@ -219,7 +223,7 @@ poly interpolate(vector<tf> &x, vector<tf> &y){
 	int k=SZ(y);
 	vector<tf> d=evaluate(p,x);
 	vector<poly> intree(2*k);
-	for (int i = k; i < 2*k; ++i) intree[i]={mulmod(y[i-k],inv(d[i-k]))};
+	fore(i,k,2*k) intree[i]={mulmod(y[i-k],inv(d[i-k]))};
 	for(int i=k-1;i;i--){
 		poly p1=multiply(tree[2*i],intree[2*i+1]);
 		poly p2=multiply(tree[2*i+1],intree[2*i]);
@@ -233,12 +237,12 @@ poly interpolate(vector<tf> &x, vector<tf> &y){
 poly doit(vector<int> &a, int top){
 	poly lg(top+1), inv(top+1);
 
-	for (int i = 1; i < top+1; ++i) inv[i]=pm(i,MOD-2);
+	fore(i,1,top+1) inv[i]=pm(i,MOD-2);
 
 	vector<int> cnt(top+1);
 	for(auto x:a) cnt[x]++;
 
-	for (int k = 1; k < top+1; ++k) if(cnt[k]){
+	fore(k,1,top+1) if(cnt[k]){
 		for(int n=1;n*k<=top;n++){
 			int now=inv[n];
 			if((n+1)&1) now=submod(0,now);
@@ -257,7 +261,7 @@ int check(vector<int> a, int n, int k){
 
     int low=tot-n+k, up=k;
 
-	for (int i = 0; i < n+1; ++i) if(low<=i&&i<=up&&res[i]) return 1;
+	fore(i,0,n+1) if(low<=i&&i<=up&&res[i]) return 1;
 	return 0;
 }
 
@@ -266,17 +270,17 @@ int main(){FIN;
 	while(t--){
 		int n,k; cin>>n>>k;
 		vector<int> dep(n,1), leaf(n,1);
-		for (int i = 1; i < n; ++i){
+		fore(i,1,n){
 			int x; cin>>x; x--;
 			leaf[x]=0;
 			dep[i]=dep[x]+1;
 		}
 
 		int top=n;
-		for (int i = 0; i < n; ++i) if(leaf[i]) top=min(top, dep[i]);
+		fore(i,0,n) if(leaf[i]) top=min(top, dep[i]);
 		
 		vector<int> a(top+1);
-		for (int i = 0; i < n; ++i) if(dep[i]<=top) a[dep[i]]++;
+		fore(i,0,n) if(dep[i]<=top) a[dep[i]]++;
 
 		if(!check(a,n,k)) top--;
 

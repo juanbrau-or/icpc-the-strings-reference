@@ -1,19 +1,17 @@
-%"The PDF file may contain up to 25 pages of reference material, single-sided, letter or A4 size, with text and illustrations readable by a person with correctable eyesight without magnification from a distance of 1/2 meter."
+% Compilar desde este directorio. No hay limite editorial de paginas.
 \input{preamble.tex}
-\begin{document}
-% Gracias Demetrio
-\def\title{Tecnológico de Monterrey Campus Guadalajara}
-\centering{Por fin tenemos reference.}\\[0.2cm]
-\centering{\includegraphics[width=5.5cm]{img/meme.png}}
-\tableofcontents\newpage
-
-%----------------------------------
-% Descripciones, se puede quitar
 \input{descriptions.tex}
-\newpage
-%----------------------------------
+\begin{document}
+{\centering\Large\bfseries The Strings -- Guía de competencia ICPC\par}
+{\centering\small The algorithms are talking \textbullet{} Tecnológico de Monterrey, Guadalajara\par}
+\tableofcontents
+\clearpage
+\input{quickguide.tex}
+\section{Plantilla y convenciones}
+\subsection{Plantilla C++17 y abreviaturas originales}
+\cppfile{other/template.cpp}
 
-\section{Data structures}
+\section{Estructuras de datos}
 \subsection{Segment tree}
 \cppfile{data_structures/segment_tree.cpp}
 \subsection{Segment tree - Lazy propagation}
@@ -26,6 +24,8 @@
 \cppfile{data_structures/sparse_table.cpp}
 \subsection{Fenwick tree}
 \cppfile{data_structures/fenwick_tree.cpp}
+\subsection{Fenwick con selección del k-ésimo}
+\cppfile{data_structures/fenwick_order.cpp}
 \subsection{Wavelet tree}
 \cppfile{data_structures/wavelet_tree.cpp}
 \subsection{STL extended set}
@@ -51,7 +51,17 @@
 \subsection{Disjoint intervals}
 \cppfile{data_structures/disjoint_intervals.cpp}
 
-\section{Graphs}
+\section{Grafos y árboles}
+\subsection{BFS y reconstrucción de caminos}
+\cppfile{graphs/bfs.cpp}
+\subsection{0-1 BFS}
+\cppfile{graphs/zero_one_bfs.cpp}
+\subsection{Recorrido Euler de subárboles, iterativo}
+\cppfile{graphs/tree_tour.cpp}
+\subsection{Rerooting: suma de distancias}
+\cppfile{graphs/rerooting_distances.cpp}
+\subsection{Grafo funcional y saltos enormes}
+\cppfile{graphs/functional_graph.cpp}
 \subsection{Topological sort}
 \cppfile{graphs/toposort.cpp}
 \subsection{Kruskal (+ Union-Find)}
@@ -85,28 +95,12 @@
 \subsection{Edmond's blossom (matching in general graphs)}
 \cppfile{graphs/edmonds_blossom.cpp}
 
-\section{Math}
-\subsection{Identities}
-{
-	$C_n = \frac{2(2n-1)}{n+1} C_{n-1}$
-
-	$C_n = \frac{1}{n+1} \binom{2n}{n}$
-
-	$C_n \sim \frac{4^n}{n^{3/2}\sqrt{\pi}}$
-
-	$\sigma(n) = O(\log(\log(n)))$ (number of divisors of $n$)
-
-	$F_{2n+1} = F_{n}^2 + F_{n+1}^2$
-
-	$F_{2n} = F_{n+1}^2 - F_{n-1}^2$
-
-	$\sum_{i=1}^n F_i = F_{n+2}-1$
-
-	$F_{n+i}F_{n+j} - F_nF_{n+i+j} = (-1)^n F_iF_j$
-
-	(Möbius Inv. Formula)
-	Let $g(n) = \sum_{d\mid n} f(d)$, then $f(n)=\sum{d\mid n} g(d) \mu\left(\frac{n}{d})\right)$.
-}
+\section{Matemáticas}
+\input{identities.tex}
+\subsection{Potencia, factoriales y combinatoria modular}
+\cppfile{math/combinatorics_mod.cpp}
+\subsection{Base XOR: combinaciones lineales binarias}
+\cppfile{math/xor_basis.cpp}
 \subsection{Theorems}
 \cppfile{math/theorems.txt}
 \subsection{Integer floor division}
@@ -127,6 +121,10 @@
 \cppfile{math/bairstow.cpp}
 \subsection{Fast Fourier Transform}
 \cppfile{math/fft.cpp}
+\subsection{NTT exacta modular}
+\cppfile{math/ntt.cpp}
+\subsection{Adaptador NTT para operaciones de series}
+\cppfile{math/fft_modular_helpers.cpp}
 \subsection{FFT operations}
 \cppfile{math/fft_operations.cpp}
 \subsection{Fast Hadamard Transform}
@@ -157,22 +155,24 @@
 \cppfile{math/tonelli_shanks.cpp}
 \subsection{Prime count}
 \cppfile{math/prime_count.cpp}
+\subsection{Puntos enteros bajo una recta}
+\cppfile{math/points_under_line.cpp}
 
-\section{Geometry}
+\section{Geometría}
 \subsection{Point}
 \cppfile{geometry/point.cpp}
 \subsection{Line}
 \cppfile{geometry/line.cpp}
+\subsection{Radial order of points}
+\cppfile{geometry/radial_order.cpp}
+\subsection{Convex hull}
+\cppfile{geometry/convex_hull.cpp}
 \subsection{Circle}
 \cppfile{geometry/circle.cpp}
 \subsection{Polygon}
 \cppfile{geometry/polygon.cpp}
 \subsection{Plane}
 \cppfile{geometry/plane.cpp}
-\subsection{Radial order of points}
-\cppfile{geometry/radial_order.cpp}
-\subsection{Convex hull}
-\cppfile{geometry/convex_hull.cpp}
 \subsection{Dual from planar graph}
 \cppfile{geometry/planar_graph_dual.cpp}
 \subsection{Halfplane intersection}
@@ -184,7 +184,9 @@
 \subsection{Delaunay triangulation}
 \cppfile{geometry/delaunay.cpp}
 
-\section{Strings}
+\section{Cadenas}
+\subsection{Rotación cíclica mínima}
+\cppfile{strings/minimal_rotation.cpp}
 \subsection{KMP}
 \cppfile{strings/kmp.cpp}
 \subsection{Z function}
@@ -210,7 +212,7 @@
 \subsection{Hashing with ll (using \_\_int128)}
 \cppfile{strings/hashing_128.cpp}
 
-\section{Flow}
+\section{Matching y flujo}
 \subsection{Matching (slower)}
 \cppfile{flow/matching.cpp}
 \subsection{Matching (Hopcroft-Karp)}
@@ -222,7 +224,25 @@
 \subsection{Min cost max flow}
 \cppfile{flow/min_cost_max_flow.cpp}
 
-\section{Other}
+\section{Técnicas y programación dinámica}
+\subsection{Búsqueda binaria de respuesta}
+\cppfile{other/binary_search.cpp}
+\subsection{Compresión de coordenadas}
+\cppfile{other/coordinate_compression.cpp}
+\subsection{Prefijos de una matriz}
+\cppfile{other/prefix_sums_2d.cpp}
+\subsection{Subsecuencia creciente máxima (LIS)}
+\cppfile{other/lis.cpp}
+\subsection{Mochila 0/1 e ilimitada}
+\cppfile{other/knapsack.cpp}
+\subsection{Máscaras: SOS DP y Held--Karp}
+\cppfile{other/subset_dp.cpp}
+\subsection{Meet in the middle}
+\cppfile{other/meet_in_middle.cpp}
+\subsection{Digit DP}
+\cppfile{other/digit_dp.cpp}
+\subsection{Cola y pila monótonas}
+\cppfile{other/monotonic_queue.cpp}
 \subsection{Mo's algorithm}
 \cppfile{other/mos_algorithm.cpp}
 \subsection{Divide and conquer DP optimization}
@@ -232,10 +252,10 @@
 \subsection{C++ stuff}
 \cppfile{other/cpp_stuff.cpp}
 \subsection{Interactive problem tester template}
-\cppfile{other/interactive_tester.py}
+\cppfile[language=Python]{other/interactive_tester.py}
 \subsection{Max number of divisors up to 10\textsuperscript{n}}
 \cppfile{other/hcn.txt}
-\subsection{Template}
-\cppfile{other/template.cpp}
 
+\input{recipes.tex}
+\input{sources.tex}
 \end{document}

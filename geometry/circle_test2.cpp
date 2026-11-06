@@ -1,6 +1,11 @@
 // SPOJ TAP2015A - AC
 // http://www.spoj.com/problems/TAP2015A/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -49,8 +54,8 @@ struct circle {
 		double x=(d*d-c.r*c.r+r*r)/(2*d);
 		double y=sqrt(r*r-x*x);
 		pt v=(c.o-o)/d;
-		s.push_back(o+v*x+v.rot(ccw90)*y);
-		if(y>EPS)s.push_back(o+v*x-v.rot(ccw90)*y);
+		s.pb(o+v*x+v.rot(ccw90)*y);
+		if(y>EPS)s.pb(o+v*x-v.rot(ccw90)*y);
 		return s;
 	}
 /*
@@ -59,10 +64,10 @@ struct circle {
 		pt p=l.proj(o);
 		double d=(p-o).norm();
 		if(d-EPS>r)return s;
-		if(abs(d-r)<EPS){s.push_back(p);return s;}
+		if(abs(d-r)<EPS){s.pb(p);return s;}
 		d=sqrt(r*r-d*d);
-		s.push_back(p+l.pq.unit()*d);
-		s.push_back(p-l.pq.unit()*d);
+		s.pb(p+l.pq.unit()*d);
+		s.pb(p-l.pq.unit()*d);
 		return s;
 	}
 	vector<pt> tang(pt p){
@@ -77,23 +82,23 @@ int n;
 
 int main(){
 	while(scanf("%d",&n)!=EOF){
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			int x,y,r;
 			scanf("%d%d%d",&x,&y,&r);
 			c[i]=circle(pt(x,y),r);
 		}
 		int r=1;
-		for (int i = 0; i < n; ++i){
-			for (int j = i+1; j < n; ++j){
+		fore(i,0,n){
+			fore(j,i+1,n){
 				auto v=c[i]^c[j];
 				for(auto p:v){
 					int s=0;
-					for (int k = 0; k < n; ++k)s+=c[k].has(p);
+					fore(k,0,n)s+=c[k].has(p);
 					r=max(r,s);
 				}
 			}
 			int s=0;
-			for (int k = 0; k < n; ++k)s+=c[k].has(c[i].o);
+			fore(k,0,n)s+=c[k].has(c[i].o);
 			r=max(r,s);
 		}
 		printf("%d\n",r);

@@ -7,12 +7,12 @@ bool qcomp(const qu &a, const qu &b){
     return (a.l/sq)&1?a.r<b.r:a.r>b.r;
 }
 void mos(){
-    for (int i = 0; i < nq; ++i)qs[i].id=i;
+    fore(i,0,nq)qs[i].id=i;
     sq=sqrt(n)+.5;
     sort(qs,qs+nq,qcomp);
     int l=0,r=0;
     init();
-    for (int i = 0; i < nq; ++i){
+    fore(i,0,nq){
         qu q=qs[i];
         while(l>q.l)add(--l);
         while(r<q.r)add(r++);

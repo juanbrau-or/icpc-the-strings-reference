@@ -1,4 +1,7 @@
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(x,a,b) for(int x=(a), qwerty=(b); x<qwerty; x++)
 using namespace std;
 typedef long long ll;
 
@@ -23,7 +26,7 @@ ll tonelli_shanks(ll n, ll p){
     ll i=1, ts=(t*t)%p;
     while(ts!=1)i++,ts=(ts*ts)%p;
     ll b=c; 
-    for (int _ = 0; _ < m-i-1; ++_)b=(b*b)%p;
+    fore(_,0,m-i-1)b=(b*b)%p;
     r=r*b%p;c=b*b%p;t=t*c%p;m=i;
   }
   return r;
@@ -42,10 +45,10 @@ int main(){
   while(queries.size()<MAX_TEST){
     ll p=rnd(2, 2e9);
     while(!is_prime(p))p++;
-    queries.push_back({fpow(rnd(1,p-1),2,p),p});
+    queries.pb({fpow(rnd(1,p-1),2,p),p});
   }
   for(auto p:queries){
-    ll r=tonelli_shanks(p.first,p.second);
-    assert(r*r%p.second==p.first&&(p.second-r)*(p.second-r)%p.second==p.first);
+    ll r=tonelli_shanks(p.fst,p.snd);
+    assert(r*r%p.snd==p.fst&&(p.snd-r)*(p.snd-r)%p.snd==p.fst);
   }
 }

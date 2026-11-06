@@ -1,6 +1,11 @@
 // SPOJ PLD - AC
 // http://www.spoj.com/problems/PLD/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -13,7 +18,7 @@ struct Hash {
 		h.resize(s.size()+1);pi.resize(s.size()+1);
 		h[0]=0;pi[0]=1;
 		bint p=1;
-		for (int i = 1; i < s.size()+1; ++i){
+		fore(i,1,s.size()+1){
 			h[i]=(h[i-1]+p*s[i-1])%MOD;
 			pi[i]=(pi[i-1]*PI)%MOD;
 			p=(p*P)%MOD;
@@ -31,10 +36,10 @@ int main(){
 	scanf("%d%s",&k,_s);
 	string s(_s);
 	int n=s.size();
-	for(int i=n-1;i>=0;--i)s.push_back(s[i]);
+	for(int i=n-1;i>=0;--i)s.pb(s[i]);
 	Hash w(s);
 	int r=0;
-	for (int i = 0; i < n-k+1; ++i){
+	fore(i,0,n-k+1){
 		if(w.get(i,i+k)==w.get(n+n-i-k,n+n-i))r++;
 	}
 	printf("%d\n",r);

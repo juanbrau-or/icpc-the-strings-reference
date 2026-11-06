@@ -1,6 +1,10 @@
 // Codeforces gym 104288K - AC
 // http://codeforces.com/gym/104288/problem/K
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -31,15 +35,15 @@ vector<pt> chull(vector<pt> p){
 	if(SZ(p)<3)return p;
 	vector<pt> r;
 	sort(ALL(p));
-	for (int i = 0; i < p.size(); ++i){
+	fore(i,0,p.size()){
 		while(r.size()>=2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
-		r.push_back(p[i]);
+		r.pb(p[i]);
 	}
 	r.pop_back();
 	int k=r.size();
 	for(int i=p.size()-1;i>=0;--i){
 		while(r.size()>=k+2&&r.back().left(r[r.size()-2],p[i]))r.pop_back();
-		r.push_back(p[i]);
+		r.pb(p[i]);
 	}
 	r.pop_back();
 	return r;
@@ -50,21 +54,21 @@ vector<pt> chull(vector<pt> p){
 void reorder(vector<pt> &p){
 	if(!p[2].left(p[0],p[1])) reverse(ALL(p));
 	int pos=0;
-	for (int i = 1; i < SZ(p); ++i) if(pt(p[i].y,p[i].x) < pt(p[pos].y,p[pos].x)) pos=i;
+	fore(i,1,SZ(p)) if(pt(p[i].y,p[i].x) < pt(p[pos].y,p[pos].x)) pos=i;
 	rotate(p.begin(), p.begin()+pos, p.end());
 }
 vector<pt> minkowski_sum(vector<pt> p, vector<pt> q){
 	if(min(SZ(p),SZ(q))<3){
 	  vector<pt> v;
-		for(pt pp:p) for(pt qq:q) v.push_back(pp+qq);
+		for(pt pp:p) for(pt qq:q) v.pb(pp+qq);
 		return chull(v);
 	}
 	reorder(p); reorder(q);
-	for (int i = 0; i < 2; ++i) p.push_back(p[i]), q.push_back(q[i]);
+	fore(i,0,2) p.pb(p[i]), q.pb(q[i]);
 	vector<pt> r;
 	int i=0,j=0;
 	while(i+2<SZ(p)||j+2<SZ(q)){
-		r.push_back(p[i]+q[j]);
+		r.pb(p[i]+q[j]);
 		auto cross=(p[i+1]-p[i])%(q[j+1]-q[j]);
 		i+=cross>=-EPS;
 		j+=cross<=EPS;
@@ -95,22 +99,22 @@ void dfs(int pos){
 	vector<poly> lef,rig;
 	
 	poly now;
-	for (int i = 0; i < SZ(g[pos]); ++i){
-		lef.push_back(now);
+	fore(i,0,SZ(g[pos])){
+		lef.pb(now);
 		now=add(now,mul(wh[g[pos][i]],-1));
 	}
 	
 	now.clear();
 	for(int i=SZ(g[pos])-1;i>=0;i--){
-		rig.push_back(now);
+		rig.pb(now);
 		now=add(now,mul(wh[g[pos][i]],-1));
 	}
 	reverse(ALL(rig));
 	
 	poly all;
-	for (int i = 0; i < SZ(g[pos]); ++i){
+	fore(i,0,SZ(g[pos])){
 		now=add(wh[g[pos][i]], add(lef[i],rig[i]));
-		for(auto p:now) all.push_back(p);
+		for(auto p:now) all.pb(p);
 	}
 	
 	wh[pos]=chull(all);
@@ -118,16 +122,16 @@ void dfs(int pos){
 
 int main(){FIN;
 	int n; cin>>n;
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		int k; cin>>k;
 		if(k==0){
 			int x,y; cin>>x>>y;
-			wh[i].push_back(pt(x,y));
+			wh[i].pb(pt(x,y));
 		}
 		else{
-			for (int j = 0; j < k; ++j){
+			fore(j,0,k){
 				int x; cin>>x; x--;
-				g[i].push_back(x);
+				g[i].pb(x);
 			}
 		}
 	}

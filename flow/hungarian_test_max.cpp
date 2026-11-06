@@ -1,6 +1,10 @@
 // SPOJ SCITIES - AC
 // https://www.spoj.com/problems/SCITIES/
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(x,a,b) for(int x=(a), qwerty=(b); x<qwerty; x++)
+#define pb push_back
 #ifdef DBP
 #define deb(...) fprintf(stderr,__VA_ARGS__)
 #else
@@ -19,37 +23,37 @@ bool zero(td x){return x==0;}//change to x==0, for ints/ll
 struct Hungarian{
     int n; vector<vd> cs; vi L, R;
     Hungarian(int N, int M):n(max(N,M)),cs(n,vd(n)),L(n),R(n){
-        for (int x = 0; x < N; ++x)for (int y = 0; y < M; ++y)cs[x][y]=INF;
+        fore(x,0,N)fore(y,0,M)cs[x][y]=INF;
     }
     void set(int x,int y,td c){cs[x][y]=c;}
 	td assign() {
 		int mat = 0; vd ds(n), u(n), v(n); vi dad(n), sn(n);
-		for (int i = 0; i < n; ++i)u[i]=*min_element(ALL(cs[i]));
-		for (int j = 0; j < n; ++j){v[j]=cs[0][j]-u[0];for (int i = 1; i < n; ++i)v[j]=min(v[j],cs[i][j]-u[i]);}
+		fore(i,0,n)u[i]=*min_element(ALL(cs[i]));
+		fore(j,0,n){v[j]=cs[0][j]-u[0];fore(i,1,n)v[j]=min(v[j],cs[i][j]-u[i]);}
 		L=R=vi(n, -1);
-		for (int i = 0; i < n; ++i)for (int j = 0; j < n; ++j)
+		fore(i,0,n)fore(j,0,n)
 			if(R[j]==-1&&zero(cs[i][j]-u[i]-v[j])){L[i]=j;R[j]=i;mat++;break;}
 		for(;mat<n;mat++){
 		    int s=0, j=0, i;
 		    while(L[s] != -1)s++;
 		    fill(ALL(dad),-1);fill(ALL(sn),0);
-		    for (int k = 0; k < n; ++k)ds[k]=cs[s][k]-u[s]-v[k];
+		    fore(k,0,n)ds[k]=cs[s][k]-u[s]-v[k];
 		    for(;;){
 		        j = -1;
-		        for (int k = 0; k < n; ++k)if(!sn[k]&&(j==-1||ds[k]<ds[j]))j=k;
+		        fore(k,0,n)if(!sn[k]&&(j==-1||ds[k]<ds[j]))j=k;
 		        sn[j] = 1; i = R[j];
 		        if(i == -1) break;
-		        for (int k = 0; k < n; ++k)if(!sn[k]){
+		        fore(k,0,n)if(!sn[k]){
 		            auto new_ds=ds[j]+cs[i][k]-u[i]-v[k];
 		            if(ds[k] > new_ds){ds[k]=new_ds;dad[k]=j;}
 		        }
 		    }
-		    for (int k = 0; k < n; ++k)if(k!=j&&sn[k]){auto w=ds[k]-ds[j];v[k]+=w,u[R[k]]-=w;}
+		    fore(k,0,n)if(k!=j&&sn[k]){auto w=ds[k]-ds[j];v[k]+=w,u[R[k]]-=w;}
 		    u[s] += ds[j];
 		    while(dad[j]>=0){int d = dad[j];R[j]=R[d];L[R[j]]=j;j=d;}
 		    R[j]=s;L[s]=j;
 		}
-		td value=0;for (int i = 0; i < n; ++i)value+=cs[i][L[i]];
+		td value=0;fore(i,0,n)value+=cs[i][L[i]];
 		return value;
 	}
 };

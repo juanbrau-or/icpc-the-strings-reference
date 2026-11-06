@@ -1,6 +1,11 @@
 // SPOJ SUBST1 - TLE
 // http://www.spoj.com/problems/SUBST1/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -11,12 +16,12 @@ bool sacomp(int lhs, int rhs) {return sf[lhs]<sf[rhs];}
 vector<int> constructSA(string& s){ // O(n log^2(n))
 	int n=s.size();                 // (sometimes fast enough) -> not in this example :P
 	vector<int> sa(n),r(n);
-	for (int i = 0; i < n; ++i)r[i]=s[i];
+	fore(i,0,n)r[i]=s[i];
 	for(int m=1;m<n;m*=2){
-		for (int i = 0; i < n; ++i)sa[i]=i,sf[i]={r[i],i+m<n?r[i+m]:-1};
+		fore(i,0,n)sa[i]=i,sf[i]={r[i],i+m<n?r[i+m]:-1};
 		stable_sort(sa.begin(),sa.end(),sacomp);
 		r[sa[0]]=0;
-		for (int i = 1; i < n; ++i)r[sa[i]]=sf[sa[i]]!=sf[sa[i-1]]?i:r[sa[i-1]];
+		fore(i,1,n)r[sa[i]]=sf[sa[i]]!=sf[sa[i-1]]?i:r[sa[i-1]];
 	}
 	return sa;
 }
@@ -24,14 +29,14 @@ vector<int> computeLCP(string& s, vector<int>& sa){
 	int n=s.size(),L=0;
 	vector<int> lcp(n),plcp(n),phi(n);
 	phi[sa[0]]=-1;
-	for (int i = 1; i < n; ++i)phi[sa[i]]=sa[i-1];
-	for (int i = 0; i < n; ++i){
+	fore(i,1,n)phi[sa[i]]=sa[i-1];
+	fore(i,0,n){
 		if(phi[i]<0){plcp[i]=0;continue;}
 		while(s[i+L]==s[phi[i]+L])L++;
 		plcp[i]=L;
 		L=max(L-1,0);
 	}
-	for (int i = 0; i < n; ++i)lcp[i]=plcp[sa[i]];
+	fore(i,0,n)lcp[i]=plcp[sa[i]];
 	return lcp; // lcp[i]=LCP(sa[i-1],sa[i])
 }
 
@@ -52,7 +57,7 @@ int main(){
 		vector<int> sa=constructSA(s);
 		vector<int> lcp=computeLCP(s,sa);
 		ll r=1LL*s.size()*(s.size()-1)/2;
-		for (int i = 1; i < s.size(); ++i)
+		fore(i,1,s.size())
 			r-=lcp[i];
 		printf("%lld\n",r);
 	}

@@ -1,5 +1,10 @@
 // Test vs brute force
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -20,7 +25,7 @@ struct CHT { // for minimum (for maximum just change the sign of lines)
 		while(c.size()>1&&in(c.back(),l)<=in(c[c.size()-2],c.back())){
 			c.pop_back();if(pos)pos--;
 		}
-		c.push_back(l);
+		c.pb(l);
 	}
 	inline bool fbin(tc x, int m){return in(c[m],c[m+1])>x;}
 	tc eval(tc x){
@@ -42,11 +47,11 @@ struct CHTBrute {
 	vector<Line> c;
 	void add(tc m, tc h) {
 		Line l=(Line){m, h};
-		c.push_back(l);
+		c.pb(l);
 	}
 	tc eval(tc x){
 		tc r=c[0].m*x+c[0].h;
-		for (int i = 1; i < c.size(); ++i)r=min(r,c[i].m*x+c[i].h);
+		fore(i,1,c.size())r=min(r,c[i].m*x+c[i].h);
 		return r;
 	}
 };
@@ -67,7 +72,7 @@ int main() {
 		m=MINIT;
 		cout<<"CLEAR"<< endl;
 		CHT ch;CHTBrute chb;
-		for (int _ = 0; _ < 1000; ++_){
+		fore(_,0,1000){
 			m=m-MSTEP;
 			if(m>MAXM)goto reset;
 			h=HVAL;
@@ -75,7 +80,7 @@ int main() {
 			ch.add(m,h);
 			chb.add(m,h);
 		}
-		for (int _ = 0; _ < 1000; ++_){
+		fore(_,0,1000){
 			x=XVAL;
 			tc v=ch.eval(x);
 			tc b=chb.eval(x);

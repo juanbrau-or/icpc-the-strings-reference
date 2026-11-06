@@ -1,6 +1,11 @@
 // Timus 1439 - AC
 // http://acm.timus.ru/problem.aspx?space=1&num=1439
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -32,6 +37,6 @@ int main(){
 		if(c[0]=='D')ss.insert(find(k));
 		else printf("%d\n",find(k));
 	}
-	for (int i = 0; i < ss.size(); ++i)assert(ss.order_of_key(*ss.find_by_order(i))==i);
+	fore(i,0,ss.size())assert(ss.order_of_key(*ss.find_by_order(i))==i);
 	return 0;
 }

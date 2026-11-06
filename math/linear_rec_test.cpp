@@ -1,6 +1,10 @@
 // Codeforces gym 102346K - AC
 // https://codeforces.com/gym/102346/problem/K
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -23,20 +27,20 @@ ll fpow(ll base, ll exp) {
 typedef vector<ll> vi;
 vi BM(vi x){
 	vi ls,cur;ll lf,ld;
-  for (int i = 0; i < SZ(x); ++i){
+  fore(i,0,SZ(x)){
 		ll t=0;
-    for (int j = 0; j < SZ(cur); ++j)t=(t+x[i-j-1]*(ll)cur[j])%MOD;
+    fore(j,0,SZ(cur))t=(t+x[i-j-1]*(ll)cur[j])%MOD;
 		if((t-x[i])%MOD==0)continue;
     if(!SZ(cur)){cur.resize(i+1);lf=i;ld=(t-x[i])%MOD;continue;}
 		ll k=-(x[i]-t)*fpow(ld,MOD-2)%MOD;
-		vi c(i-lf-1);c.push_back(k);
-    for (int j = 0; j < SZ(ls); ++j)c.push_back(-ls[j]*k%MOD);
+		vi c(i-lf-1);c.pb(k);
+    fore(j,0,SZ(ls))c.pb(-ls[j]*k%MOD);
     if(SZ(c)<SZ(cur))c.resize(SZ(cur));
-    for (int j = 0; j < SZ(cur); ++j)c[j]=(c[j]+cur[j])%MOD;
+    fore(j,0,SZ(cur))c[j]=(c[j]+cur[j])%MOD;
     if(i-lf+SZ(ls)>=SZ(cur))ls=cur,lf=i,ld=(t-x[i])%MOD;
 		cur=c;
 	}
-  for (int i = 0; i < SZ(cur); ++i)cur[i]=(cur[i]%MOD+MOD)%MOD;
+  fore(i,0,SZ(cur))cur[i]=(cur[i]%MOD+MOD)%MOD;
 	return cur;
 }
 
@@ -49,9 +53,9 @@ struct LinearRec{
   int n; vi terms, trans; vector<vi> bin;
   vi add(vi &a, vi &b){
     vi res(n*2+1);
-    for (int i = 0; i < n+1; ++i)for (int j = 0; j < n+1; ++j)res[i+j]=(res[i+j]*1LL+(ll)a[i]*b[j])%MOD;
+    fore(i,0,n+1)fore(j,0,n+1)res[i+j]=(res[i+j]*1LL+(ll)a[i]*b[j])%MOD;
     for(int i=2*n; i>n; --i){
-      for (int j = 0; j < n; ++j)res[i-1-j]=(res[i-1-j]*1LL+(ll)res[i]*trans[j])%MOD;
+      fore(j,0,n)res[i-1-j]=(res[i-1-j]*1LL+(ll)res[i]*trans[j])%MOD;
       res[i]=0;
     }
     res.erase(res.begin()+n+1,res.end());
@@ -59,14 +63,14 @@ struct LinearRec{
   }
   LinearRec(vi &terms, vi &trans):terms(terms),trans(trans){
     n=SZ(trans);vi a(n+1);a[1]=1;
-    bin.push_back(a);
-    for (int i = 1; i < LOG; ++i)bin.push_back(add(bin[i-1],bin[i-1]));
+    bin.pb(a);
+    fore(i,1,LOG)bin.pb(add(bin[i-1],bin[i-1]));
   }
   int calc(int k){
     vi a(n+1);a[0]=1;
-    for (int i = 0; i < LOG; ++i)if((k>>i)&1)a=add(a,bin[i]);
+    fore(i,0,LOG)if((k>>i)&1)a=add(a,bin[i]);
     int ret=0;
-    for (int i = 0; i < n; ++i)ret=((ll)ret+(ll)a[i+1]*terms[i])%MOD;
+    fore(i,0,n)ret=((ll)ret+(ll)a[i+1]*terms[i])%MOD;
     return ret;
   }
 };

@@ -1,6 +1,13 @@
 // Codeforces gym 100269H - AC
 // http://codeforces.com/gym/100269/problem/H
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,n) for(int i=a,to=n;i<to;++i)
+#define mp make_pair
+#define fst first
+#define snd second
+#define pb push_back
 #define MAXN 10005
 #define SZ(x) int((x).size())
 #define iter(it,c) for(__typeof((c).begin()) it = (c).begin(); it != (c).end(); ++it)
@@ -14,15 +21,15 @@ int dist[MAXN],q[MAXN],work[MAXN];
 struct edge {int to,rev;ll f,cap;};
 vector<edge> g[MAXN];
 void add_edge(int s, int t, ll cap){
-	g[s].push_back((edge){t,SZ(g[t]),0,cap});
-	g[t].push_back((edge){s,SZ(g[s])-1,0,0});
+	g[s].pb((edge){t,SZ(g[t]),0,cap});
+	g[t].pb((edge){s,SZ(g[s])-1,0,0});
 }
 bool dinic_bfs(){
 	fill(dist,dist+nodes,-1);dist[src]=0;
 	int qt=0;q[qt++]=src;
 	for(int qh=0;qh<qt;qh++){
 		int u=q[qh];
-		for (int i = 0; i < SZ(g[u]); ++i){
+		fore(i,0,SZ(g[u])){
 			edge &e=g[u][i];int v=g[u][i].to;
 			if(dist[v]<0&&e.f<e.cap)dist[v]=dist[u]+1,q[qt++]=v;
 		}
@@ -62,8 +69,8 @@ int l=0,r=0;
 
 vector<int> mvc(){
 	vector<int> s;
-	for (int i = 0; i < l; ++i)if(dist[2+i]<0)s.push_back(i);
-	for (int i = 0; i < r; ++i)if(dist[2+l+i]>0)s.push_back(l+i);
+	fore(i,0,l)if(dist[2+i]<0)s.pb(i);
+	fore(i,0,r)if(dist[2+l+i]>0)s.pb(l+i);
 	return s;
 }
 
@@ -75,19 +82,19 @@ int main(){
 
 	int n,k;
 	scanf("%d%d",&n,&k);
-	for (int i = 0; i < n; ++i) {
+	fore(i,0,n) {
 		scanf("%s",c[i]);
 	}
-	for (int i = 0; i < n; ++i) {
+	fore(i,0,n) {
 		string s = "";
-		for (int j = 0; j < k; ++j)
+		fore(j,0,k)
 			s+= c[i][j];
 		if(pre.count(s) == 0)
 			pre[s] = l++;
 		w[i][0] = pre[s];
 		s = "";
 		int t = strlen(c[i]);
-		for (int j = 0; j < k; ++j) {
+		fore(j,0,k) {
 			s+= c[i][t-k+j];
 		}
 		if(su.count(s) == 0)
@@ -96,39 +103,39 @@ int main(){
 
 	}
 	nodes=2+l+r;
-	for (int i = 0; i < l; ++i)add_edge(0,2+i,1);
-	for (int i = 0; i < r; ++i)add_edge(2+l+i,1,1);
-	for (int i = 0; i < n; ++i) {
+	fore(i,0,l)add_edge(0,2+i,1);
+	fore(i,0,r)add_edge(2+l+i,1,1);
+	fore(i,0,n) {
 		if(vis[w[i][0]][w[i][1]] == 0) {
 			add_edge(2+w[i][0],2+l+w[i][1],1);
 			vis[w[i][0]][w[i][1]] = 1;
 		}
 		//printf(" %d %d\n",w[i][0],w[i][1]);
-		cc[0][w[i][0]].push_back(i);
-		cc[1][w[i][1]].push_back(i);
+		cc[0][w[i][0]].pb(i);
+		cc[1][w[i][1]].pb(i);
 	}
 	max_flow(0,1);
 	vector<int> res = mvc();
 	printf("%d\n",SZ(res));
 	memset(u,false,sizeof(u));
 	int s=0;
-	for (int i = 0; i < SZ(res); ++i){
+	fore(i,0,SZ(res)){
 		int x=res[i],k=0;
 		if(x>=l){
 			x-=l;k=1;
 		}
 		vector<int> sol;
-		for (int i = 0; i < SZ(cc[k][x]); ++i){
+		fore(i,0,SZ(cc[k][x])){
 			int w=cc[k][x][i];
 			if(u[w])continue;
-			else sol.push_back(w);
+			else sol.pb(w);
 			s++;
 			u[w]=true;
 		}
 		assert(SZ(sol));
 		if(SZ(sol)>1)swap(sol[0],sol[1]);
 		printf("%d",SZ(sol));
-		for (int i = 0; i < SZ(sol); ++i)printf(" %d",sol[i]+1);
+		fore(i,0,SZ(sol))printf(" %d",sol[i]+1);
 		puts("");
 	}
 	assert(s==n);

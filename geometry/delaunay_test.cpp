@@ -1,6 +1,10 @@
 // Codeforces 104555J - AC
 // https://codeforces.com/gym/104555/problem/J
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -131,22 +135,22 @@ vector<vector<int>> delaunay(vector<pt> v){
 	int n=SZ(v); auto tmp=v;
 	vector<int> id(n); iota(ALL(id),0);
 	sort(ALL(id),[&](int l, int r){return v[l]<v[r];});
-	for (int i = 0; i < n; ++i) v[i]=tmp[id[i]];
+	fore(i,0,n) v[i]=tmp[id[i]];
 	assert(unique(ALL(v))==v.end());
 	vector<vector<int>> g(n);
 	int col=1;
-	for (int i = 2; i < n; ++i) col&=abs(area(v[i],v[i-1],v[i-2]))<=EPS;
+	fore(i,2,n) col&=abs(area(v[i],v[i-1],v[i-2]))<=EPS;
 	if(col){
-		for (int i = 1; i < n; ++i) g[id[i-1]].push_back(id[i]),g[id[i]].push_back(id[i-1]);
+		fore(i,1,n) g[id[i-1]].pb(id[i]),g[id[i]].pb(id[i-1]);
 	}
 	else{
-		Q e=build_tr(v,0,n-1).first;
+		Q e=build_tr(v,0,n-1).fst;
 		vector<Q> edg={e};
 		for(int i=0;i<SZ(edg);e=edg[i++]){
 			for(Q at=e;!at->used;at=at->next()){
 				at->used=1;
-				g[id[at->id]].push_back(id[at->rev()->id]);
-				edg.push_back(at->rev());
+				g[id[at->id]].pb(id[at->rev()->id]);
+				edg.pb(at->rev());
 			}
 		}
 	}
@@ -186,7 +190,7 @@ pt2 get(pt2 a, pt2 b, pt2 c){
 
 int main(){FIN;
 	ll mnx=INF,mxx=-INF, mny=INF, mxy=-INF;
-	for (int i = 0; i < 4; ++i){
+	fore(i,0,4){
 		ll x,y; cin>>x>>y;
 		mnx=min(mnx,x);
 		mxx=max(mxx,x);
@@ -196,21 +200,21 @@ int main(){FIN;
 
 	int n; cin>>n;
 	vector<pt> v(n);
-	for (int i = 0; i < n; ++i) cin>>v[i].x>>v[i].y;
+	fore(i,0,n) cin>>v[i].x>>v[i].y;
 	
-	for (int i = 0; i < n; ++i){
-		if(mnx<v[i].x) v.push_back(pt(2*mnx-v[i].x, v[i].y));
-		if(v[i].x<mxx) v.push_back(pt(2*mxx-v[i].x, v[i].y));
-		if(mny<v[i].y) v.push_back(pt(v[i].x,2*mny-v[i].y));
-		if(v[i].y<mxy) v.push_back(pt(v[i].x,2*mxy-v[i].y));
+	fore(i,0,n){
+		if(mnx<v[i].x) v.pb(pt(2*mnx-v[i].x, v[i].y));
+		if(v[i].x<mxx) v.pb(pt(2*mxx-v[i].x, v[i].y));
+		if(mny<v[i].y) v.pb(pt(v[i].x,2*mny-v[i].y));
+		if(v[i].y<mxy) v.pb(pt(v[i].x,2*mxy-v[i].y));
 	}
 	
 	auto g=delaunay(v);
 	
 	ld ans=0;
 	
-	for (int i = 0; i < n; ++i) if(SZ(g[i])>1){
-		for (int j = 0; j < SZ(g[i]); ++j){
+	fore(i,0,n) if(SZ(g[i])>1){
+		fore(j,0,SZ(g[i])){
 			pt a=v[i], b=v[g[i][j]], c=v[g[i][(j+1)%SZ(g[i])]];
 			pt2 circ=get(pt2(a.x,a.y), pt2(b.x,b.y), pt2(c.x,c.y));
 			int inx=mnx <= circ.x+1e-8 && circ.x-1e-8 <= mxx;

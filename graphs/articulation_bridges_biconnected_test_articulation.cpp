@@ -1,6 +1,11 @@
 // SPOJ SUBMERGE - AC
 // http://www.spoj.com/problems/SUBMERGE/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 #define MAXN 100005
@@ -9,8 +14,8 @@ vector<int> g[MAXN];int n;
 struct edge {int u,v,comp;bool bridge;};
 vector<edge> e;
 void add_edge(int u, int v){
-	g[u].push_back(e.size());g[v].push_back(e.size());
-	e.push_back((edge){u,v,-1,false});
+	g[u].pb(e.size());g[v].pb(e.size());
+	e.pb((edge){u,v,-1,false});
 }
 int D[MAXN],B[MAXN],T;
 //int nbc;  // number of biconnected components
@@ -18,7 +23,7 @@ int art[MAXN];  // articulation point iff !=0
 //stack<int> st;  // only for biconnected
 void dfs(int u,int pe){
 	B[u]=D[u]=T++;
-	for (int _ = 0; _ < g[u].size(); ++_){
+	fore(_,0,g[u].size()){
 		int ne=g[u][_];if(ne==pe)continue;
 		int v=e[ne].u^e[ne].v^u;
 		if(D[v]<0){
@@ -43,7 +48,7 @@ void doit(){
 	memset(D,-1,sizeof(D));
 	memset(art,0,sizeof(art));
 	/*nbc=*/T=0;
-	for (int i = 0; i < n; ++i)if(D[i]<0)dfs(i,-1),art[i]--;
+	fore(i,0,n)if(D[i]<0)dfs(i,-1),art[i]--;
 }
 
 int m;
@@ -57,9 +62,9 @@ int main(){
 		}
 		doit();
 		int r=0;
-		for (int i = 0; i < n; ++i)if(art[i])r++;
+		fore(i,0,n)if(art[i])r++;
 		printf("%d\n",r);
-		for (int i = 0; i < n; ++i)g[i].clear();
+		fore(i,0,n)g[i].clear();
 		e.clear();
 	}
 	return 0;

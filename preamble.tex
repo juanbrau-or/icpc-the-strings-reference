@@ -1,85 +1,61 @@
 \documentclass[10pt,landscape,twocolumn,a4paper,notitlepage]{article}
-\usepackage{hyperref}
-\usepackage[english, activeacute]{babel}
+\usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\usepackage{fancyhdr}
-\usepackage{lastpage}
-\usepackage{listings}
-\usepackage{amssymb}
-\usepackage[usenames,dvipsnames]{color}
-\usepackage{graphicx}
-\usepackage{wrapfig}
-\usepackage{amsmath}
-\usepackage{makeidx}
-
-%%% Margenes
-\setlength{\columnsep}{0.25in}    % default=10pt
-\setlength{\columnseprule}{0.5pt}    % default=0pt (no line)
-
-\addtolength{\textheight}{2.35in}
-\addtolength{\topmargin}{-0.9in}     % ~ -0.5 del incremento anterior
-
-\addtolength{\textwidth}{1.1in}
-\addtolength{\oddsidemargin}{-0.55in} % -0.5 del incremento anterior
-
-\setlength{\headsep}{0.08in}
-\setlength{\parskip}{0in}
-\setlength{\headheight}{15pt}
-\setlength{\parindent}{0mm}
-
-%%% Encabezado y pie de pagina
+\usepackage[spanish,es-nodecimaldot,es-noshorthands]{babel}
+\usepackage{lmodern}
+\usepackage[landscape,a4paper,left=10mm,right=10mm,top=13mm,bottom=10mm,headheight=14pt,headsep=3mm]{geometry}
+\usepackage{amsmath,amssymb,graphicx,tabularx,array,enumitem,titlesec,needspace}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{fancyhdr,lastpage,listings,microtype}
+\usepackage[unicode,hidelinks,bookmarksnumbered]{hyperref}
+\hypersetup{pdftitle={The Strings - Guía ICPC},pdfauthor={The algorithms are talking}}
+\setlength{\columnsep}{7mm}
+\setlength{\columnseprule}{0.3pt}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1.5pt}
+\setlength{\emergencystretch}{1.5em}
+\raggedbottom
 \pagestyle{fancy}
-\fancyhead[LO]{\textbf{\title}}
-\fancyhead[C]{\leftmark\ -\ \rightmark}
-\fancyhead[RO]{Page \thepage\ of \pageref{LastPage}}
-\renewcommand{\headrulewidth}{0.4pt}
-\fancyfoot{}
-\definecolor{darkblue}{rgb}{0,0,0.4}
-%%% Configuracion de Listings
-\lstloadlanguages{C++}
-\lstnewenvironment{code}
-	{%\lstset{    numbers=none, frame=lines, basicstyle=\small\ttfamily, }%
-	 \csname lst@SetFirstLabel\endcsname}
-	{\csname lst@SaveFirstLabel\endcsname}
-\lstset{% general command to set parameter(s)
-	language=C++, basicstyle=\small\ttfamily, keywordstyle=\slshape,
-	emph=[1]{tipo,usa}, emphstyle={[1]\sffamily\bfseries},
-	morekeywords={tint,forn,forsn,fore},
-	basewidth={0.47em,0.40em},
-	columns=fixed, fontadjust, resetmargins, xrightmargin=5pt, xleftmargin=15pt,
-	flexiblecolumns=false, tabsize=2, breaklines, breakatwhitespace=false, extendedchars=true,
-	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=9pt,
-	frame=l, framesep=3pt,
-	basicstyle=\ttfamily,
-	keywordstyle=\color{darkblue}\ttfamily,
-	stringstyle=\color{magenta}\ttfamily,
-	commentstyle=\color{RedOrange}\ttfamily,
-	morecomment=[l][\color{OliveGreen}]{\#}
-}
-
+\fancyhf{}
+\fancyhead[L]{\small\textbf{The Strings -- Tec de Monterrey, Guadalajara}}
+\fancyhead[R]{\small\thepage\ / \pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\titlespacing*{\section}{0pt}{9pt plus 2pt minus 1pt}{4pt}
+\titlespacing*{\subsection}{0pt}{7pt plus 2pt minus 1pt}{3pt}
+\titleformat{\section}{\large\bfseries}{\thesection}{0.6em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{0.5em}{}
+\setlist{nosep,leftmargin=1.2em,topsep=2pt}
+\setcounter{tocdepth}{2}
+\definecolor{darkblue}{rgb}{0,0,0.35}
 \lstdefinestyle{C++}{
-	language=C++, basicstyle=\small\ttfamily, keywordstyle=\slshape,
-	emph=[1]{tipo,usa,tipo2}, emphstyle={[1]\sffamily\bfseries},
-	morekeywords={tint,forn,forsn,fore},
-	basewidth={0.47em,0.40em},
-	columns=fixed, fontadjust, resetmargins, xrightmargin=5pt, xleftmargin=15pt,
-	flexiblecolumns=false, tabsize=2, breaklines, breakatwhitespace=false, extendedchars=true,
-	numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=9pt,
-	frame=l, framesep=3pt,
-	basicstyle=\ttfamily,
-	keywordstyle=\color{darkblue}\ttfamily,
-	stringstyle=\color{magenta}\ttfamily,
-	commentstyle=\color{RedOrange}\ttfamily,
-	morecomment=[l][\color{OliveGreen}]{\#}
+ language=C++,basicstyle=\fontsize{8}{8.8}\selectfont\ttfamily,
+ keywordstyle=\color{darkblue},commentstyle=\color{OliveGreen},
+ stringstyle=\color{Magenta},morekeywords={ll,fore,pb,fst,snd,SZ,ALL},
+ columns=fullflexible,keepspaces=true,tabsize=2,
+ breaklines=true,breakatwhitespace=false,breakindent=10pt,
+ numbers=left,numberstyle=\fontsize{6}{6.5}\selectfont\color{gray},
+ numbersep=5pt,xleftmargin=12pt,xrightmargin=0pt,
+ frame=l,framesep=3pt,rulecolor=\color{gray},
+ aboveskip=3pt,belowskip=4pt,showstringspaces=false,
+ literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+ {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+ {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {ü}{{\"u}}1
 }
+\lstset{style=C++}
+\newcommand{\id}[1]{\texttt{\detokenize{#1}}}
+\newcommand{\field}[2]{\par\noindent\textbf{#1} #2}
+\newcommand{\algodesc}[2]{\expandafter\gdef\csname desc@#1\endcsname{#2}}
+\newcommand{\algoref}[2]{\hyperref[code:#1]{#2 (p.~\pageref*{code:#1})}}
+\newcommand{\cppfile}[2][]{%
+ \label{code:#2}%
+ \begingroup\small
+ \ifcsname desc@#2\endcsname\csname desc@#2\endcsname
+ \else\PackageError{reference}{Falta descripcion de #2}{Documenta el fragmento antes de incluirlo.}\fi
+ \par\endgroup
+ {\scriptsize\color{gray}\nolinkurl{#2}\par}%
+ \lstinputlisting[style=C++,#1]{#2}}
+\newcommand{\complexity}[1]{\texorpdfstring{$\mathcal O(#1)$}{O(#1)}}
+\newcommand{\comb}[2]{\binom{#1}{#2}}
 
-%%% Macros
-\def\nbtitle#1{\begin{Large}\begin{center}\textbf{#1}\end{center}\end{Large}}
-\def\nbsection#1{\section{#1}}
-\def\nbsubsection#1{\subsection{#1}}
-\def\nbcoment#1{\begin{small}\textbf{#1}\end{small}}
-\newcommand{\comb}[2]{\left( \begin{array}{c} #1 \\ #2 \end{array}\right)}
-\def\complexity#1{\texorpdfstring{$\mathcal{O}(#1)$}{O(#1)}}
-\newcommand\cppfile[2][]{
-	\lstinputlisting[style=C++]{#2}
-}
+% Filas independientes: las tablas de decisión pueden cruzar columnas.
+\newcommand{\decisionrow}[2]{\noindent\begin{tabularx}{\linewidth}{@{}p{.38\linewidth}X@{}}#1&#2\end{tabularx}\par}

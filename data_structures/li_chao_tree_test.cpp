@@ -2,6 +2,10 @@
 // https://contest.ucup.ac/contest/2668/problem/15455
 
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -74,15 +78,15 @@ struct LiChaoTree{
 int main(){FIN;
 	int n,m,k; cin>>n>>m>>k;
     vector<ll> a(n+1);
-    for (int i = 1; i < n+1; ++i) cin>>a[i];
+    fore(i,1,n+1) cin>>a[i];
 
     auto s=a;
-    for (int i = 1; i < n+1; ++i) s[i]+=s[i-1];
+    fore(i,1,n+1) s[i]+=s[i-1];
 
     vector<ll> mn(n+1,1e18),mx(n+1,-1e18);
 
     multiset<ll> all;
-    for (int i = 1; i < n+1; ++i){
+    fore(i,1,n+1){
         if(i+k<=n+1) all.insert(s[i+k-1]-s[i-1]);
         if(i-k>=1) all.erase(all.find(s[i-1]-s[i-k-1]));
 
@@ -97,7 +101,7 @@ int main(){FIN;
     {
         LiChaoTree lt(m+1);
     
-        for (int i = 1; i < n+1; ++i){
+        fore(i,1,n+1){
             if(mn[i]==a[i]*k) continue;
 
             ll low=(mn[i]+k-1)/k, up=a[i];
@@ -109,7 +113,7 @@ int main(){FIN;
             lt.add(Line(-A, -B), low, up+1);
         }
 
-        for (int k = 1; k < m+1; ++k) if(ans[k]>0){
+        fore(k,1,m+1) if(ans[k]>0){
             ans[k]=min(ans[k], -lt.query(k));
         }
     }
@@ -117,7 +121,7 @@ int main(){FIN;
     {
         LiChaoTree lt(m+1);
     
-        for (int i = 1; i < n+1; ++i){
+        fore(i,1,n+1){
             if(mx[i]==a[i]*k) continue;
 
             ll low=a[i], up=mx[i]/k;
@@ -129,13 +133,13 @@ int main(){FIN;
             lt.add(Line(-A, -B), low, up+1);
         }
 
-        for (int k = 1; k < m+1; ++k) if(ans[k]>0){
+        fore(k,1,m+1) if(ans[k]>0){
             ans[k]=min(ans[k], -lt.query(k));
         }
     }
 
     cout<<fixed<<setprecision(10);
-    for (int i = 1; i < m+1; ++i){
+    fore(i,1,m+1){
         if(ans[i]>1.5) cout<<"-1\n";
         else cout<<ans[i]<<"\n";
     }

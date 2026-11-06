@@ -2,6 +2,7 @@ struct state {int len,link;map<char,int> next;}; //clear next!!
 state st[100005];
 int sz,last;
 void sa_init(){
+	fore(i,0,sz)st[i].next.clear();
 	last=st[0].len=0;sz=1;
 	st[0].link=-1;
 }

@@ -6,3 +6,6 @@ reference.synctex.gz
 clean_ref.py
 **/a.out
 
+*.fdb_latexmk
+*.fls
+__pycache__/

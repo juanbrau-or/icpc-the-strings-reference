@@ -1,4 +1,9 @@
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -80,8 +85,8 @@ struct circle {
 		double x=(d*d-c.r*c.r+r*r)/(2*d);
 		double y=sqrt(r*r-x*x);
 		pt v=(c.o-o)/d;
-		s.push_back(o+v*x+v.rot(ccw90)*y);
-		if(y>EPS)s.push_back(o+v*x-v.rot(ccw90)*y);
+		s.pb(o+v*x+v.rot(ccw90)*y);
+		if(y>EPS)s.pb(o+v*x-v.rot(ccw90)*y);
 		return s;
 	}
 	vector<pt> operator^(ln l){
@@ -89,10 +94,10 @@ struct circle {
 		pt p=l.proj(o);
 		double d=(p-o).norm();
 		if(d-EPS>r)return s;
-		if(abs(d-r)<EPS){s.push_back(p);return s;}
+		if(abs(d-r)<EPS){s.pb(p);return s;}
 		d=sqrt(r*r-d*d);
-		s.push_back(p+l.pq.unit()*d);
-		s.push_back(p-l.pq.unit()*d);
+		s.pb(p+l.pq.unit()*d);
+		s.pb(p-l.pq.unit()*d);
 		return s;
 	}
 	vector<pt> tang(pt p){
@@ -104,7 +109,7 @@ struct circle {
 double randd(){return 1.*rand()/RAND_MAX;}
 
 int main(){
-	for (int _ = 0; _ < 100000; ++_){
+	fore(_,0,100000){
 		pt c0(randd(),randd()),c1(randd(),randd());
 		double r0=randd(),r1=randd();
 		double d=(c0-c1).norm();
@@ -118,7 +123,7 @@ int main(){
 		}
 		for(auto p:v)assert(abs((p-c0).norm()-r0)<EPS&&abs((p-c1).norm()-r1)<EPS);
 	}
-	for (int _ = 0; _ < 100000; ++_){
+	fore(_,0,100000){
 		pt c(randd(),randd());ln l(pt(randd(),randd()),pt(randd(),randd()));
 		double r=randd();
 		double d=l.dist(c);
@@ -131,7 +136,7 @@ int main(){
 		//printf("(%lf,%lf,%lf) (%lf,%lf) (%lf,%lf)  (%lf,%lf)\n",c.x,c.y,r,l.p.x,l.p.y,(l.p+l.pq).x,(l.p+l.pq).y,v[0].x,v[0].y);
 		for(auto p:v)assert(l.has(p)),assert(abs((p-c).norm()-r)<EPS);
 	}
-	for (int _ = 0; _ < 100000; ++_){
+	fore(_,0,100000){
 		pt c(randd(),randd());pt p(randd(),randd());
 		double r=randd();
 		if(circle(c,r).has(p)){_--;continue;}

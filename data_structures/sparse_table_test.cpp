@@ -1,6 +1,11 @@
 // SPOJ RMQSQ - AC
 // http://www.spoj.com/problems/RMQSQ/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -9,8 +14,8 @@ typedef long long ll;
 #define oper min
 int st[K][1<<K];int n;  // K such that 2^K>n
 void st_init(int *a){
-	for (int i = 0; i < n; ++i)st[0][i]=a[i];
-	for (int k = 1; k < K; ++k)for (int i = 0; i < n-(1<<k)+1; ++i)
+	fore(i,0,n)st[0][i]=a[i];
+	fore(k,1,K)fore(i,0,n-(1<<k)+1)
 		st[k][i]=oper(st[k-1][i],st[k-1][i+(1<<(k-1))]);
 }
 int st_query(int s, int e){
@@ -22,7 +27,7 @@ int x[1<<K];
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0; i < n; ++i)scanf("%d",x+i);
+	fore(i,0,n)scanf("%d",x+i);
 	st_init(x);
 	int q;
 	scanf("%d",&q);

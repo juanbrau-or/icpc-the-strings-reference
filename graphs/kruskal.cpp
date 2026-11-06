@@ -12,9 +12,9 @@ vector<pair<ll,pair<int,int> > > es; // edges (cost,(u,v))
 ll kruskal(){  // assumes graph is connected
 	sort(es.begin(),es.end());uf_init();
 	ll r=0;
-	for (int i = 0; i < es.size(); ++i){
-		int x=es[i].second.first,y=es[i].second.second;
-		if(uf_join(x,y))r+=es[i].first; // (x,y,c) belongs to mst
+	fore(i,0,es.size()){
+		int x=es[i].snd.fst,y=es[i].snd.snd;
+		if(uf_join(x,y))r+=es[i].fst; // (x,y,c) belongs to mst
 	}
 	return r; // total cost
 }

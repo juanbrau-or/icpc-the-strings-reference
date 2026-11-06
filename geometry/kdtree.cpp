@@ -3,11 +3,11 @@ bool onx(pt a, pt b){return a.x<b.x;}
 bool ony(pt a, pt b){return a.y<b.y;}
 struct Node {
 	pt pp;
-	ll x0=INF, x1=-INF, y0=INF, y1=-INF;
+	double x0=INFINITY,x1=-INFINITY,y0=INFINITY,y1=-INFINITY;
 	Node *first=0, *second=0;
-	ll distance(pt p){
-		ll x=min(max(x0,p.x),x1);
-		ll y=min(max(y0,p.y),y1);
+	double distance(pt p){
+		double x=min(max(x0,p.x),x1);
+		double y=min(max(y0,p.y),y1);
 		return (pt(x,y)-p).norm2();
 	}
 	Node(vector<pt>&& vp):pp(vp[0]){
@@ -26,18 +26,18 @@ struct Node {
 struct KDTree {
 	Node* root;
 	KDTree(const vector<pt>& vp):root(new Node({ALL(vp)})) {}
-	pair<ll,pt> search(pt p, Node *node){
+	pair<double,pt> search(pt p, Node *node){
 		if(!node->first){
 			//avoid query point as answer
 			//if(p==node->pp) {INF,pt()};
 			return {(p-node->pp).norm2(),node->pp};
 		}
 		Node *f=node->first, *s=node->second;
-		ll bf=f->distance(p), bs=s->distance(p);
+		double bf=f->distance(p), bs=s->distance(p);
 		if(bf>bs)swap(bf,bs),swap(f,s);
 		auto best=search(p,f);
-		if(bs<best.first) best=min(best,search(p,s));
+		if(bs<best.fst) best=min(best,search(p,s));
 		return best;
 	}
-	pair<ll,pt> nearest(pt p){return search(p,root);}
+	pair<double,pt> nearest(pt p){return search(p,root);}
 };

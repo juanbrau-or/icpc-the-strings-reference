@@ -1,6 +1,11 @@
 // Codeforces 319C - AC
 // http://codeforces.com/problemset/problem/319/C
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -21,7 +26,7 @@ struct CHT { // for minimum (for maximum just change the sign of lines)
 		while(c.size()>1&&in(c.back(),l)<=in(c[c.size()-2],c.back())){
 			c.pop_back();if(pos)pos--;
 		}
-		c.push_back(l);
+		c.pb(l);
 	}
 	inline bool fbin(tc x, int m){return in(c[m],c[m+1])>x;}
 	tc eval(tc x){
@@ -46,11 +51,11 @@ ll f;
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0; i < n; ++i){int t;scanf("%d",&t);a[i]=t;}
-	for (int i = 0; i < n; ++i){int t;scanf("%d",&t);b[i]=t;}
+	fore(i,0,n){int t;scanf("%d",&t);a[i]=t;}
+	fore(i,0,n){int t;scanf("%d",&t);b[i]=t;}
 	CHT ch;
 	ch.add(b[0],0);
-	for (int i = 1; i < n; ++i){
+	fore(i,1,n){
 		f=ch.eval(a[i]);
 		ch.add(b[i],f);
 	}

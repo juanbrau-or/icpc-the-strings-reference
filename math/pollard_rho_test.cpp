@@ -1,6 +1,11 @@
 // SPOJ FACT0 - AC
 // http://www.spoj.com/problems/FACT0/
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -20,7 +25,7 @@ bool is_prime_prob(ll n, int a){
 	while(d%2==0)s++,d/=2;
 	ll x=expmod(a,d,n);
 	if((x==1)||(x+1==n))return true;
-	for (int _ = 0; _ < s-1; ++_){
+	fore(_,0,s-1){
 		x=mulmod(x,x,n);
 		if(x==1)return false;
 		if(x+1==n)return true;
@@ -30,7 +35,7 @@ bool is_prime_prob(ll n, int a){
 bool rabin(ll n){ // true iff n is prime
 	if(n==1)return false;
 	int ar[]={2,3,5,7,11,13,17,19,23};
-	for (int i = 0; i < 9; ++i)if(!is_prime_prob(n,ar[i]))return false;
+	fore(i,0,9)if(!is_prime_prob(n,ar[i]))return false;
 	return true;
 }
 ll rho(ll n){
@@ -62,7 +67,7 @@ int main(){
 		for(auto t:f){
 			if(p)putchar(' ');
 			p=true;
-			printf("%lld^%d",t.first,t.second);
+			printf("%lld^%d",t.fst,t.snd);
 		}
 		puts("");
 	}

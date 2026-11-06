@@ -1,5 +1,10 @@
 // Same as stl_rope_test.cpp, but with integers, since it's a bit different for types other than char
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -15,9 +20,9 @@ int main(){
 		int n;
 		scanf("%d",&n);
 		rope<int> x;
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			int k;
-			scanf("%d",&k);x.push_back(k);
+			scanf("%d",&k);x.pb(k);
 		}
 		char t[8];
 		while(scanf("%s",t),t[0]!='E'){
@@ -26,15 +31,15 @@ int main(){
 				scanf("%d",&n);
 				/*
 				rope<int> s;
-					for (int i = 0; i < n; ++i){
+					fore(i,0,n){
 					int k;
 					scanf("%d",&k);
-						s.push_back(k);
+						s.pb(k);
 				}
 				scanf("%d",&i);
 				x.insert(x.mutable_begin()+i,s);
 				*/
-				for (int i = 0; i < n; ++i)scanf("%d",s+i);
+				fore(i,0,n)scanf("%d",s+i);
 				scanf("%d",&i);
 				x.insert(x.mutable_begin()+i,s,n);
 			}

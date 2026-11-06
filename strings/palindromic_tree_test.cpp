@@ -1,4 +1,8 @@
 #include <bits/stdc++.h>
+#define fore(x,a,b) for(int x=a, qwerty=b; x<qwerty; x++)
+#define pb push_back
+#define fst first
+#define snd second
 #define ALL(a) (a).begin(),(a).end()
 #define SZ(a) ((int)(a).size())
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
@@ -16,8 +20,8 @@ struct palindromic_tree{
     };
     vector<Node> ns;
     int last;
-    palindromic_tree():last(0){ns.push_back(Node(-1));ns.push_back(Node(0));}
-    void reset(){ns.clear();last=0;ns.push_back(Node(-1));ns.push_back(Node(0));}
+    palindromic_tree():last(0){ns.pb(Node(-1));ns.pb(Node(0));}
+    void reset(){ns.clear();last=0;ns.pb(Node(-1));ns.pb(Node(0));}
     void add(int i, string &s){
         int p=last, c=s[i]-'a';
         while(s[i-ns[p].len-1]!=s[i])p=ns[p].link;
@@ -29,7 +33,7 @@ struct palindromic_tree{
             while(s[i-ns[q].len-1]!=s[i])q=ns[q].link;
             q=max(1,ns[q].to[c]);
             last=ns[p].to[c]=SZ(ns);
-            ns.push_back(Node(ns[p].len+2,q,1));
+            ns.pb(Node(ns[p].len+2,q,1));
         }
     }
 };
@@ -39,18 +43,18 @@ string s, t;
 
 ll solve(int a, int b){
     ll ans = a > 1 && b > 1 ? pt1.ns[a].cnt * pt2.ns[b].cnt : 0;
-    for (int c = 0; c < pt1.SIGMA; ++c)if(pt1.ns[a].to[c] && pt2.ns[b].to[c])
+    fore(c,0,pt1.SIGMA)if(pt1.ns[a].to[c] && pt2.ns[b].to[c])
         ans += solve(pt1.ns[a].to[c],pt2.ns[b].to[c]);
     return ans;
 }
 
 int main(){FIN;
     int T; cin >> T;
-    for (int tc = 1; tc < T+1; ++tc){
+    fore(tc,1,T+1){
         pt1.reset();pt2.reset();
         cin >> s >> t;
-        for (int i = 0; i < SZ(s); ++i)pt1.add(i,s);
-        for (int i = 0; i < SZ(t); ++i)pt2.add(i,t);
+        fore(i,0,SZ(s))pt1.add(i,s);
+        fore(i,0,SZ(t))pt2.add(i,t);
 
         for(int i=SZ(pt1.ns)-1; i>=0; i--)
             pt1.ns[pt1.ns[i].link].cnt+=pt1.ns[i].cnt;

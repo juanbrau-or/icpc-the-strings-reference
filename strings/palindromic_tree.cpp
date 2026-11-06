@@ -9,19 +9,19 @@ struct palindromic_tree{
     };
     vector<Node> ns;
     int last;
-    palindromic_tree():last(0){ns.push_back(Node(-1));ns.push_back(Node(0));}
+    palindromic_tree():last(0){ns.pb(Node(-1));ns.pb(Node(0));}
     void add(int i, string &s){
         int p=last, c=s[i]-'a';
-        while(s[i-ns[p].len-1]!=s[i])p=ns[p].link;
+        while(i-ns[p].len-1<0||s[i-ns[p].len-1]!=s[i])p=ns[p].link;
         if(ns[p].to[c]){
             last=ns[p].to[c];
             ns[last].cnt++;
         }else{
             int q=ns[p].link;
-            while(s[i-ns[q].len-1]!=s[i])q=ns[q].link;
+            while(i-ns[q].len-1<0||s[i-ns[q].len-1]!=s[i])q=ns[q].link;
             q=max(1,ns[q].to[c]);
             last=ns[p].to[c]=SZ(ns);
-            ns.push_back(Node(ns[p].len+2,q,1));
+            ns.pb(Node(ns[p].len+2,q,1));
         }
     }
 };

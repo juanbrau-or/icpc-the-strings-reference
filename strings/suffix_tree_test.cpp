@@ -1,6 +1,11 @@
 // ICPC Live Archive 5794 - AC
 // https://icpcarchive.ecs.baylor.edu/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=3805
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 #ifdef DEMETRIO
 #define deb(...) fprintf(stderr,__VA_ARGS__)
 #define deb1(x) cerr << #x << " = " << x << endl
@@ -24,7 +29,7 @@ struct SuffixTree {
 	int node,pos,sz=1,n=0;
 	void clear(){
 		node=pos=n=0;
-		for (int i = 0; i < sz; ++i)to[i].clear();
+		fore(i,0,sz)to[i].clear();
 		sz=1;
 	}
 	int make_node(int p, int l){
@@ -68,7 +73,7 @@ struct SuffixTree {
 			return r;
 		}
 		for(auto p:to[x]){
-			int c=p.first,y=p.second;
+			int c=p.fst,y=p.snd;
 			r|=dfs(y,ss,x);
 		}
 		if(x)ss.insert(r);
@@ -80,9 +85,9 @@ struct SuffixTree {
 		return SZ(r);
 	}
 	void print(){
-		for (int i = 0; i < sz; ++i){
+		fore(i,0,sz){
 			printf("%d %d %d %d",i,fpos[i],len[i],link[i]);
-			for(auto p:to[i])printf(" (%c,%d)",(char)p.first,p.second);
+			for(auto p:to[i])printf(" (%c,%d)",(char)p.fst,p.snd);
 			puts("");
 		}
 	}
@@ -95,7 +100,7 @@ int n;
 int main(){
 	while(scanf("%d",&n),n){
 		t.clear();
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			scanf("%s",s);
 			for(int j=0;s[j];++j)t.add(s[j],i);
 			t.add(-100-i,i);

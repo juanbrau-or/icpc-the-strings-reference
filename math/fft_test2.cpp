@@ -1,6 +1,11 @@
 // ICPC Live Archive 4671 - AC
 // https://icpcarchive.ecs.baylor.edu/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=2672
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -41,7 +46,7 @@ CD root(int n, bool inv){
 CD cp1[MAXN+9],cp2[MAXN+9];
 int R[MAXN+9];
 void dft(CD* a, int n, bool inv){
-	for (int i = 0; i < n; ++i)if(R[i]<i)swap(a[R[i]],a[i]);
+	fore(i,0,n)if(R[i]<i)swap(a[R[i]],a[i]);
 	for(int m=2;m<=n;m*=2){
 		double z=2*pi/m*(inv?-1:1); // FFT
 		CD wi=CD(cos(z),sin(z)); // FFT
@@ -53,27 +58,27 @@ void dft(CD* a, int n, bool inv){
 			}
 		}
 	}
-	if(inv)for (int i = 0; i < n; ++i)a[i]/=n; // FFT
+	if(inv)fore(i,0,n)a[i]/=n; // FFT
 	//if(inv){ // NTT
 	//	CD z(pm(n,MOD-2)); // pm: modular exponentiation
-	//	for (int i = 0; i < n; ++i)a[i]=a[i]*z;
+	//	fore(i,0,n)a[i]=a[i]*z;
 	//}
 }
 poly multiply(poly& p1, poly& p2){
 	int n=p1.size()+p2.size()+1;
 	int m=1,cnt=0;
 	while(m<=n)m+=m,cnt++;
-	for (int i = 0; i < m; ++i){R[i]=0;for (int j = 0; j < cnt; ++j)R[i]=(R[i]<<1)|((i>>j)&1);}
-	for (int i = 0; i < m; ++i)cp1[i]=0,cp2[i]=0;
-	for (int i = 0; i < p1.size(); ++i)cp1[i]=p1[i];
-	for (int i = 0; i < p2.size(); ++i)cp2[i]=p2[i];
+	fore(i,0,m){R[i]=0;fore(j,0,cnt)R[i]=(R[i]<<1)|((i>>j)&1);}
+	fore(i,0,m)cp1[i]=0,cp2[i]=0;
+	fore(i,0,p1.size())cp1[i]=p1[i];
+	fore(i,0,p2.size())cp2[i]=p2[i];
 	dft(cp1,m,false);dft(cp2,m,false);
-	for (int i = 0; i < m; ++i)cp1[i]=cp1[i]*cp2[i];
+	fore(i,0,m)cp1[i]=cp1[i]*cp2[i];
 	dft(cp1,m,true);
 	poly res;
 	n-=2;
-	for (int i = 0; i < n; ++i)res.push_back((ll)floor(cp1[i].real()+0.5)); // FFT
-	//for (int i = 0; i < n; ++i)res.push_back(cp1[i].x); // NTT
+	fore(i,0,n)res.pb((ll)floor(cp1[i].real()+0.5)); // FFT
+	//fore(i,0,n)res.pb(cp1[i].x); // NTT
 	return res;
 }
 
@@ -97,9 +102,9 @@ int gh(int _, int s, int e){
 }
 
 int main(){
-	for (int _ = 0; _ < 2; ++_){
+	fore(_,0,2){
 		p[0][_]=pis[0][_]=1;
-		for (int i = 1; i < 200005; ++i){
+		fore(i,1,200005){
 			p[i][_]=(1LL*p[i-1][_]*P)%MOD[_];
 			pis[i][_]=(1LL*pis[i-1][_]*PI[_])%MOD[_];
 		}
@@ -108,20 +113,20 @@ int main(){
 	while(scanf("%d",&k),k>=0){
 		scanf("%s%s",s,t);ns=strlen(s);nt=strlen(t);
 		if(nt>ns){printf("Case %d: 0\n",tc++);continue;}
-		for (int _ = 0; _ < 2; ++_){
+		fore(_,0,2){
 			h[0][_]=0;
-			for (int i = 0; i < ns; ++i){
+			fore(i,0,ns){
 				h[i+1][_]=(h[i][_]+(1LL*s[i]*p[i][_]))%MOD[_];
 			}
 		}
 		vector<int> S,T,R;
 		w.clear();
-		for (int i = 0; i < ns; ++i)S.push_back(s[i]=='a'?1:-1);
-		for (int i = 0; i < nt; ++i)T.push_back(t[i]=='a'?1:-1);
+		fore(i,0,ns)S.pb(s[i]=='a'?1:-1);
+		fore(i,0,nt)T.pb(t[i]=='a'?1:-1);
 		reverse(T.begin(),T.end());
 		R=multiply(S,T);
 		int q=nt-2*k,r=0;
-		for (int i = nt-1; i < ns; ++i){
+		fore(i,nt-1,ns){
 			if(R[i]>=q){
 				w.insert({gh(0,i-nt+1,i+1),gh(1,i-nt+1,i+1)});
 			}

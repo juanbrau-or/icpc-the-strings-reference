@@ -2,6 +2,8 @@
 // https://codeforces.com/contest/438/problem/E
 
 #include <bits/stdc++.h>
+#define pb push_back
+#define fore(i,a,b) for(int i=a,jet=b;i<jet;++i)
 #define SZ(x) ((int)x.size())
 #define FIN ios::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 using namespace std;
@@ -47,23 +49,23 @@ struct FFT {
 		assert(c <= (1<<LG));
 		u h=u(uu(-p)*-p%p), a=m(h, p/2+1), x, y;
 		while(n<c) n*=2, h=red(p, m(h, a));
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			v[i]=i<SZ(as)?u(as[i]):0,
 			v[i+n]=i<SZ(bs)?u(bs[i]):0;
 
 		}
-		for(auto s:{v,v+n}) for(int j=n;j>=2;j--) for(int k=j&-j; k/=2;) for (int i = j-k; i < j; ++i){
+		for(auto s:{v,v+n}) for(int j=n;j>=2;j--) for(int k=j&-j; k/=2;) fore(i,j-k,j){
 			x=s[i], y=s[i-k];
 			s[i-k] = red(2*p, x+y);
 			s[i] = m(2*p+y-x, r[3*k-j+i]);
 		}
-		for (int i = 0; i < n; ++i) v[i]=m(v[i], v[i+n]);
-		for (int j = 2; j < n+1; ++j) for(int k=1; !(k&j); k*=2) for (int i = j-k; i < j; ++i){
+		fore(i,0,n) v[i]=m(v[i], v[i+n]);
+		fore(j,2,n+1) for(int k=1; !(k&j); k*=2) fore(i,j-k,j){
 			x = m(v[i], r[3*k+j-i]);
 			y = red(2*p, v[i-k]);
 			v[i-k]=x+y, v[i]=2*p+y-x;
 		}
-		for (int i = 0; i < c; ++i) v[i]=red(p, m(v[i], h));
+		fore(i,0,c) v[i]=red(p, m(v[i], h));
 		return poly(v, v+c);
 	}
 };
@@ -80,7 +82,7 @@ poly multiply(const poly &as, const poly &bs) {
 poly add(poly &a, poly &b){
 	int n=SZ(a),m=SZ(b);
 	poly ans(max(n,m));
-	for (int i = 0; i < max(n,m); ++i) ans[i]=addmod(i<SZ(a)?a[i]:0, i<SZ(b)?b[i]:0);
+	fore(i,0,max(n,m)) ans[i]=addmod(i<SZ(a)?a[i]:0, i<SZ(b)?b[i]:0);
 	while(SZ(ans)>1&&!ans.back())ans.pop_back();
 	return ans;
 }
@@ -88,14 +90,14 @@ poly add(poly &a, poly &b){
 // derivative of p
 poly derivate(poly &p){
 	poly ans(max(1, SZ(p)-1));
-	for (int i = 1; i < SZ(p); ++i) ans[i-1]=mulmod(p[i],i);
+	fore(i,1,SZ(p)) ans[i-1]=mulmod(p[i],i);
 	return ans;
 }
 
 // integral of p
 poly integrate(poly &p){
 	poly ans(SZ(p)+1);
-	for (int i = 0; i < SZ(p); ++i) ans[i+1]=mulmod(p[i], inv(i+1));
+	fore(i,0,SZ(p)) ans[i+1]=mulmod(p[i], inv(i+1));
 	return ans;
 }
 
@@ -116,7 +118,7 @@ poly invert(poly &p, int d){
 		sz*=2;
 		poly pre(p.begin(), p.begin()+min(SZ(p),sz));
 		poly cur=multiply(res,pre);
-		for (int i = 0; i < SZ(cur); ++i) cur[i]=submod(0,cur[i]);
+		fore(i,0,SZ(cur)) cur[i]=submod(0,cur[i]);
 		cur[0]=addmod(cur[0],2);
 		res=multiply(res,cur);
 		res=takemod(res,sz);
@@ -144,7 +146,7 @@ poly exp(poly &p, int d){
 	while(sz<d){
 		sz*=2;
 		poly lg=log(res, sz), cur(sz);
-		for (int i = 0; i < sz; ++i) cur[i]=submod(i<SZ(p)?p[i]:0, i<SZ(lg)?lg[i]:0);
+		fore(i,0,sz) cur[i]=submod(i<SZ(p)?p[i]:0, i<SZ(lg)?lg[i]:0);
 		cur[0]=addmod(cur[0],1);
 		res=multiply(res,cur);
 		res=takemod(res, sz);
@@ -170,7 +172,7 @@ poly operator*(tf c, poly p){
 int main(){FIN;
 	int n,m; cin>>n>>m; m++;
 	vector<int> c(m);
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		int x; cin>>x;
 		if(x<m)c[x]=1;
 	}
@@ -190,6 +192,6 @@ int main(){FIN;
 	tmp=2*tmp;
 	// tmp = 2 / (1+√(1-4C))
 	
-	for (int i = 1; i < m; ++i)cout<<tmp[i]<<"\n";
+	fore(i,1,m)cout<<tmp[i]<<"\n";
  	return 0;
 }

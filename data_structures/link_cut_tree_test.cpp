@@ -1,6 +1,11 @@
 // Codeforces gym 100960H - AC
 // http://codeforces.com/gym/100960/problem/H
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -79,7 +84,7 @@ int n,m;
 
 int main(){
 	scanf("%d",&n);
-	for (int i = 0; i < n; ++i)x[i]=new item();
+	fore(i,0,n)x[i]=new item();
 	char s[16];int a,b;
 	while(scanf("%s",s),s[0]!='E'){
 		scanf("%d%d",&a,&b);a--;b--;

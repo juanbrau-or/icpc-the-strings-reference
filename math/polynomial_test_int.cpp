@@ -1,4 +1,9 @@
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -14,19 +19,19 @@ struct poly {  // poly<> : 1 variable, poly<poly<>>: 2 variables, etc.
 	poly operator+(poly<T> o){
 		int m=c.size(),n=o.c.size();
 		poly res(max(m,n));
-		for (int i = 0; i < m; ++i)res[i]=res[i]+c[i];
-		for (int i = 0; i < n; ++i)res[i]=res[i]+o.c[i];
+		fore(i,0,m)res[i]=res[i]+c[i];
+		fore(i,0,n)res[i]=res[i]+o.c[i];
 		return res;
 	}
 	poly operator*(tp k){
 		poly res(c.size());
-		for (int i = 0; i < c.size(); ++i)res[i]=c[i]*k;
+		fore(i,0,c.size())res[i]=c[i]*k;
 		return res;
 	}
 	poly operator*(poly o){
 		int m=c.size(),n=o.c.size();
 		poly res(m+n-1);
-		for (int i = 0; i < m; ++i)for (int j = 0; j < n; ++j)res[i+j]=res[i+j]+c[i]*o.c[j];
+		fore(i,0,m)fore(j,0,n)res[i+j]=res[i+j]+c[i]*o.c[j];
 		return res;
 	}
 	poly operator-(poly<T> o){return *this+(o*-1);}
@@ -47,8 +52,8 @@ set<tp> roots(poly<> p){ // only for integer polynomials
 	tp a0=0,an=abs(p[p.c.size()-1]);
 	for(int k=0;!a0;a0=abs(p[k++]));
 	vector<tp> ps,qs;
-	for (int i = 1; i < sqrt(a0)+1; ++i)if(a0%i==0)ps.push_back(i),ps.push_back(a0/i);
-	for (int i = 1; i < sqrt(an)+1; ++i)if(an%i==0)qs.push_back(i),qs.push_back(an/i);
+	fore(i,1,sqrt(a0)+1)if(a0%i==0)ps.pb(i),ps.pb(a0/i);
+	fore(i,1,sqrt(an)+1)if(an%i==0)qs.pb(i),qs.pb(an/i);
 	for(auto pt:ps)for(auto qt:qs)if(pt%qt==0){
 		tp x=pt/qt;
 		if(!p(x))r.insert(x);
@@ -67,8 +72,8 @@ pair<poly<>,tp> ruffini(poly<> p, tp r){ // returns pair (result,rem)
 poly<> interpolate(vector<tp> x, vector<tp> y){
 	poly<> q={1},S={0};
 	for(tp a:x)q=poly<>({-a,1})*q;
-	for (int i = 0; i < x.size(); ++i){
-		poly<> Li=ruffini(q,x[i]).first;
+	fore(i,0,x.size()){
+		poly<> Li=ruffini(q,x[i]).fst;
 		Li=Li*(1.0/Li(x[i])); // change for int polynomials
 		S=S+Li*y[i];
 	}
@@ -92,8 +97,8 @@ int main(){
 	set<tp> r=roots(a);
 	assert(roots(a)==set<tp>({-15,-7,0,1,5,9}));
 	auto w=ruffini(a,-7);
-	assert(w.second==0);
+	assert(w.snd==0);
 	poly<> a2=(x-u)*(x-u*5)*(x-u*9)*(x+u*15)*x;
-	assert(w.first.c==a2.c);
+	assert(w.fst.c==a2.c);
 	return 0;
 }

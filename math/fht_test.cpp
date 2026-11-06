@@ -1,4 +1,9 @@
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 #ifdef DEMETRIO
 #define deb(...) fprintf(stderr,__VA_ARGS__)
 #define deb1(x) cerr << #x << " = " << x << endl
@@ -16,7 +21,7 @@ ll c1[MAXN+9],c2[MAXN+9];  // MAXN must be power of 2 !!
 void fht(ll* p, int n, bool inv, char t){
 	for(int l=1;2*l<=n;l*=2){
 		for(int i=0;i<n;i+=2*l){
-			for (int j = 0; j < l; ++j){
+			fore(j,0,l){
 				ll u=p[i+j],v=p[i+l+j];
 				// XOR
 				if(t=='x'){
@@ -41,18 +46,18 @@ void fht(ll* p, int n, bool inv, char t){
 // instead of adding them (also ANDing, ORing)
 vector<ll> multiply(vector<ll>& p1, vector<ll>& p2, char t){
 	int n=1<<(32-__builtin_clz(max(SZ(p1),SZ(p2))-1));
-	for (int i = 0; i < n; ++i)c1[i]=0,c2[i]=0;
-	for (int i = 0; i < SZ(p1); ++i)c1[i]=p1[i];
-	for (int i = 0; i < SZ(p2); ++i)c2[i]=p2[i];
+	fore(i,0,n)c1[i]=0,c2[i]=0;
+	fore(i,0,SZ(p1))c1[i]=p1[i];
+	fore(i,0,SZ(p2))c2[i]=p2[i];
 	fht(c1,n,false,t);fht(c2,n,false,t);
-	for (int i = 0; i < n; ++i)c1[i]*=c2[i];
+	fore(i,0,n)c1[i]*=c2[i];
 	fht(c1,n,true,t);
 	return vector<ll>(c1,c1+n);
 }
 
 vector<ll> gen(){
 	vector<ll> r;
-	for (int _ = 0; _ < MAXN; ++_)r.push_back(rand()%2000000-1000000);
+	fore(_,0,MAXN)r.pb(rand()%2000000-1000000);
 	return r;
 }
 
@@ -66,16 +71,16 @@ int main(){
 		vector<ll> a=gen(),b=gen();
 		vector<ll> c=multiply(a,b,'x');
 		memset(t,0,sizeof(t));
-		for (int i = 0; i < MAXN; ++i)for (int j = 0; j < MAXN; ++j)t[i^j]+=a[i]*b[j];
-		for (int i = 0; i < MAXN; ++i)assert(c[i]==t[i]);
+		fore(i,0,MAXN)fore(j,0,MAXN)t[i^j]+=a[i]*b[j];
+		fore(i,0,MAXN)assert(c[i]==t[i]);
 		c=multiply(a,b,'a');
 		memset(t,0,sizeof(t));
-		for (int i = 0; i < MAXN; ++i)for (int j = 0; j < MAXN; ++j)t[i&j]+=a[i]*b[j];
-		for (int i = 0; i < MAXN; ++i)assert(c[i]==t[i]);
+		fore(i,0,MAXN)fore(j,0,MAXN)t[i&j]+=a[i]*b[j];
+		fore(i,0,MAXN)assert(c[i]==t[i]);
 		c=multiply(a,b,'o');
 		memset(t,0,sizeof(t));
-		for (int i = 0; i < MAXN; ++i)for (int j = 0; j < MAXN; ++j)t[i|j]+=a[i]*b[j];
-		for (int i = 0; i < MAXN; ++i)assert(c[i]==t[i]);
+		fore(i,0,MAXN)fore(j,0,MAXN)t[i|j]+=a[i]*b[j];
+		fore(i,0,MAXN)assert(c[i]==t[i]);
 	}
 	return 0;
 }

@@ -8,23 +8,23 @@ struct ChuLiu{
 	vector<int> inc,dec,take,pre,num,id,vis;
 	vector<tw> inw;
 	void add_edge(int x, int y, tw w){
-		inc.push_back(0); dec.push_back(0); take.push_back(0);
-		e.push_back({x,y,SZ(e),w});
+		inc.pb(0); dec.pb(0); take.pb(0);
+		e.pb({x,y,SZ(e),w});
 	}
 	ChuLiu(int n):n(n),pre(n),num(n),id(n),vis(n),inw(n){}
 	tw doit(int root){
 		auto e2=e;
 		tw ans=0; int eg=SZ(e)-1,pos=SZ(e)-1;
 		while(1){
-			for (int i = 0; i < n; ++i) inw[i]=INF,id[i]=vis[i]=-1;
+			fore(i,0,n) inw[i]=INF,id[i]=vis[i]=-1;
 			for(auto ed:e2) if(ed.len<inw[ed.v]){
 				inw[ed.v]=ed.len; pre[ed.v]=ed.u;
 				num[ed.v]=ed.id;
 			}
 			inw[root]=0;
-			for (int i = 0; i < n; ++i) if(inw[i]==INF) return -1;
+			fore(i,0,n) if(inw[i]==INF) return -1;
 			int tot=-1;
-			for (int i = 0; i < n; ++i){
+			fore(i,0,n){
 				ans+=inw[i];
 				if(i!=root)take[num[i]]++;
 				int j=i;
@@ -35,17 +35,17 @@ struct ChuLiu{
 				}
 			}
 			if(tot<0)break;
-			for (int i = 0; i < n; ++i) if(id[i]<0)id[i]=++tot;
+			fore(i,0,n) if(id[i]<0)id[i]=++tot;
 			n=tot+1; int j=0;
-			for (int i = 0; i < SZ(e2); ++i){
+			fore(i,0,SZ(e2)){
 				int v=e2[i].v;
 				e2[j].v=id[e2[i].v];
 				e2[j].u=id[e2[i].u];
 				if(e2[j].v!=e2[j].u){
 					e2[j].len=e2[i].len-inw[v];
-					inc.push_back(e2[i].id);
-					dec.push_back(num[v]);
-					take.push_back(0);
+					inc.pb(e2[i].id);
+					dec.pb(num[v]);
+					take.pb(0);
 					e2[j++].id=++pos;
 				}
 			}

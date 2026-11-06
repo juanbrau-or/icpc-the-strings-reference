@@ -4,8 +4,8 @@ struct Tree {
 	vector<int> ex,ey,p,w,f,v[2];
 	Tree(int n):g(n),w(n),f(n){}
 	void add_edge(int x, int y){
-		p.push_back(g[x].size());g[x].push_back(ex.size());ex.push_back(x);ey.push_back(y);
-		p.push_back(g[y].size());g[y].push_back(ex.size());ex.push_back(y);ey.push_back(x);
+		p.pb(g[x].size());g[x].pb(ex.size());ex.pb(x);ey.pb(y);
+		p.pb(g[y].size());g[y].pb(ex.size());ex.pb(y);ey.pb(x);
 	}
 	bool go(int k){ // returns true if it finds new node
 		int& x=z[k];
@@ -16,7 +16,7 @@ struct Tree {
 		if((g[x][w[x]]^1)==f[x])w[x]++;
 		int e=g[x][w[x]],y=ey[e];
 		f[y]=e;w[x]++;w[y]=0;x=y;
-		v[k].push_back(x);
+		v[k].pb(x);
 		return true;
 	}
 	vector<int> erase_edge(int e){

@@ -1,5 +1,10 @@
 // https://codeforces.com/gym/101853/problem/G
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
  
@@ -29,13 +34,13 @@ ll discrete_log(ll a,ll b,ll m) {//returns x such that a^x = b (mod m) or -1 if 
     map<ll,int> w;
     int s = ceil(sqrt(m));
     ll base = b;
-    for (int i = 0; i < s; ++i) {
+    fore(i,0,s) {
         w[base] = i;
         base=base*a%m;
     }
     base=fastpow(a,s,m);
     ll key=tmp;
-    for (int i = 1; i < s+2; ++i) {
+    fore(i,1,s+2) {
         key=base*key%m;
         if(w.count(key)) return i*s-w[key]+cnt;
     }

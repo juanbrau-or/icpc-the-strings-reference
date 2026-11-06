@@ -1,6 +1,11 @@
 // Codeforces gym 100109K - AC
 // http://codeforces.com/gym/100109/problem/K
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 #define MOD 99990001
 using namespace std;
 typedef long long ll;
@@ -11,8 +16,8 @@ struct Tree {
 	vector<int> ex,ey,p,w,f,v[2];
 	Tree(int n):g(n),w(n),f(n){}
 	void add_edge(int x, int y){
-		p.push_back(g[x].size());g[x].push_back(ex.size());ex.push_back(x);ey.push_back(y);
-		p.push_back(g[y].size());g[y].push_back(ex.size());ex.push_back(y);ey.push_back(x);
+		p.pb(g[x].size());g[x].pb(ex.size());ex.pb(x);ey.pb(y);
+		p.pb(g[y].size());g[y].pb(ex.size());ex.pb(y);ey.pb(x);
 	}
 	bool go(int k){ // returns true if it finds new node
 		int& x=z[k];
@@ -23,7 +28,7 @@ struct Tree {
 		if((g[x][w[x]]^1)==f[x])w[x]++;
 		int e=g[x][w[x]],y=ey[e];
 		f[y]=e;w[x]++;w[y]=0;x=y;
-		v[k].push_back(x);
+		v[k].pb(x);
 		return true;
 	}
 	vector<int> erase_edge(int e){
@@ -52,13 +57,13 @@ int l[200005]; // lazy
 int main() {
 	scanf("%d",&n);
 	Tree t(n);
-	for (int i = 0; i < n-1; ++i){
+	fore(i,0,n-1){
 		int x,y;
 		scanf("%d%d%d",&x,&y,ew+i);x--;y--;
 		t.add_edge(x,y);
 	}
 	nc=1;
-	for (int i = 1; i < n; ++i){
+	fore(i,1,n){
 		int e;
 		scanf("%d",&e);e--;
 		int c=wc[t.ex[2*e]];

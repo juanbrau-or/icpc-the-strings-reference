@@ -1,6 +1,11 @@
 // Codeforces gym 100551A - AC
 // http://codeforces.com/gym/100551/problem/A
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -8,12 +13,12 @@ struct UnionFind {
 	int n,comp;
 	vector<int> uf,si,c;
 	UnionFind(int n=0):n(n),comp(n),uf(n),si(n,1){
-		for (int i = 0; i < n; ++i)uf[i]=i;}
+		fore(i,0,n)uf[i]=i;}
 	int find(int x){return x==uf[x]?x:find(uf[x]);}
 	bool join(int x, int y){
 		if((x=find(x))==(y=find(y)))return false;
 		if(si[x]<si[y])swap(x,y);
-		si[x]+=si[y];uf[y]=x;comp--;c.push_back(y);
+		si[x]+=si[y];uf[y]=x;comp--;c.pb(y);
 		return true;
 	}
 	int snap(){return c.size();}
@@ -34,21 +39,21 @@ struct DynCon {
 	DynCon(int n):dsu(n){}
 	void add(int x, int y){
 		if(x>y) swap(x,y);
-		q.push_back((Query){ADD,x,y}),mt.push_back(-1);
+		q.pb((Query){ADD,x,y}),mt.pb(-1);
 		last[{x,y}]=q.size()-1;
 	}
 	void remove(int x, int y){
 		if(x>y)swap(x,y);
-		q.push_back((Query){DEL,x,y});
+		q.pb((Query){DEL,x,y});
 		int pr=last[{x,y}];
 		mt[pr]=q.size()-1;
-		mt.push_back(pr);
+		mt.pb(pr);
 	}
 	void query(){
-		q.push_back((Query){QUERY,-1,-1});mt.push_back(-1);}
+		q.pb((Query){QUERY,-1,-1});mt.pb(-1);}
 	void process(){ // answers all queries in order
 		if(!q.size())return;
-		for (int i = 0; i < q.size(); ++i)if(q[i].type==ADD&&mt[i]<0)mt[i]=q.size();
+		fore(i,0,q.size())if(q[i].type==ADD&&mt[i]<0)mt[i]=q.size();
 		go(0,q.size());
 	}
 	void go(int s, int e){

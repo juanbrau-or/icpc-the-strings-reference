@@ -1,5 +1,9 @@
 // Stress test for exp/log functions - AC
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -36,7 +40,7 @@ CD root(int n, bool inv){
 CD cp1[MAXN+9],cp2[MAXN+9];
 int R[MAXN+9];
 void dft(CD* a, int n, bool inv){
-	for (int i = 0; i < n; ++i)if(R[i]<i)swap(a[R[i]],a[i]);
+	fore(i,0,n)if(R[i]<i)swap(a[R[i]],a[i]);
 	for(int m=2;m<=n;m*=2){
 		CD wi=root(m,inv);
 		for(int j=0;j<n;j+=m){
@@ -48,30 +52,30 @@ void dft(CD* a, int n, bool inv){
 	}
 	if(inv){
 		CD z(fpow(n,MOD-2));
-		for (int i = 0; i < n; ++i)a[i]=a[i]*z;
+		fore(i,0,n)a[i]=a[i]*z;
 	}
 }
 poly multiply(poly& p1, poly& p2){
 	int n=p1.size()+p2.size()+1;
 	int m=1,cnt=0;
 	while(m<=n)m+=m,cnt++;
-	for (int i = 0; i < m; ++i){R[i]=0;for (int j = 0; j < cnt; ++j)R[i]=(R[i]<<1)|((i>>j)&1);}
-	for (int i = 0; i < m; ++i)cp1[i]=0,cp2[i]=0;
-	for (int i = 0; i < p1.size(); ++i)cp1[i]=p1[i];
-	for (int i = 0; i < p2.size(); ++i)cp2[i]=p2[i];
+	fore(i,0,m){R[i]=0;fore(j,0,cnt)R[i]=(R[i]<<1)|((i>>j)&1);}
+	fore(i,0,m)cp1[i]=0,cp2[i]=0;
+	fore(i,0,p1.size())cp1[i]=p1[i];
+	fore(i,0,p2.size())cp2[i]=p2[i];
 	dft(cp1,m,false);dft(cp2,m,false);
-	for (int i = 0; i < m; ++i)cp1[i]=cp1[i]*cp2[i];
+	fore(i,0,m)cp1[i]=cp1[i]*cp2[i];
 	dft(cp1,m,true);
 	poly res;
 	n-=2;
-	for (int i = 0; i < n; ++i)res.push_back(cp1[i].x);
+	fore(i,0,n)res.pb(cp1[i].x);
 	return res;
 }
 
 poly add(poly &a, poly &b){
 	int n=SZ(a),m=SZ(b);
 	poly ans(max(n,m));
-	for (int i = 0; i < max(n,m); ++i) ans[i]=addmod(i<SZ(a)?a[i]:0, i<SZ(b)?b[i]:0);
+	fore(i,0,max(n,m)) ans[i]=addmod(i<SZ(a)?a[i]:0, i<SZ(b)?b[i]:0);
 	while(SZ(ans)>1&&!ans.back())ans.pop_back();
 	return ans;
 }
@@ -79,14 +83,14 @@ poly add(poly &a, poly &b){
 // derivative of p
 poly derivate(poly &p){
 	poly ans(max(1, SZ(p)-1));
-	for (int i = 1; i < SZ(p); ++i) ans[i-1]=mulmod(p[i],i);
+	fore(i,1,SZ(p)) ans[i-1]=mulmod(p[i],i);
 	return ans;
 }
 
 // integral of p
 poly integrate(poly &p){
 	poly ans(SZ(p)+1);
-	for (int i = 0; i < SZ(p); ++i) ans[i+1]=mulmod(p[i], inv(i+1));
+	fore(i,0,SZ(p)) ans[i+1]=mulmod(p[i], inv(i+1));
 	return ans;
 }
 
@@ -107,7 +111,7 @@ poly invert(poly &p, int d){
 		sz*=2;
 		poly pre(p.begin(), p.begin()+min(SZ(p),sz));
 		poly cur=multiply(res,pre);
-		for (int i = 0; i < SZ(cur); ++i) cur[i]=submod(0,cur[i]);
+		fore(i,0,SZ(cur)) cur[i]=submod(0,cur[i]);
 		cur[0]=addmod(cur[0],2);
 		res=multiply(res,cur);
 		res=takemod(res,sz);
@@ -135,7 +139,7 @@ poly exp(poly &p, int d){
 	while(sz<d){
 		sz*=2;
 		poly lg=log(res, sz), cur(sz);
-		for (int i = 0; i < sz; ++i) cur[i]=submod(i<SZ(p)?p[i]:0, i<SZ(lg)?lg[i]:0);
+		fore(i,0,sz) cur[i]=submod(i<SZ(p)?p[i]:0, i<SZ(lg)?lg[i]:0);
 		cur[0]=addmod(cur[0],1);
 		res=multiply(res,cur);
 		res=takemod(res, sz);
@@ -148,7 +152,7 @@ poly exp(poly &p, int d){
 poly fast(vector<int> &a, int top){
 	// the answer is exp(sum (log(1+x^a[i])))
 	poly ans={0};
-	for (int i = 0; i < SZ(a); ++i){
+	fore(i,0,SZ(a)){
 		poly p(a[i]+1);
 		p[0]=p[a[i]]=1;
 		poly now=log(p, top+1);
@@ -166,14 +170,14 @@ poly brute(vector<int> &a, int top){
 }
 
 int main(){FIN;
-	for (int it = 1; it < 101; ++it){
+	fore(it,1,101){
 		int n=100;
 		int mx=100;
 		
 		auto rnd=bind(uniform_int_distribution<int>(1,mx), mt19937(time(0)));
 		
 		vector<int> a(n);
-		for (int i = 0; i < n; ++i) a[i]=rnd();
+		fore(i,0,n) a[i]=rnd();
 		
 		auto me=fast(a,mx);
 		auto he=brute(a,mx);

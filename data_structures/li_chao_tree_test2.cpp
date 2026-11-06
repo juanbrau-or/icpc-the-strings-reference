@@ -2,6 +2,10 @@
 // https://cses.fi/problemset/task/3227/
 
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -74,29 +78,29 @@ struct LiChaoTree{
 int main(){FIN;
 	int n,k; cin>>n>>k;
 	vector<ll> a(n);
-	for (int i = 0; i < n; ++i) cin>>a[i];
+	fore(i,0,n) cin>>a[i];
  
 	vector<vector<ll>> v;
-	for (int it = 0; it < 2; ++it){
+	fore(it,0,2){
 		vector<ll> st={-1},to(n);
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			while(st.back()!=-1 && a[st.back()]>=a[i]) st.pop_back();
 			to[i]=i-st.back()-1;
-			st.push_back(i);
+			st.pb(i);
 		}
  
 		if(it) reverse(ALL(to));
-		v.push_back(to);
+		v.pb(to);
 		reverse(ALL(a));
 	}
  
 	vector<ii> wh(n);
-	for (int i = 0; i < n; ++i) wh[i]={i-v[0][i], i+v[1][i]};
+	fore(i,0,n) wh[i]={i-v[0][i], i+v[1][i]};
  
 	LiChaoTree lc(n);
  
 	// p<=l && r<=p+k-1
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		auto [l,r]=wh[i];
 		int st=i-k+1, en=i;
  
@@ -108,7 +112,7 @@ int main(){FIN;
 	}
  
 	// p<=l && r>p+k-1
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		auto [l,r]=wh[i];
 		int st=i-k+1, en=i;
  
@@ -120,7 +124,7 @@ int main(){FIN;
 	}
  
 	// p>l && r<=p+k-1
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		auto [l,r]=wh[i];
 		int st=i-k+1, en=i;
  
@@ -132,7 +136,7 @@ int main(){FIN;
 	}
  
 	// p>l && r>p+k-1
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		auto [l,r]=wh[i];
 		int st=i-k+1, en=i;
  
@@ -143,5 +147,5 @@ int main(){FIN;
 		lc.add(Line(0, a[i]*k), st, en+1);
 	}
  
-	for (int i = 0; i < n-k+1; ++i) cout<<lc.query(i)<<" ";cout<<"\n";
+	fore(i,0,n-k+1) cout<<lc.query(i)<<" ";cout<<"\n";
 }

@@ -1,4 +1,9 @@
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -95,7 +100,7 @@ double randd(){return 1.*rand()/RAND_MAX;}
 pt randp(){return pt(randd(),randd(),randd());}
 
 int main(){
-	for (int _ = 0; _ < 1000; ++_){
+	fore(_,0,1000){
 		plane w(randp(),randp(),randp());
 		ln l(randp(),randp());
 		pt r;
@@ -103,7 +108,7 @@ int main(){
 		assert(l.has(r));
 		assert(w.has(r));
 	}
-	for (int _ = 0; _ < 1000; ++_){
+	fore(_,0,1000){
 		plane w(randp(),randp(),randp());
 		plane u(randp(),randp(),randp());
 		ln l;
@@ -116,7 +121,7 @@ int main(){
 		assert(u.has(l.p));
 		assert(u.has(l.p+l.pq));
 	}
-	for (int _ = 0; _ < 1000; ++_){
+	fore(_,0,1000){
 		plane w(randp(),randp(),randp());
 		pt q=randp();
 		pt p=w.proj(q);

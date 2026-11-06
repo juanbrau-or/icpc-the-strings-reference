@@ -1,6 +1,11 @@
 // Codeforces 321E - AC
 // http://codeforces.com/problemset/problem/321/E
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -17,7 +22,7 @@ void doit(int s, int e, int s0, int e0, int i){
 	if(s==e)return;
 	int m=(s+e)/2;
 	int r=INF,rp;
-	for (int j = s0; j < min(e0,m); ++j){
+	fore(j,s0,min(e0,m)){
 		int r0=f[j]+sx[m][m]-sx[m][j]-sx[j][m]+sx[j][j];
 		if(r0<r){
 			r=r0;
@@ -29,8 +34,8 @@ void doit(int s, int e, int s0, int e0, int i){
 	doit(m+1,e,rp,e0,i);
 }
 int doall(){
-	for (int i = 0; i < n+1; ++i)f[i]=sx[i][i];
-	for (int i = 1; i < k; ++i){
+	fore(i,0,n+1)f[i]=sx[i][i];
+	fore(i,1,k){
 		doit(1,n+1,0,n,i);
 		memcpy(f,f2,sizeof(f));
 	}
@@ -40,14 +45,14 @@ int doall(){
 
 int main(){
 	scanf("%d%d",&n,&k);
-	for (int i = 0; i < n; ++i){
-		for (int j = 0; j < n; ++j){
+	fore(i,0,n){
+		fore(j,0,n){
 			getchar();
 			x[i][j]=getchar()-'0';
 		}
 	}
-	for (int i = 1; i < n+1; ++i){
-		for (int j = 1; j < n+1; ++j){
+	fore(i,1,n+1){
+		fore(j,1,n+1){
 			sx[i][j]=sx[i-1][j]+sx[i][j-1]-sx[i-1][j-1]+x[i-1][j-1];
 		}
 	}

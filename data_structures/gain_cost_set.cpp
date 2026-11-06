@@ -4,10 +4,10 @@ struct GCS {
 	void add(int g, int c){
 		pair<int,int> x={g,c};
 		auto p=s.lower_bound(x);
-		if(p!=s.end()&&p->second<=x.second)return;
+		if(p!=s.end()&&p->second<=x.snd)return;
 		if(p!=s.begin()){ // erase pairs with less benefit
 			--p;            // and more cost
-			while(p->second>=x.second){
+			while(p->second>=x.snd){
 				if(p==s.begin()){s.erase(p);break;}
 				s.erase(p--);
 			}

@@ -15,30 +15,24 @@ void void_debug(const Head& H, const Tail&... T) { std::cerr << " " << H; void_d
 #ifdef LOCAL
 #define debug(...) std::cerr << "[" << #__VA_ARGS__ << "]:", void_debug(__VA_ARGS__)
 #else
-#define debug(...) 42
+#define debug(...) ((void)0)
 #endif
 
-/*
-Uso en competencia:
-Compila localmente con el flag -DLOCAL para activar las salidas por cerr, por
-ejemplo:
-    g++ -std=c++17 -O2 -Wall -Wextra -DLOCAL main.cpp -o main
+// Local: g++ -std=c++17 -O2 -Wall -Wextra -DLOCAL main.cpp
 
-Dentro del codigo puedes escribir:
-    debug(variable_x, mi_vector[0], "llegue aqui");
 
-Cuando LOCAL no esta definido, como ocurre normalmente al enviar al juez en
-linea, debug(...) se expande a una expresion inocua y no imprime nada. Esto
-mantiene las trazas fuera del output oficial sin tener que borrar llamadas de
-debug antes de enviar gracias a #ifdef LOCAL. Si tu entorno usa
-#ifndef ONLINE_JUDGE, puedes mantener la misma idea: compila localmente con
--DLOCAL y envia sin ese flag.
-*/
-
-#define SZ(x) ((int)x.size())
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define ALL(x) (x).begin(),(x).end()
+#define SZ(x) ((int)(x).size())
 using namespace std;
 typedef long long ll;
+typedef pair<ll,ll> pl;
 
 int main(){
+	ios::sync_with_stdio(false);cin.tie(nullptr);
 	return 0;
 }

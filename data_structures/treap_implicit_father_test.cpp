@@ -1,6 +1,11 @@
 // Codeforces gym 101481F - AC
 // https://codeforces.com/gym/101481/problem/F
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 #ifdef DEMETRIO
 #define deb(...) fprintf(stderr,__VA_ARGS__)
 #define deb1(x) cerr << #x << " = " << x << endl
@@ -100,11 +105,11 @@ void disjoin(int k, int x, int y){
 }
 
 int main(){
-	for (int i = 0; i < 105; ++i)for (int j = 0; j < 8005; ++j)t[i][j]=new item();
+	fore(i,0,105)fore(j,0,8005)t[i][j]=new item();
 	while(scanf("%d%d%d%d",&n,&m,&c,&q),n){
-		for (int i = 0; i < c; ++i)for (int j = 0; j < n; ++j)t[i][j]->l=t[i][j]->r=t[i][j]->f=0;
+		fore(i,0,c)fore(j,0,n)t[i][j]->l=t[i][j]->r=t[i][j]->f=0;
 		w.clear();
-		for (int i = 0; i < m; ++i){
+		fore(i,0,m){
 			int x,y,k;
 			scanf("%d%d%d",&x,&y,&k);x--;y--;k--;
 			w[{x,y}]=k;

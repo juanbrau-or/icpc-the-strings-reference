@@ -1,85 +1,38 @@
-ll gcd(ll a, ll b){return a?gcd(b%a,a):b;}
-ll mulmod(ll a, ll b, ll m) {
-	ll r=a*b-(ll)((long double)a*b/m+.5)*m;
-	return r<0?r+m:r;
+// Positive signed 64-bit integers. Exact modular products with __int128.
+ll mulmod(ll a,ll b,ll m){return (__int128)a*b%m;}
+ll expmod(ll b,ll e,ll m){
+    ll r=1;while(e){if(e&1)r=mulmod(r,b,m);b=mulmod(b,b,m);e>>=1;}
+    return r;
 }
-ll expmod(ll b, ll e, ll m){
-	if(!e)return 1;
-	ll q=expmod(b,e/2,m);q=mulmod(q,q,m);
-	return e&1?mulmod(b,q,m):q;
+// Deterministic Miller-Rabin bases, also used by KACTL (CC0).
+bool rabin(ll n){
+    if(n<2)return false;
+    for(ll p:{2,3,5,7,11,13,17,19,23,29,31,37})if(n%p==0)return n==p;
+    ll d=n-1;int s=0;while(!(d&1))d>>=1,s++;
+    for(ll a:{2LL,325LL,9375LL,28178LL,450775LL,9780504LL,1795265022LL}){
+        if(a%n==0)continue;
+        ll x=expmod(a%n,d,n);if(x==1||x==n-1)continue;
+        bool witness=true;
+        fore(i,1,s){x=mulmod(x,x,n);if(x==n-1){witness=false;break;}}
+        if(witness)return false;
+    }
+    return true;
 }
-bool is_prime_prob(ll n, int a){
-	if(n==a)return true;
-	ll s=0,d=n-1;
-	while(d%2==0)s++,d/=2;
-	ll x=expmod(a,d,n);
-	if((x==1)||(x+1==n))return true;
-	for (int _ = 0; _ < s-1; ++_){
-		x=mulmod(x,x,n);
-		if(x==1)return false;
-		if(x+1==n)return true;
-	}
-	return false;
+ll rho(ll n){ // n composite, n > 1
+    if(n%2==0)return 2;if(n%3==0)return 3;
+    static mt19937_64 rng(712367821);
+    while(true){
+        ll c=uniform_int_distribution<ll>(1,n-1)(rng);
+        ll x=uniform_int_distribution<ll>(0,n-1)(rng),y=x,d=1;
+        auto step=[&](ll v){return (ll)(((__int128)mulmod(v,v,n)+c)%n);};
+        for(int it=0;d==1&&it<1000000;it++){
+            x=step(x);y=step(step(y));d=std::gcd(x>y?x-y:y-x,n);
+        }
+        if(d>1&&d<n)return d;
+    }
 }
-bool rabin(ll n){ // true iff n is prime
-	if(n==1)return false;
-	int ar[]={2,3,5,7,11,13,17,19,23};
-	for (int i = 0; i < 9; ++i)if(!is_prime_prob(n,ar[i]))return false;
-	return true;
-}
-ll rho(ll n){
-	if(!(n&1))return 2;
-	ll x=2,y=2,d=1;
-	ll c=rand()%n+1;
-	while(d==1){
-		x=(mulmod(x,x,n)+c)%n;
-		y=(mulmod(y,y,n)+c)%n;
-		y=(mulmod(y,y,n)+c)%n;
-		if(x>=y)d=gcd(x-y,n);
-		else d=gcd(y-x,n);
-	}
-	return d==n?rho(n):d;
-}
-void fact(ll n, map<ll,int>& f){ //O (lg n)^3
-	if(n==1)return;
-	if(rabin(n)){f[n]++;return;}
-	ll q=rho(n);fact(q,f);fact(n/q,f);
-}
-// optimized version: replace rho and fact with the following:
-const int MAXP=1e6+1; // sieve size
-int sv[MAXP]; // sieve
-ll add(ll a, ll b, ll m){return (a+=b)<m?a:a-m;}
-ll rho(ll n){
-	static ll s[MAXP];
-	while(1){
-		ll x=rand()%n,y=x,c=rand()%n;
-		ll *px=s,*py=s,v=0,p=1;
-		while(1){
-			*py++=y=add(mulmod(y,y,n),c,n);
-			*py++=y=add(mulmod(y,y,n),c,n);
-			if((x=*px++)==y)break;
-			ll t=p;
-			p=mulmod(p,abs(y-x),n);
-			if(!p)return gcd(t,n);
-			if(++v==26){
-				if((p=gcd(p,n))>1&&p<n)return p;
-				v=0;
-			}
-		}
-		if(v&&(p=gcd(p,n))>1&&p<n)return p;
-	}
-}
-void init_sv(){
-	for (int i = 2; i < MAXP; ++i)if(!sv[i])for(ll j=i;j<MAXP;j+=i)sv[j]=i;
-}
-void fact(ll n, map<ll,int>& f){ // call init_sv first!!!
-	for(auto&& p:f){
-		while(n%p.first==0){
-			p.second++;
-			n/=p.first;
-		}
-	}
-	if(n<MAXP)while(n>1)f[sv[n]]++,n/=sv[n];
-	else if(rabin(n))f[n]++;
-	else {ll q=rho(n);fact(q,f);fact(n/q,f);}
+void fact(ll n,map<ll,int>& f){
+    assert(n>=1);if(n==1)return;
+    if(rabin(n)){f[n]++;return;}
+    ll p=rho(n);fact(p,f);fact(n/p,f);
 }

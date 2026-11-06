@@ -1,6 +1,11 @@
 // Codeforces 617E - AC
 // http://codeforces.com/problemset/problem/617/E
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -38,12 +43,12 @@ bool qcomp(const qu &a, const qu &b){
     return (a.l/sq)&1?a.r<b.r:a.r>b.r;
 }
 void mos(){
-    for (int i = 0; i < nq; ++i)qs[i].id=i;
+    fore(i,0,nq)qs[i].id=i;
     sq=sqrt(n)+.5;
     sort(qs,qs+nq,qcomp);
     int l=0,r=0;
     init();
-    for (int i = 0; i < nq; ++i){
+    fore(i,0,nq){
         qu q=qs[i];
         while(l>q.l)add(--l);
         while(r<q.r)add(r++);
@@ -55,13 +60,13 @@ void mos(){
 
 int main(){
 	scanf("%d%d%d",&n,&nq,&k);
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		int a;
 		scanf("%d",&a);
 		s[i+1]=s[i]^a;
 	}
-	for (int i = 0; i < nq; ++i)scanf("%d%d",&qs[i].l,&qs[i].r),qs[i].l--,qs[i].r++;
+	fore(i,0,nq)scanf("%d%d",&qs[i].l,&qs[i].r),qs[i].l--,qs[i].r++;
 	mos();
-	for (int i = 0; i < nq; ++i)printf("%lld\n",ans[i]);
+	fore(i,0,nq)printf("%lld\n",ans[i]);
 	return 0;
 }

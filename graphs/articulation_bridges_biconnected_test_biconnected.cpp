@@ -1,6 +1,11 @@
 // Codeforces 487E - AC
 // http://codeforces.com/contest/487/problem/E
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 #define MAXN 200005
@@ -76,8 +81,8 @@ vector<int> g[MAXN];int n;
 struct edge {int u,v,comp;bool bridge;};
 vector<edge> e;
 void add_edge(int u, int v){
-	g[u].push_back(e.size());g[v].push_back(e.size());
-	e.push_back((edge){u,v,-1,false});
+	g[u].pb(e.size());g[v].pb(e.size());
+	e.pb((edge){u,v,-1,false});
 }
 int D[MAXN],B[MAXN],T;
 int art[MAXN];  // articulation point iff !=0
@@ -108,7 +113,7 @@ void doit(){
 	memset(D,-1,sizeof(D));
 	memset(art,0,sizeof(art));
 	nbc=T=0;
-	for (int i = 0; i < n; ++i)if(D[i]<0)dfs(i,-1),art[i]--;
+	fore(i,0,n)if(D[i]<0)dfs(i,-1),art[i]--;
 }
 
 int m,q;
@@ -123,34 +128,34 @@ void add_comp0(int c, int x){
 	z[c].insert(w[x]);
 	if(!art[x])return;
 	x=art[x];
-	gg[x].push_back(c);
-	gg[c].push_back(x);
+	gg[x].pb(c);
+	gg[c].pb(x);
 }
 
 int ar[MAXN];
 
 int main(){
 	scanf("%d%d%d",&n,&m,&q);
-	for (int i = 0; i < n; ++i)scanf("%d",w+i);
-	for (int _ = 0; _ < m; ++_){
+	fore(i,0,n)scanf("%d",w+i);
+	fore(_,0,m){
 		int x,y;
 		scanf("%d%d",&x,&y);x--;y--;
 		add_edge(x,y);
 	}
 	doit();
-	for (int i = 0; i < n; ++i)if(art[i])art[i]=nbc+nart++;
-	for (int i = 0; i < m; ++i){
+	fore(i,0,n)if(art[i])art[i]=nbc+nart++;
+	fore(i,0,m){
 		add_comp0(e[i].comp,e[i].u);
 		add_comp0(e[i].comp,e[i].v);
 	}
 	hld_init();
-	for (int i = 0; i < n; ++i){
+	fore(i,0,n){
 		if(art[i]){
 			for(int c:cc[i])if(c!=dad[art[i]])z[c].erase(z[c].find(w[i]));
 		}
 	}
-	for (int i = 0; i < nbc; ++i)ar[pos[i]]=*z[i].begin();
-	for (int i = 0; i < n; ++i)if(art[i])ar[pos[art[i]]]=w[i];
+	fore(i,0,nbc)ar[pos[i]]=*z[i].begin();
+	fore(i,0,n)if(art[i])ar[pos[art[i]]]=w[i];
 	STree rmq(nbc+nart);
 	rmq.init(ar);
 	while(q--){

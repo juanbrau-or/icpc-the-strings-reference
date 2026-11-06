@@ -1,6 +1,10 @@
 // SPOJ GREED - AC
 // https://www.spoj.com/problems/GREED/
 #include <bits/stdc++.h>
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define pb push_back
 #define ALL(s) s.begin(),s.end()
 #define FIN ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0)
 #define SZ(s) int(s.size())
@@ -20,8 +24,8 @@ struct MCF{
 	vector<vector<edge>> g;
 	MCF(int n):n(n),prio(n),curflow(n),prevedge(n),prevnode(n),pot(n),g(n){}
 	void add_edge(int s, int t, tf cap, tc cost) {
-		g[s].push_back((edge){t,SZ(g[t]),0,cap,cost});
-		g[t].push_back((edge){s,SZ(g[s])-1,0,0,-cost});
+		g[s].pb((edge){t,SZ(g[t]),0,cap,cost});
+		g[t].pb((edge){s,SZ(g[s])-1,0,0,-cost});
 	}
 	pair<tf,tc> get_flow(int s, int t) {
 		tf flow=0; tc flowcost=0;
@@ -31,8 +35,8 @@ struct MCF{
 			prio[s]=0; curflow[s]=INFFLOW;
 			while(!q.empty()) {
 				auto cur=q.top();
-				tc d=cur.first;
-        int u=cur.second;
+				tc d=cur.fst;
+        int u=cur.snd;
 				q.pop();
 				if(d!=prio[u]) continue;
 				for(int i=0; i<SZ(g[u]); ++i) {
@@ -49,7 +53,7 @@ struct MCF{
 				}
 			}
 			if(prio[t]==INFCOST) break;
-			for (int i = 0; i < n; ++i) pot[i]+=prio[i];
+			fore(i,0,n) pot[i]+=prio[i];
 			tf df=min(curflow[t], INFFLOW-flow);
 			flow+=df;
 			for(int v=t; v!=s; v=prevnode[v]) {
@@ -71,19 +75,19 @@ int main(){FIN;
 		cin>>n;
 		MCF nt(n+2);
 		memset(q,0,sizeof(q));
-		for (int i = 0; i < n; ++i){
+		fore(i,0,n){
 			int x; cin >>x; x--;
 			q[x]++;
 		}
-		for (int i = 0; i < n; ++i)if(q[i]>0)nt.add_edge(0,2+i,q[i],0);
-		for (int i = 0; i < n; ++i)nt.add_edge(2+i,1,1,0);
+		fore(i,0,n)if(q[i]>0)nt.add_edge(0,2+i,q[i],0);
+		fore(i,0,n)nt.add_edge(2+i,1,1,0);
 		int m; cin>>m;
 		while(m--){
 			int x,y; cin>>x>>y; x--; y--;
 			nt.add_edge(2+x,2+y,512,1);
 			nt.add_edge(2+y,2+x,512,1);
 		}
-		cout << nt.get_flow(0,1).second<<"\n";
+		cout << nt.get_flow(0,1).snd<<"\n";
 	}
 	return 0;
 }

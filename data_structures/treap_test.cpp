@@ -1,6 +1,11 @@
 // Timus 1439 - AC
 // http://acm.timus.ru/problem.aspx?space=1&num=1439
 #include <bits/stdc++.h>
+#define pb push_back
+#define mp make_pair
+#define fst first
+#define snd second
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
 using namespace std;
 typedef long long ll;
 
@@ -43,10 +48,10 @@ pitem kth(pitem t, int k){
 pair<int,int> lb(pitem t, int key){ // position and value of lower_bound
 	if(!t)return {0,1<<30}; // (special value)
 	if(key>t->key){
-		auto w=lb(t->r,key);w.first+=cnt(t->l)+1;return w;
+		auto w=lb(t->r,key);w.fst+=cnt(t->l)+1;return w;
 	}
 	auto w=lb(t->l,key);
-	if(w.first==cnt(t->l))w.second=t->key;
+	if(w.fst==cnt(t->l))w.snd=t->key;
 	return w;
 }
 
@@ -57,7 +62,7 @@ int find(int x){
 	int s=1,e=n+1;
 	while(e-s>1){
 		int m=(s+e)/2;
-		if(m-lb(ss,m).first>x)e=m;
+		if(m-lb(ss,m).fst>x)e=m;
 		else s=m;
 	}
 	return s;
@@ -71,6 +76,6 @@ int main(){
 		if(c[0]=='D')insert(ss,new item(find(k)));
 		else printf("%d\n",find(k));
 	}
-	for (int i = 0; i < cnt(ss); ++i)assert(lb(ss,kth(ss,i)->key).first==i);
+	fore(i,0,cnt(ss))assert(lb(ss,kth(ss,i)->key).fst==i);
 	return 0;
 }

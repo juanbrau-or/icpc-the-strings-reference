@@ -1,6 +1,9 @@
 // Codeforces 1033D - AC
 // https://codeforces.com/contest/1033/problem/D
 #include <bits/stdc++.h>
+#define fore(i,a,b) for(int i=a,ThxDem=b;i<ThxDem;++i)
+#define fst first
+#define snd second
 using namespace std;
 typedef long long LL;
 typedef long long ll;
@@ -20,7 +23,7 @@ bool is_prime_prob(ll n, int a){
 	while(d%2==0)s++,d/=2;
 	ll x=expmod(a,d,n);
 	if((x==1)||(x+1==n))return true;
-	for (int _ = 0; _ < s-1; ++_){
+	fore(_,0,s-1){
 		x=mulmod(x,x,n);
 		if(x==1)return false;
 		if(x+1==n)return true;
@@ -30,7 +33,7 @@ bool is_prime_prob(ll n, int a){
 bool rabin(ll n){ // true iff n is prime
 	if(n==1)return false;
 	int ar[]={2,3,5,7,11,13,17,19,23};
-	for (int i = 0; i < 9; ++i)if(!is_prime_prob(n,ar[i]))return false;
+	fore(i,0,9)if(!is_prime_prob(n,ar[i]))return false;
 	return true;
 }
 const int MAXP=1e6+1; // sieve size
@@ -57,13 +60,13 @@ ll rho(ll n){
 	}
 }
 void init_sv(){
-	for (int i = 2; i < MAXP; ++i)if(!sv[i])for(ll j=i;j<MAXP;j+=i)sv[j]=i;
+	fore(i,2,MAXP)if(!sv[i])for(ll j=i;j<MAXP;j+=i)sv[j]=i;
 }
 void fact(ll n, map<ll,int>& f){ // call init_sv first!!!
 	for(auto&& p:f){
-		while(n%p.first==0){
-			p.second++;
-			n/=p.first;
+		while(n%p.fst==0){
+			p.snd++;
+			n/=p.fst;
 		}
 	}
 	if(n<MAXP)while(n>1)f[sv[n]]++,n/=sv[n];
@@ -82,7 +85,7 @@ int main() {
 	}
 	//sort(p, p + cnt);
 	int ans = 1;
-	for(auto p:f)ans=ans*(p.second+1LL)%mod;
+	for(auto p:f)ans=ans*(p.snd+1LL)%mod;
 	//for(int i = 0; i < cnt; ) {
 	//	int ctr = 0;
 	//	for(LL pp = p[i]; i < cnt && p[i] == pp; ++i, ++ctr);
