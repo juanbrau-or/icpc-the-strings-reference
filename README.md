@@ -7,9 +7,6 @@ La copia original en el directorio hermano se conserva sin cambios.
 La edición tiene fichas junto a cada fragmento: qué resuelve, entradas/salidas,
 orden de llamadas, ejemplos, complejidad y casos donde no se debe usar.
 El índice y las tablas por síntoma enlazan a las páginas de las implementaciones.
-Se restauraron `fore`, `pb`, `mp`, `fst` y `snd`; `other/template.cpp` es la cabecera
-compartida. Varios fragmentos son alternativas con nombres repetidos: copia los
-que necesita tu solución y sus dependencias, no toda la biblioteca a la vez.
 
 ## Compilar
 
@@ -43,13 +40,6 @@ interlineado compacto; no se impone límite de páginas.
   son una inferencia de preparación, sin porcentajes inventados de aparición.
 - `preamble.tex`: diseño y macros de impresión; el texto no queda centrado por
   una declaración que se extienda accidentalmente a todo el documento.
-
-Las adiciones cubren BFS multi-fuente, 0-1 BFS, Euler iterativo de subárboles,
-rerooting, grafos funcionales, Fenwick con selección, combinatoria modular,
-base XOR, búsqueda binaria, compresión, prefijos 2D, LIS, mochila, máscaras/SOS,
-meet in the middle, digit DP, pila/deque monótonas y rotación mínima. También se
-imprimen NTT y puntos enteros bajo una recta, antes ausentes del PDF, y se incluye
-un adaptador listo para usar NTT con las operaciones de series formales.
 
 ## Verificar código y documentación
 
